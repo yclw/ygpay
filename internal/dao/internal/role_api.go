@@ -11,72 +11,58 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-// DictTypeDao is the data access object for the table t_dict_type.
-type DictTypeDao struct {
+// RoleApiDao is the data access object for the table t_role_api.
+type RoleApiDao struct {
 	table    string             // table is the underlying table name of the DAO.
 	group    string             // group is the database configuration group name of the current DAO.
-	columns  DictTypeColumns    // columns contains all the column names of Table for convenient usage.
+	columns  RoleApiColumns     // columns contains all the column names of Table for convenient usage.
 	handlers []gdb.ModelHandler // handlers for customized model modification.
 }
 
-// DictTypeColumns defines and stores column names for the table t_dict_type.
-type DictTypeColumns struct {
-	Id        string // 字典类型ID
-	Pid       string // 父类字典类型ID
-	Name      string // 字典类型名称
-	Type      string // 字典类型
-	Sort      string // 排序
-	Remark    string // 备注
-	Status    string // 字典类型状态
-	CreatedAt string // 创建时间
-	UpdatedAt string // 更新时间
+// RoleApiColumns defines and stores column names for the table t_role_api.
+type RoleApiColumns struct {
+	RoleId string // 角色ID
+	ApiId  string // API ID
 }
 
-// dictTypeColumns holds the columns for the table t_dict_type.
-var dictTypeColumns = DictTypeColumns{
-	Id:        "id",
-	Pid:       "pid",
-	Name:      "name",
-	Type:      "type",
-	Sort:      "sort",
-	Remark:    "remark",
-	Status:    "status",
-	CreatedAt: "created_at",
-	UpdatedAt: "updated_at",
+// roleApiColumns holds the columns for the table t_role_api.
+var roleApiColumns = RoleApiColumns{
+	RoleId: "role_id",
+	ApiId:  "api_id",
 }
 
-// NewDictTypeDao creates and returns a new DAO object for table data access.
-func NewDictTypeDao(handlers ...gdb.ModelHandler) *DictTypeDao {
-	return &DictTypeDao{
+// NewRoleApiDao creates and returns a new DAO object for table data access.
+func NewRoleApiDao(handlers ...gdb.ModelHandler) *RoleApiDao {
+	return &RoleApiDao{
 		group:    "default",
-		table:    "t_dict_type",
-		columns:  dictTypeColumns,
+		table:    "t_role_api",
+		columns:  roleApiColumns,
 		handlers: handlers,
 	}
 }
 
 // DB retrieves and returns the underlying raw database management object of the current DAO.
-func (dao *DictTypeDao) DB() gdb.DB {
+func (dao *RoleApiDao) DB() gdb.DB {
 	return g.DB(dao.group)
 }
 
 // Table returns the table name of the current DAO.
-func (dao *DictTypeDao) Table() string {
+func (dao *RoleApiDao) Table() string {
 	return dao.table
 }
 
 // Columns returns all column names of the current DAO.
-func (dao *DictTypeDao) Columns() DictTypeColumns {
+func (dao *RoleApiDao) Columns() RoleApiColumns {
 	return dao.columns
 }
 
 // Group returns the database configuration group name of the current DAO.
-func (dao *DictTypeDao) Group() string {
+func (dao *RoleApiDao) Group() string {
 	return dao.group
 }
 
 // Ctx creates and returns a Model for the current DAO. It automatically sets the context for the current operation.
-func (dao *DictTypeDao) Ctx(ctx context.Context) *gdb.Model {
+func (dao *RoleApiDao) Ctx(ctx context.Context) *gdb.Model {
 	model := dao.DB().Model(dao.table)
 	for _, handler := range dao.handlers {
 		model = handler(model)
@@ -90,6 +76,6 @@ func (dao *DictTypeDao) Ctx(ctx context.Context) *gdb.Model {
 //
 // Note: Do not commit or roll back the transaction in function f,
 // as it is automatically handled by this function.
-func (dao *DictTypeDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
+func (dao *RoleApiDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
 	return dao.Ctx(ctx).Transaction(ctx, f)
 }

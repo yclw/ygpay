@@ -36,3 +36,20 @@ func (d *memberInfoDao) FindByID(ctx context.Context, id int64) (memberInfo *ent
 	err = model.Scan(&memberInfo)
 	return
 }
+
+// FindByUserIds 根据用户ID列表查询用户信息
+func (d *memberInfoDao) FindByUserIds(ctx context.Context, userIds []int64) (memberInfos []*entity.MemberInfo, err error) {
+	err = d.Ctx(ctx).WhereIn(d.Columns().Id, userIds).Scan(&memberInfos)
+	return
+}
+
+// FindAll 获取所有用户信息
+func (d *memberInfoDao) FindAll(ctx context.Context) (memberInfos []*entity.MemberInfo, err error) {
+	err = d.Ctx(ctx).Scan(&memberInfos)
+	return
+}
+
+// Create 创建用户
+func (d *memberInfoDao) Create(ctx context.Context, member *entity.MemberInfo) (err error) {
+	return
+}

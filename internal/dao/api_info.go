@@ -8,15 +8,15 @@ import (
 	"yclw/ygpay/internal/dao/internal"
 )
 
-// attachmentDao is the data access object for the table t_attachment.
+// apiInfoDao is the data access object for the table t_api_info.
 // You can define custom methods on it to extend its functionality as needed.
-type attachmentDao struct {
-	*internal.AttachmentDao
+type apiInfoDao struct {
+	*internal.ApiInfoDao
 }
 
 var (
-	// Attachment is a globally accessible object for table t_attachment operations.
-	Attachment = attachmentDao{internal.NewAttachmentDao()}
+	// ApiInfo is a globally accessible object for table t_api_info operations.
+	ApiInfo = apiInfoDao{internal.NewApiInfoDao()}
 )
 
 // Add your custom methods and functionality below.

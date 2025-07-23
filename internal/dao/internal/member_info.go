@@ -21,42 +21,40 @@ type MemberInfoDao struct {
 
 // MemberInfoColumns defines and stores column names for the table t_member_info.
 type MemberInfoColumns struct {
-	Id                 string // 用户ID
-	Username           string // 帐号
-	PasswordHash       string // 密码
-	Salt               string // 密码盐
-	PasswordResetToken string // 密码重置令牌
-	RoleId             string // 角色ID
-	Avatar             string // 头像
-	Sex                string // 性别
-	Email              string // 邮箱
-	Mobile             string // 手机号码
-	Address            string // 联系地址
-	LastActiveAt       string // 最后活跃时间
-	Remark             string // 备注
-	Status             string // 状态
-	CreatedAt          string // 创建时间
-	UpdatedAt          string // 修改时间
+	Id           string // 用户ID
+	Uid          string // 用户UID
+	Username     string // 帐号
+	PasswordHash string // 密码哈希
+	Avatar       string // 头像
+	Sex          string // 性别: 1男 2女 3未知
+	Email        string // 邮箱
+	Mobile       string // 手机号码
+	Address      string // 联系地址
+	LastActiveAt string // 最后活跃时间
+	Remark       string // 备注
+	Sort         string // 排序
+	Status       string // 状态: 0禁用 1启用
+	CreatedAt    string // 创建时间
+	UpdatedAt    string // 更新时间
 }
 
 // memberInfoColumns holds the columns for the table t_member_info.
 var memberInfoColumns = MemberInfoColumns{
-	Id:                 "id",
-	Username:           "username",
-	PasswordHash:       "password_hash",
-	Salt:               "salt",
-	PasswordResetToken: "password_reset_token",
-	RoleId:             "role_id",
-	Avatar:             "avatar",
-	Sex:                "sex",
-	Email:              "email",
-	Mobile:             "mobile",
-	Address:            "address",
-	LastActiveAt:       "last_active_at",
-	Remark:             "remark",
-	Status:             "status",
-	CreatedAt:          "created_at",
-	UpdatedAt:          "updated_at",
+	Id:           "id",
+	Uid:          "uid",
+	Username:     "username",
+	PasswordHash: "password_hash",
+	Avatar:       "avatar",
+	Sex:          "sex",
+	Email:        "email",
+	Mobile:       "mobile",
+	Address:      "address",
+	LastActiveAt: "last_active_at",
+	Remark:       "remark",
+	Sort:         "sort",
+	Status:       "status",
+	CreatedAt:    "created_at",
+	UpdatedAt:    "updated_at",
 }
 
 // NewMemberInfoDao creates and returns a new DAO object for table data access.

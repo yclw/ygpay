@@ -10,17 +10,13 @@ import (
 
 // SysConfig is the golang structure for table sys_config.
 type SysConfig struct {
-	Id           int64       `json:"id"           orm:"id"            ` // 配置ID
-	Group        string      `json:"group"        orm:"group"         ` // 配置分组
-	Name         string      `json:"name"         orm:"name"          ` // 参数名称
-	Type         string      `json:"type"         orm:"type"          ` // 键值类型:string,int,uint,bool,datetime,date
-	Key          string      `json:"key"          orm:"key"           ` // 参数键名
-	Value        string      `json:"value"        orm:"value"         ` // 参数键值
-	DefaultValue string      `json:"defaultValue" orm:"default_value" ` // 默认值
-	Sort         int         `json:"sort"         orm:"sort"          ` // 排序
-	Tip          string      `json:"tip"          orm:"tip"           ` // 变量描述
-	IsDefault    int         `json:"isDefault"    orm:"is_default"    ` // 是否为系统默认
-	Status       int         `json:"status"       orm:"status"        ` // 状态
-	CreatedAt    *gtime.Time `json:"createdAt"    orm:"created_at"    ` // 创建时间
-	UpdatedAt    *gtime.Time `json:"updatedAt"    orm:"updated_at"    ` // 更新时间
+	Id          int64       `json:"id"          orm:"id"          ` // 配置ID
+	Group       string      `json:"group"       orm:"group"       ` // 配置分组
+	Key         string      `json:"key"         orm:"key"         ` // 参数键名
+	Value       string      `json:"value"       orm:"value"       ` // 参数值
+	Description string      `json:"description" orm:"description" ` // 配置描述
+	Sort        int         `json:"sort"        orm:"sort"        ` // 排序
+	Status      int         `json:"status"      orm:"status"      ` // 状态: 0禁用 1启用
+	CreatedAt   *gtime.Time `json:"createdAt"   orm:"created_at"  ` // 创建时间
+	UpdatedAt   *gtime.Time `json:"updatedAt"   orm:"updated_at"  ` // 更新时间
 }

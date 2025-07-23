@@ -15,12 +15,10 @@ type RoleInfo struct {
 	Id        interface{} // 角色ID
 	Name      interface{} // 角色名称
 	Key       interface{} // 角色权限字符串
-	Pid       interface{} // 上级角色ID
 	Level     interface{} // 关系树等级
-	Tree      interface{} // 关系树
 	Remark    interface{} // 备注
 	Sort      interface{} // 排序
-	Status    interface{} // 角色状态
+	Status    interface{} // 状态: 0禁用 1启用
 	CreatedAt *gtime.Time // 创建时间
 	UpdatedAt *gtime.Time // 更新时间
 }

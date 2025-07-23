@@ -4,8 +4,8 @@
 
 package entity
 
-// MemberRole is the golang structure for table member_role.
-type MemberRole struct {
-	MemberId int64 `json:"memberId" orm:"member_id" ` // 用户ID
-	RoleId   int64 `json:"roleId"   orm:"role_id"   ` // 角色ID
+// RoleTree is the golang structure for table role_tree.
+type RoleTree struct {
+	Id  int64 `json:"id"  orm:"id"  ` // 角色ID
+	Pid int64 `json:"pid" orm:"pid" ` // 父角色ID
 }

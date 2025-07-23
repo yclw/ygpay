@@ -4,6 +4,9 @@ import (
 	"context"
 	v1 "yclw/ygpay/api/user/v1"
 	"yclw/ygpay/pkg/contexts"
+
+	"github.com/gogf/gf/v2/errors/gerror"
+	"github.com/gogf/gf/v2/util/gconv"
 )
 
 func (c *ControllerV1) UserInfo(ctx context.Context, _ *v1.UserInfoReq) (res *v1.UserInfoRes, err error) {
@@ -12,20 +15,10 @@ func (c *ControllerV1) UserInfo(ctx context.Context, _ *v1.UserInfoReq) (res *v1
 	if err != nil {
 		return
 	}
-	res = &v1.UserInfoRes{
-		Id:          member.Id,
-		RoleName:    member.RoleName,
-		Permissions: member.Permissions,
-		Username:    member.Username,
-		Avatar:      member.Avatar,
-		Sex:         member.Sex,
-		Email:       member.Email,
-		Mobile:      member.Mobile,
-		Address:     member.Address,
-		CreatedAt:   member.CreatedAt,
-		LoginCount:  member.LoginCount,
-		LastLoginAt: member.LastLoginAt,
-		LastLoginIp: member.LastLoginIp,
+	err = gconv.Struct(member, &res)
+	if err != nil {
+		err = gerror.Wrap(err, "字段复制失败")
+		return
 	}
 	return
 }

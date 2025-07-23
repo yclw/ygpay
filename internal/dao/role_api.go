@@ -8,15 +8,15 @@ import (
 	"yclw/ygpay/internal/dao/internal"
 )
 
-// noticeInfoDao is the data access object for the table t_notice_info.
+// roleApiDao is the data access object for the table t_role_api.
 // You can define custom methods on it to extend its functionality as needed.
-type noticeInfoDao struct {
-	*internal.NoticeInfoDao
+type roleApiDao struct {
+	*internal.RoleApiDao
 }
 
 var (
-	// NoticeInfo is a globally accessible object for table t_notice_info operations.
-	NoticeInfo = noticeInfoDao{internal.NewNoticeInfoDao()}
+	// RoleApi is a globally accessible object for table t_role_api operations.
+	RoleApi = roleApiDao{internal.NewRoleApiDao()}
 )
 
 // Add your custom methods and functionality below.

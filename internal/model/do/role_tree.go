@@ -8,9 +8,9 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-// MemberRole is the golang structure of table t_member_role for DAO operations like Where/Data.
-type MemberRole struct {
-	g.Meta   `orm:"table:t_member_role, do:true"`
-	MemberId interface{} // 用户ID
-	RoleId   interface{} // 角色ID
+// RoleTree is the golang structure of table t_role_tree for DAO operations like Where/Data.
+type RoleTree struct {
+	g.Meta `orm:"table:t_role_tree, do:true"`
+	Id     interface{} // 角色ID
+	Pid    interface{} // 父角色ID
 }

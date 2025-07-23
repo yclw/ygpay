@@ -11,72 +11,58 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-// RoleInfoDao is the data access object for the table t_role_info.
-type RoleInfoDao struct {
+// MenuTreeDao is the data access object for the table t_menu_tree.
+type MenuTreeDao struct {
 	table    string             // table is the underlying table name of the DAO.
 	group    string             // group is the database configuration group name of the current DAO.
-	columns  RoleInfoColumns    // columns contains all the column names of Table for convenient usage.
+	columns  MenuTreeColumns    // columns contains all the column names of Table for convenient usage.
 	handlers []gdb.ModelHandler // handlers for customized model modification.
 }
 
-// RoleInfoColumns defines and stores column names for the table t_role_info.
-type RoleInfoColumns struct {
-	Id        string // 角色ID
-	Name      string // 角色名称
-	Key       string // 角色权限字符串
-	Level     string // 关系树等级
-	Remark    string // 备注
-	Sort      string // 排序
-	Status    string // 状态: 0禁用 1启用
-	CreatedAt string // 创建时间
-	UpdatedAt string // 更新时间
+// MenuTreeColumns defines and stores column names for the table t_menu_tree.
+type MenuTreeColumns struct {
+	Id  string // 菜单ID
+	Pid string // 父菜单ID
 }
 
-// roleInfoColumns holds the columns for the table t_role_info.
-var roleInfoColumns = RoleInfoColumns{
-	Id:        "id",
-	Name:      "name",
-	Key:       "key",
-	Level:     "level",
-	Remark:    "remark",
-	Sort:      "sort",
-	Status:    "status",
-	CreatedAt: "created_at",
-	UpdatedAt: "updated_at",
+// menuTreeColumns holds the columns for the table t_menu_tree.
+var menuTreeColumns = MenuTreeColumns{
+	Id:  "id",
+	Pid: "pid",
 }
 
-// NewRoleInfoDao creates and returns a new DAO object for table data access.
-func NewRoleInfoDao(handlers ...gdb.ModelHandler) *RoleInfoDao {
-	return &RoleInfoDao{
+// NewMenuTreeDao creates and returns a new DAO object for table data access.
+func NewMenuTreeDao(handlers ...gdb.ModelHandler) *MenuTreeDao {
+	return &MenuTreeDao{
 		group:    "default",
-		table:    "t_role_info",
-		columns:  roleInfoColumns,
+		table:    "t_menu_tree",
+		columns:  menuTreeColumns,
 		handlers: handlers,
 	}
 }
 
 // DB retrieves and returns the underlying raw database management object of the current DAO.
-func (dao *RoleInfoDao) DB() gdb.DB {
+func (dao *MenuTreeDao) DB() gdb.DB {
 	return g.DB(dao.group)
 }
 
 // Table returns the table name of the current DAO.
-func (dao *RoleInfoDao) Table() string {
+func (dao *MenuTreeDao) Table() string {
 	return dao.table
 }
 
 // Columns returns all column names of the current DAO.
-func (dao *RoleInfoDao) Columns() RoleInfoColumns {
+func (dao *MenuTreeDao) Columns() MenuTreeColumns {
 	return dao.columns
 }
 
 // Group returns the database configuration group name of the current DAO.
-func (dao *RoleInfoDao) Group() string {
+func (dao *MenuTreeDao) Group() string {
 	return dao.group
 }
 
 // Ctx creates and returns a Model for the current DAO. It automatically sets the context for the current operation.
-func (dao *RoleInfoDao) Ctx(ctx context.Context) *gdb.Model {
+func (dao *MenuTreeDao) Ctx(ctx context.Context) *gdb.Model {
 	model := dao.DB().Model(dao.table)
 	for _, handler := range dao.handlers {
 		model = handler(model)
@@ -90,6 +76,6 @@ func (dao *RoleInfoDao) Ctx(ctx context.Context) *gdb.Model {
 //
 // Note: Do not commit or roll back the transaction in function f,
 // as it is automatically handled by this function.
-func (dao *RoleInfoDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
+func (dao *MenuTreeDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
 	return dao.Ctx(ctx).Transaction(ctx, f)
 }

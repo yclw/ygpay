@@ -29,3 +29,9 @@ func (d *roleInfoDao) FindByID(ctx context.Context, id int64) (role *entity.Role
 	err = model.Scan(&role)
 	return
 }
+
+// FindByRoleIds 根据角色ID列表查询角色信息
+func (d *roleInfoDao) FindByRoleIds(ctx context.Context, roleIds []int64) (roles []*entity.RoleInfo, err error) {
+	err = d.Ctx(ctx).WhereIn(d.Columns().Id, roleIds).Scan(&roles)
+	return
+}

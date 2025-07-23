@@ -21,36 +21,28 @@ type SysConfigDao struct {
 
 // SysConfigColumns defines and stores column names for the table t_sys_config.
 type SysConfigColumns struct {
-	Id           string // 配置ID
-	Group        string // 配置分组
-	Name         string // 参数名称
-	Type         string // 键值类型:string,int,uint,bool,datetime,date
-	Key          string // 参数键名
-	Value        string // 参数键值
-	DefaultValue string // 默认值
-	Sort         string // 排序
-	Tip          string // 变量描述
-	IsDefault    string // 是否为系统默认
-	Status       string // 状态
-	CreatedAt    string // 创建时间
-	UpdatedAt    string // 更新时间
+	Id          string // 配置ID
+	Group       string // 配置分组
+	Key         string // 参数键名
+	Value       string // 参数值
+	Description string // 配置描述
+	Sort        string // 排序
+	Status      string // 状态: 0禁用 1启用
+	CreatedAt   string // 创建时间
+	UpdatedAt   string // 更新时间
 }
 
 // sysConfigColumns holds the columns for the table t_sys_config.
 var sysConfigColumns = SysConfigColumns{
-	Id:           "id",
-	Group:        "group",
-	Name:         "name",
-	Type:         "type",
-	Key:          "key",
-	Value:        "value",
-	DefaultValue: "default_value",
-	Sort:         "sort",
-	Tip:          "tip",
-	IsDefault:    "is_default",
-	Status:       "status",
-	CreatedAt:    "created_at",
-	UpdatedAt:    "updated_at",
+	Id:          "id",
+	Group:       "group",
+	Key:         "key",
+	Value:       "value",
+	Description: "description",
+	Sort:        "sort",
+	Status:      "status",
+	CreatedAt:   "created_at",
+	UpdatedAt:   "updated_at",
 }
 
 // NewSysConfigDao creates and returns a new DAO object for table data access.

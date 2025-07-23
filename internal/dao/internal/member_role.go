@@ -21,7 +21,7 @@ type MemberRoleDao struct {
 
 // MemberRoleColumns defines and stores column names for the table t_member_role.
 type MemberRoleColumns struct {
-	MemberId string // 管理员ID
+	MemberId string // 用户ID
 	RoleId   string // 角色ID
 }
 

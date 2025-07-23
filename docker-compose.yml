@@ -1,0 +1,19 @@
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ygpay
+      MYSQL_USER: ygpay
+      MYSQL_PASSWORD: yg@123
+
+  redis:
+    container_name: redis
+    image: redis:6.2
+    restart: always
+    ports:
+      - "6379:6379"

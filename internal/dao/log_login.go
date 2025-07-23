@@ -27,7 +27,7 @@ var (
 // FindLastByMemberId 根据用户ID查询最后登录信息
 func (d *logLoginDao) FindLastByMemberId(ctx context.Context, memberId int64) (res *entity.LogLogin, err error) {
 	cols := d.Columns()
-	err = d.Ctx(ctx).Fields(cols.LoginAt, cols.LoginIp).Where(cols.MemberId, memberId).Where(cols.Status, consts.StatusEnabled).OrderDesc(cols.Id).Scan(&res)
+	err = d.Ctx(ctx).Fields(cols.LoginTime, cols.IpAddress).Where(cols.MemberId, memberId).Where(cols.LoginStatus, consts.StatusEnabled).OrderDesc(cols.Id).Scan(&res)
 	if err != nil || res == nil {
 		return
 	}
@@ -37,6 +37,6 @@ func (d *logLoginDao) FindLastByMemberId(ctx context.Context, memberId int64) (r
 // GetLoginCount 获取用户登录次数
 func (d *logLoginDao) GetLoginCount(ctx context.Context, memberId int64) (count int, err error) {
 	cols := d.Columns()
-	count, err = d.Ctx(ctx).Where(cols.MemberId, memberId).Where(cols.Status, consts.StatusEnabled).Count()
+	count, err = d.Ctx(ctx).Where(cols.MemberId, memberId).Where(cols.LoginStatus, consts.StatusEnabled).Count()
 	return
 }

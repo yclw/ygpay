@@ -8,8 +8,9 @@ import (
 	"yclw/ygpay/internal/global"
 	"yclw/ygpay/internal/model/entity"
 	"yclw/ygpay/pkg/token"
-	"yclw/ygpay/util/simple"
+	"yclw/ygpay/util/encrypt"
 
+	"github.com/gogf/gf/v2/encoding/gbase64"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/os/gtime"
 )
@@ -36,12 +37,8 @@ func (l *Login) AccountLogin(ctx context.Context, username, password string) (re
 		return
 	}
 
-	if mb.Salt == "" {
-		err = gerror.New("用户信息错误")
-		return
-	}
-
-	if err = simple.CheckPassword(password, mb.Salt, mb.PasswordHash); err != nil {
+	// 验证密码
+	if err = checkPassword(password, mb.PasswordHash); err != nil {
 		err = gerror.New("用户名或密码错误")
 		return
 	}
@@ -54,8 +51,47 @@ func (l *Login) AccountLogin(ctx context.Context, username, password string) (re
 	return
 }
 
+// checkPassword 检查密码
+func checkPassword(input, hash string) (err error) {
+	// 解码密码
+	password, err := gbase64.Decode([]byte(input))
+	if err != nil {
+		err = gerror.New("密码解析失败")
+		return
+	}
+	// 解密密码
+	password, err = encrypt.AesECBDecrypt(password, []byte(consts.RequestEncryptKey))
+	if err != nil {
+		err = gerror.New("密码解析失败")
+		return
+	}
+
+	plainPassword := string(password)
+
+	// 尝试新的bcrypt验证方式
+	if isBcryptHash(hash) {
+		err = encrypt.VerifyPassword(plainPassword, hash)
+		return
+	}
+	err = gerror.New("用户名或密码错误")
+	return
+}
+
+// isBcryptHash 判断是否为bcrypt哈希
+func isBcryptHash(hash string) bool {
+	// bcrypt哈希格式：$2a$12$...（通常60-70字符）
+	return len(hash) > 50 && (hash[:4] == "$2a$" || hash[:4] == "$2b$" || hash[:4] == "$2y$")
+}
+
 func (l *Login) handleLogin(ctx context.Context, member *entity.MemberInfo) (res *v1.LoginRes, err error) {
-	role, err := dao.RoleInfo.FindByID(ctx, member.RoleId)
+	// 获取用户角色
+	roleId, err := dao.MemberRole.FindRoleIdByMemberId(ctx, member.Id)
+	if err != nil {
+		err = gerror.Wrap(err, "获取用户角色失败")
+		return
+	}
+	// 获取角色信息
+	role, err := dao.RoleInfo.FindByID(ctx, roleId)
 	if err != nil {
 		err = gerror.Wrap(err, "获取角色信息失败")
 		return

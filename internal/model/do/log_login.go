@@ -11,19 +11,16 @@ import (
 
 // LogLogin is the golang structure of table t_log_login for DAO operations like Where/Data.
 type LogLogin struct {
-	g.Meta     `orm:"table:t_log_login, do:true"`
-	Id         interface{} // 日志ID
-	ReqId      interface{} // 请求ID
-	MemberId   interface{} // 用户ID
-	Username   interface{} // 用户名
-	Response   interface{} // 响应数据
-	LoginAt    *gtime.Time // 登录时间
-	LoginIp    interface{} // 登录IP
-	ProvinceId interface{} // 省编码
-	CityId     interface{} // 市编码
-	UserAgent  interface{} // UA信息
-	ErrMsg     interface{} // 错误提示
-	Status     interface{} // 状态
-	CreatedAt  *gtime.Time // 创建时间
-	UpdatedAt  *gtime.Time // 修改时间
+	g.Meta        `orm:"table:t_log_login, do:true"`
+	Id            interface{} // 登录日志ID
+	MemberId      interface{} // 用户ID
+	Username      interface{} // 登录账号
+	IpAddress     interface{} // IP地址
+	UserAgent     interface{} // 用户代理
+	LoginLocation interface{} // 登录地点
+	Browser       interface{} // 浏览器
+	Os            interface{} // 操作系统
+	LoginStatus   interface{} // 登录状态: 0失败 1成功
+	LoginMessage  interface{} // 登录信息
+	LoginTime     *gtime.Time // 登录时间
 }

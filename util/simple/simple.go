@@ -52,29 +52,23 @@ func DefaultErrorTplContent(ctx context.Context) string {
 	return gfile.GetContents(g.Cfg().MustGet(ctx, "viewer.paths").String() + "/error/default.html")
 }
 
-// DecryptText 解密文本
-func DecryptText(text string) (string, error) {
-	str, err := gbase64.Decode([]byte(text))
-	if err != nil {
-		return "", err
-	}
-
-	str, err = encrypt.AesECBDecrypt(str, RequestEncryptKey)
-	if err != nil {
-		return "", err
-	}
-	return string(str), nil
-}
-
 // CheckPassword 检查密码
 func CheckPassword(input, salt, hash string) (err error) {
-	// 解密密码
-	password, err := DecryptText(input)
+	// 解码密码
+	password, err := gbase64.Decode([]byte(input))
 	if err != nil {
-		return err
+		err = gerror.New("密码解析失败")
+		return
+	}
+	// 解密密码
+	password, err = encrypt.AesECBDecrypt(password, RequestEncryptKey)
+	if err != nil {
+		err = gerror.New("密码解析失败")
+		return
 	}
 
-	if hash != gmd5.MustEncryptString(password+salt) {
+	// 验证密码
+	if hash != gmd5.MustEncryptString(string(password)+salt) {
 		err = gerror.New("用户名或密码错误")
 		return
 	}

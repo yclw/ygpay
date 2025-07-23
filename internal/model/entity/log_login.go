@@ -10,18 +10,15 @@ import (
 
 // LogLogin is the golang structure for table log_login.
 type LogLogin struct {
-	Id         int64       `json:"id"         orm:"id"          ` // 日志ID
-	ReqId      string      `json:"reqId"      orm:"req_id"      ` // 请求ID
-	MemberId   int64       `json:"memberId"   orm:"member_id"   ` // 用户ID
-	Username   string      `json:"username"   orm:"username"    ` // 用户名
-	Response   string      `json:"response"   orm:"response"    ` // 响应数据
-	LoginAt    *gtime.Time `json:"loginAt"    orm:"login_at"    ` // 登录时间
-	LoginIp    string      `json:"loginIp"    orm:"login_ip"    ` // 登录IP
-	ProvinceId int64       `json:"provinceId" orm:"province_id" ` // 省编码
-	CityId     int64       `json:"cityId"     orm:"city_id"     ` // 市编码
-	UserAgent  string      `json:"userAgent"  orm:"user_agent"  ` // UA信息
-	ErrMsg     string      `json:"errMsg"     orm:"err_msg"     ` // 错误提示
-	Status     int         `json:"status"     orm:"status"      ` // 状态
-	CreatedAt  *gtime.Time `json:"createdAt"  orm:"created_at"  ` // 创建时间
-	UpdatedAt  *gtime.Time `json:"updatedAt"  orm:"updated_at"  ` // 修改时间
+	Id            int64       `json:"id"            orm:"id"             ` // 登录日志ID
+	MemberId      int64       `json:"memberId"      orm:"member_id"      ` // 用户ID
+	Username      string      `json:"username"      orm:"username"       ` // 登录账号
+	IpAddress     string      `json:"ipAddress"     orm:"ip_address"     ` // IP地址
+	UserAgent     string      `json:"userAgent"     orm:"user_agent"     ` // 用户代理
+	LoginLocation string      `json:"loginLocation" orm:"login_location" ` // 登录地点
+	Browser       string      `json:"browser"       orm:"browser"        ` // 浏览器
+	Os            string      `json:"os"            orm:"os"             ` // 操作系统
+	LoginStatus   int         `json:"loginStatus"   orm:"login_status"   ` // 登录状态: 0失败 1成功
+	LoginMessage  string      `json:"loginMessage"  orm:"login_message"  ` // 登录信息
+	LoginTime     *gtime.Time `json:"loginTime"     orm:"login_time"     ` // 登录时间
 }

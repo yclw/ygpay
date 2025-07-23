@@ -11,66 +11,58 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-// NoticeReadDao is the data access object for the table t_notice_read.
-type NoticeReadDao struct {
+// RoleTreeDao is the data access object for the table t_role_tree.
+type RoleTreeDao struct {
 	table    string             // table is the underlying table name of the DAO.
 	group    string             // group is the database configuration group name of the current DAO.
-	columns  NoticeReadColumns  // columns contains all the column names of Table for convenient usage.
+	columns  RoleTreeColumns    // columns contains all the column names of Table for convenient usage.
 	handlers []gdb.ModelHandler // handlers for customized model modification.
 }
 
-// NoticeReadColumns defines and stores column names for the table t_notice_read.
-type NoticeReadColumns struct {
-	Id        string // 记录ID
-	NoticeId  string // 公告ID
-	MemberId  string // 会员ID
-	Clicks    string // 已读次数
-	UpdatedAt string // 更新时间
-	CreatedAt string // 阅读时间
+// RoleTreeColumns defines and stores column names for the table t_role_tree.
+type RoleTreeColumns struct {
+	Id  string // 角色ID
+	Pid string // 父角色ID
 }
 
-// noticeReadColumns holds the columns for the table t_notice_read.
-var noticeReadColumns = NoticeReadColumns{
-	Id:        "id",
-	NoticeId:  "notice_id",
-	MemberId:  "member_id",
-	Clicks:    "clicks",
-	UpdatedAt: "updated_at",
-	CreatedAt: "created_at",
+// roleTreeColumns holds the columns for the table t_role_tree.
+var roleTreeColumns = RoleTreeColumns{
+	Id:  "id",
+	Pid: "pid",
 }
 
-// NewNoticeReadDao creates and returns a new DAO object for table data access.
-func NewNoticeReadDao(handlers ...gdb.ModelHandler) *NoticeReadDao {
-	return &NoticeReadDao{
+// NewRoleTreeDao creates and returns a new DAO object for table data access.
+func NewRoleTreeDao(handlers ...gdb.ModelHandler) *RoleTreeDao {
+	return &RoleTreeDao{
 		group:    "default",
-		table:    "t_notice_read",
-		columns:  noticeReadColumns,
+		table:    "t_role_tree",
+		columns:  roleTreeColumns,
 		handlers: handlers,
 	}
 }
 
 // DB retrieves and returns the underlying raw database management object of the current DAO.
-func (dao *NoticeReadDao) DB() gdb.DB {
+func (dao *RoleTreeDao) DB() gdb.DB {
 	return g.DB(dao.group)
 }
 
 // Table returns the table name of the current DAO.
-func (dao *NoticeReadDao) Table() string {
+func (dao *RoleTreeDao) Table() string {
 	return dao.table
 }
 
 // Columns returns all column names of the current DAO.
-func (dao *NoticeReadDao) Columns() NoticeReadColumns {
+func (dao *RoleTreeDao) Columns() RoleTreeColumns {
 	return dao.columns
 }
 
 // Group returns the database configuration group name of the current DAO.
-func (dao *NoticeReadDao) Group() string {
+func (dao *RoleTreeDao) Group() string {
 	return dao.group
 }
 
 // Ctx creates and returns a Model for the current DAO. It automatically sets the context for the current operation.
-func (dao *NoticeReadDao) Ctx(ctx context.Context) *gdb.Model {
+func (dao *RoleTreeDao) Ctx(ctx context.Context) *gdb.Model {
 	model := dao.DB().Model(dao.table)
 	for _, handler := range dao.handlers {
 		model = handler(model)
@@ -84,6 +76,6 @@ func (dao *NoticeReadDao) Ctx(ctx context.Context) *gdb.Model {
 //
 // Note: Do not commit or roll back the transaction in function f,
 // as it is automatically handled by this function.
-func (dao *NoticeReadDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
+func (dao *RoleTreeDao) Transaction(ctx context.Context, f func(ctx context.Context, tx gdb.TX) error) (err error) {
 	return dao.Ctx(ctx).Transaction(ctx, f)
 }

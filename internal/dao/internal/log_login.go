@@ -21,38 +21,32 @@ type LogLoginDao struct {
 
 // LogLoginColumns defines and stores column names for the table t_log_login.
 type LogLoginColumns struct {
-	Id         string // 日志ID
-	ReqId      string // 请求ID
-	MemberId   string // 用户ID
-	Username   string // 用户名
-	Response   string // 响应数据
-	LoginAt    string // 登录时间
-	LoginIp    string // 登录IP
-	ProvinceId string // 省编码
-	CityId     string // 市编码
-	UserAgent  string // UA信息
-	ErrMsg     string // 错误提示
-	Status     string // 状态
-	CreatedAt  string // 创建时间
-	UpdatedAt  string // 修改时间
+	Id            string // 登录日志ID
+	MemberId      string // 用户ID
+	Username      string // 登录账号
+	IpAddress     string // IP地址
+	UserAgent     string // 用户代理
+	LoginLocation string // 登录地点
+	Browser       string // 浏览器
+	Os            string // 操作系统
+	LoginStatus   string // 登录状态: 0失败 1成功
+	LoginMessage  string // 登录信息
+	LoginTime     string // 登录时间
 }
 
 // logLoginColumns holds the columns for the table t_log_login.
 var logLoginColumns = LogLoginColumns{
-	Id:         "id",
-	ReqId:      "req_id",
-	MemberId:   "member_id",
-	Username:   "username",
-	Response:   "response",
-	LoginAt:    "login_at",
-	LoginIp:    "login_ip",
-	ProvinceId: "province_id",
-	CityId:     "city_id",
-	UserAgent:  "user_agent",
-	ErrMsg:     "err_msg",
-	Status:     "status",
-	CreatedAt:  "created_at",
-	UpdatedAt:  "updated_at",
+	Id:            "id",
+	MemberId:      "member_id",
+	Username:      "username",
+	IpAddress:     "ip_address",
+	UserAgent:     "user_agent",
+	LoginLocation: "login_location",
+	Browser:       "browser",
+	Os:            "os",
+	LoginStatus:   "login_status",
+	LoginMessage:  "login_message",
+	LoginTime:     "login_time",
 }
 
 // NewLogLoginDao creates and returns a new DAO object for table data access.

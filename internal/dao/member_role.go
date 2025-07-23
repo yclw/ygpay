@@ -5,6 +5,7 @@
 package dao
 
 import (
+	"context"
 	"yclw/ygpay/internal/dao/internal"
 )
 
@@ -20,3 +21,15 @@ var (
 )
 
 // Add your custom methods and functionality below.
+
+// FindRoleIdByMemberId 根据用户ID查询角色ID列表
+func (d *memberRoleDao) FindRoleIdByMemberId(ctx context.Context, memberId int64) (roleId int64, err error) {
+	err = d.Ctx(ctx).Where(d.Columns().MemberId, memberId).Fields(d.Columns().RoleId).Scan(&roleId)
+	return
+}
+
+// FindByRoleIds 根据角色ID列表查询用户ID列表
+func (d *memberRoleDao) FindUserIdsByRoleIds(ctx context.Context, roleIds []int64) (userIds []int64, err error) {
+	err = d.Ctx(ctx).WhereIn(d.Columns().RoleId, roleIds).Fields(d.Columns().MemberId).Scan(&userIds)
+	return
+}

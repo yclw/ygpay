@@ -8,15 +8,15 @@ import (
 	"yclw/ygpay/internal/dao/internal"
 )
 
-// dictTypeDao is the data access object for the table t_dict_type.
+// menuTreeDao is the data access object for the table t_menu_tree.
 // You can define custom methods on it to extend its functionality as needed.
-type dictTypeDao struct {
-	*internal.DictTypeDao
+type menuTreeDao struct {
+	*internal.MenuTreeDao
 }
 
 var (
-	// DictType is a globally accessible object for table t_dict_type operations.
-	DictType = dictTypeDao{internal.NewDictTypeDao()}
+	// MenuTree is a globally accessible object for table t_menu_tree operations.
+	MenuTree = menuTreeDao{internal.NewMenuTreeDao()}
 )
 
 // Add your custom methods and functionality below.

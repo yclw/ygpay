@@ -12,7 +12,7 @@ type UserInfoReq struct {
 
 type UserInfoRes struct {
 	Id          int64       `json:"id"                 dc:"用户ID"`
-	RoleName    string      `json:"roleName"           dc:"所属角色"`
+	RoleId      int64       `json:"roleId"             dc:"所属角色"`
 	Permissions []string    `json:"permissions"        dc:"权限信息"`
 	Username    string      `json:"username"           dc:"用户名"`
 	Avatar      string      `json:"avatar"             dc:"头像"`

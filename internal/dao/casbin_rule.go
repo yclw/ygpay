@@ -8,15 +8,15 @@ import (
 	"yclw/ygpay/internal/dao/internal"
 )
 
-// noticeReadDao is the data access object for the table t_notice_read.
+// casbinRuleDao is the data access object for the table t_casbin_rule.
 // You can define custom methods on it to extend its functionality as needed.
-type noticeReadDao struct {
-	*internal.NoticeReadDao
+type casbinRuleDao struct {
+	*internal.CasbinRuleDao
 }
 
 var (
-	// NoticeRead is a globally accessible object for table t_notice_read operations.
-	NoticeRead = noticeReadDao{internal.NewNoticeReadDao()}
+	// CasbinRule is a globally accessible object for table t_casbin_rule operations.
+	CasbinRule = casbinRuleDao{internal.NewCasbinRuleDao()}
 )
 
 // Add your custom methods and functionality below.
