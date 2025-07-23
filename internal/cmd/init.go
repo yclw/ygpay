@@ -4,9 +4,8 @@ import (
 	"context"
 	"fmt"
 	"runtime"
-	"yclw/ygpay/pkg/token"
-
 	"yclw/ygpay/internal/global"
+	"yclw/ygpay/pkg/token"
 
 	"github.com/gogf/gf/contrib/trace/jaeger/v2"
 	"github.com/gogf/gf/v2"

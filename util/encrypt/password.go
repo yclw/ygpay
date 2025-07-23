@@ -1,8 +1,6 @@
 package encrypt
 
 import (
-	"crypto/rand"
-	"encoding/hex"
 	"regexp"
 
 	"github.com/gogf/gf/v2/errors/gerror"
@@ -12,8 +10,6 @@ import (
 const (
 	// bcrypt推荐的最小成本因子
 	DefaultCost = 12
-	// 盐值长度（字节）
-	SaltLength = 32
 )
 
 // PasswordStrength 密码强度要求
@@ -25,23 +21,14 @@ type PasswordStrength struct {
 	RequireSymbol bool // 需要特殊字符
 }
 
-// DefaultPasswordStrength 默认密码强度要求
-var DefaultPasswordStrength = PasswordStrength{
-	MinLength:     8,
-	RequireUpper:  true,
-	RequireLower:  true,
-	RequireDigit:  true,
-	RequireSymbol: false,
-}
-
 // HashPassword 使用bcrypt加密密码
-func HashPassword(password string) (hash string, err error) {
+func HashPassword(password string, cost int) (hash string, err error) {
 	if password == "" {
 		return "", gerror.New("密码不能为空")
 	}
 
-	// 使用bcrypt生成哈希（自动生成盐值）
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), DefaultCost)
+	// 使用bcrypt生成哈希
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), cost)
 	if err != nil {
 		return "", gerror.Wrap(err, "密码加密失败")
 	}
@@ -97,26 +84,4 @@ func ValidatePasswordStrength(password string, strength PasswordStrength) error 
 	}
 
 	return nil
-}
-
-// GenerateSecureToken 生成安全令牌（用于密码重置等）
-func GenerateSecureToken(length int) (string, error) {
-	if length <= 0 {
-		length = SaltLength
-	}
-
-	bytes := make([]byte, length)
-	if _, err := rand.Read(bytes); err != nil {
-		return "", gerror.Wrap(err, "生成安全令牌失败")
-	}
-
-	return hex.EncodeToString(bytes), nil
-}
-
-// HashPasswordWithSalt 使用自定义盐值加密密码（兼容老系统）
-// 注意：新系统不建议使用，仅用于迁移
-func HashPasswordWithSalt(password, salt string) (string, error) {
-	// 这里仍使用bcrypt，但加入自定义盐值
-	combined := password + salt
-	return HashPassword(combined)
 }
