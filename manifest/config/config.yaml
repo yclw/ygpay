@@ -61,30 +61,6 @@ server:
     path: "logs/server"                       # 日志文件路径。默认为空，表示关闭，仅输出到终端
     <<: *defaultLogger
 
-
-# tcp服务
-tcp:
-  # 服务器
-  server:
-    address: ":8099"
-  # 客户端
-  client:
-    # 定时任务
-    cron:
-      group: "cron"                                                 # 分组名称
-      name: "cron1"                                                 # 客户端名称
-      address: "127.0.0.1:8099"                                     # 服务器地址
-      appId: "1002"                                                 # 应用名称
-      secretKey: "hotgo"                                            # 密钥
-    # 系统授权
-    auth:
-      group: "auth"                                                 # 分组名称
-      name: "auth1"                                                 # 客户端名称
-      address: "127.0.0.1:8099"                                     # 服务器地址
-      appId: "mengshuai"                                            # 应用名称
-      secretKey: "123456"                                           # 密钥
-
-
 # 日志配置
 logger:
   # 全局日志：g.Log()
@@ -115,13 +91,11 @@ viewer:
   delimiters: [ "@{", "}" ]
   homeLayout: "home/index.html"
 
-
 # 内容设置
 setting:
   title: "HotGo"
   keywords: "中后台解决方案,gf框架,vue3"
   description: "hotgo 是一个基于 goframe2，vue3，vite2，TypeScript，uniapp 的中后台解决方案，它可以帮助你快速搭建企业级中后台项目，相信不管是从新技术使用还是其他方面，都能帮助到你，持续更新中。"
-
 
 # 路由配置
 router:
@@ -167,9 +141,14 @@ router:
 
 # 缓存驱动
 cache:
-  adapter: "memory"                    # 缓存驱动方式，支持：memory|redis|file，不填默认memory
-  fileDir: "./storage/cache"         # 文件缓存路径，adapter=file时必填
-
+  adapter: "memory"                    # 缓存驱动方式，支持：memory|redis，不填默认memory
+# Redis. 配置参考：https://goframe.org/pages/viewpage.action?pageId=1114217
+redis:
+  default:
+    address: "127.0.0.1:6379"
+    db: "2"
+    pass: ""
+    idleTimeout: "20"
 
 # 登录令牌
 token:
@@ -181,44 +160,6 @@ token:
   maxRefreshTimes: 30                    # 最大允许刷新次数，-1不限制。默认30次
   multiLogin: true                       # 是否允许多端登录， false|true 默认为true
 
-# 消息队列
-queue:
-  switch: true                                        # 队列开关，可选：true|false，默认为true
-  driver: "disk"                                      # 队列驱动，可选：disk|redis|rocketmq|kafka，默认为disk
-  groupName: "hotgo"                                  # mq群组名称
-  # 磁盘队列
-  disk:
-    path: "./storage/diskqueue"                       # 数据存放路径
-    batchSize: 100                                    # 每100条消息同步一次，batchSize和batchTime满足其一就会同步一次
-    batchTime: 1                                      # 每1秒消息同步一次
-    segmentSize: 10485760                             # 每个topic分片数据文件最大字节，默认10M
-    segmentLimit: 3000                                # 每个topic最大分片数据文件数量，超出部分将会丢弃
-  # redis，默认使用全局redis运行队列
-  redis:
-    timeout: 0                                        # 队列超时时间以秒为单位，0表示永不超时。如果队列在设定的超时时间内没有被消费，则会被销毁
-  rocketmq:
-    nameSrvAdders: ["127.0.0.1:9876"]                  # nameSrvAdder+端口，支持多个
-    accessKey: ""                                      # 选填。如果开启了acl控制就必填
-    secretKey: ""                                      # 选填。如果开启了acl控制就必填
-    brokerAddr: "127.0.0.1:10911"                      # brokerAddr+端口，选填。用于消费者订阅主题前会检查主题是否存在，不存在会自动创建。你也可以在rocketmq控制台手动创建主题
-    retry: 0                                           # 重试次数
-    logLevel: "info"                                   # rocketmq日志输出级别，可选：all|close|debug|info|warn|error|fatal
-  kafka:
-    address: "127.0.0.1:9092"                         # kafka地址+端口
-    version: "2.0.0.0"                                # kafka专属配置，默认2.0.0.0
-    randClient: true                                  # 开启随机生成clientID，可以实现启动多实例同时一起消费相同topic，加速消费能力的特性，默认为true
-    multiConsumer: true                               # 是否支持创建多个消费者
-
-
-# Redis. 配置参考：https://goframe.org/pages/viewpage.action?pageId=1114217
-redis:
-  default:
-    address: "127.0.0.1:6379"
-    db: "2"
-    pass: ""
-    idleTimeout: "20"
-
-
 # Database. 配置参考：https://goframe.org/pages/viewpage.action?pageId=1114245
 database:
   logger:
@@ -226,70 +167,12 @@ database:
     <<: *defaultLogger
     stdout: true
   default:
-    link: "mysql:hotgo:hg123456.@tcp(127.0.0.1:3306)/hotgo?loc=Local&parseTime=true&charset=utf8mb4"
+    link: "mysql:root:root@tcp(127.0.0.1:3306)/ygpay?loc=Local&parseTime=true&charset=utf8mb4"
     debug: true
-    # Prefix: "hg_"
+    Prefix: "t_"
 
 
 # 链路追踪
 jaeger:
   switch: false                                   # 链路追踪开关，可选：true|false，默认为false
   endpoint: "127.0.0.1:6831"                      # jaeger-agent上报地址
-
-
-# 生成代码
-hggen:
-  allowedIPs: [ "127.0.0.1", "*" ]                                      # 白名单，*代表所有，只有允许的IP后台才能使用生成代码功能
-  selectDbs: [ "default" ]                                              # 可选生成表的数据库配置名称，支持多库
-  disableTables: [ "hg_sys_gen_codes","hg_admin_role_casbin" ]          # 禁用的表，禁用以后将不会在选择表中看到
-  delimiters: [ "@{", "}" ]                                             # 模板引擎变量分隔符号
-  # 生成应用模型，所有生成模板允许自定义，可以参考default模板进行改造
-  application:
-    # CRUD和关系树列表模板
-    crud:
-      templates:
-        # 默认的主包模板
-        - group: "default"                                              # 分组名称
-          isAddon: false                                                # 是否为插件模板 false｜true
-          masterPackage: "sys"                                          # 主包名称，需和controllerPath、logicPath、inputPath保持关联
-          templatePath: "./resource/generate/default/curd"              # 模板路径
-          apiPath: "./api/admin"                                        # goApi生成路径
-          controllerPath: "./internal/controller/admin/sys"             # 控制器生成路径
-          logicPath: "./internal/logic/sys"                             # 主要业务生成路径
-          inputPath: "./internal/model/input/sysin"                     # 表单过滤器生成路径
-          routerPath: "./internal/router/genrouter"                     # 生成路由表路径
-          sqlPath: "./storage/data/generate"                            # 生成sql语句路径
-          webApiPath: "../web/src/api"                                  # webApi生成路径
-          webViewsPath: "../web/src/views"                              # web页面生成路径
-
-        # 默认的插件包模板，{$name}会自动替换成实际的插件名称
-        - group: "addon"                                                # 分组名称
-          isAddon: true                                                 # 是否为插件模板 false｜true
-          masterPackage: "sys"                                          # 主包名称，需和controllerPath、logicPath、inputPath保持关联
-          templatePath: "./resource/generate/default/curd"              # 模板路径
-          apiPath: "./addons/{$name}/api/admin"                         # goApi生成路径
-          controllerPath: "./addons/{$name}/controller/admin/sys"       # 控制器生成路径
-          logicPath: "./addons/{$name}/logic/sys"                       # 主要业务生成路径
-          inputPath: "./addons/{$name}/model/input/sysin"               # 表单过滤器生成路径
-          routerPath: "./addons/{$name}/router/genrouter"               # 生成路由表路径
-          sqlPath: "./storage/data/generate/addons"                     # 生成sql语句路径
-          webApiPath: "../web/src/api/addons/{$name}"                   # webApi生成路径
-          webViewsPath: "../web/src/views/addons/{$name}"               # web页面生成路径
-
-    # 消息队列模板
-    queue:
-      templates:
-        - group: "default"
-          templatePath: "./resource/generate/default/queue"
-
-    # 定时任务模板
-    cron:
-      templates:
-        - group: "default"
-          templatePath: "./resource/generate/default/cron"
-
-  # 生成插件模块，通过后台创建新插件时使用的模板，允许自定义，可以参考default模板进行改造
-  addon:
-    srcPath: "./resource/generate/default/addon"                    # 生成模板路径
-    webApiPath: "../web/src/api/addons/{$name}"                     # webApi生成路径
-    webViewsPath: "../web/src/views/addons/{$name}"                 # web页面生成路径
