@@ -1,0 +1,5 @@
+gfcli:
+  gen:
+    dao:
+      - link: "mysql:hotgo:hg123456.@tcp(127.0.0.1:3306)/hotgo?loc=Local&parseTime=true&charset=utf8mb4"
+        removePrefix: "t_"

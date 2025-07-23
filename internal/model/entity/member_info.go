@@ -1,0 +1,29 @@
+// =================================================================================
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT.
+// =================================================================================
+
+package entity
+
+import (
+	"github.com/gogf/gf/v2/os/gtime"
+)
+
+// MemberInfo is the golang structure for table member_info.
+type MemberInfo struct {
+	Id                 int64       `json:"id"                 orm:"id"                   ` // 用户ID
+	Username           string      `json:"username"           orm:"username"             ` // 帐号
+	PasswordHash       string      `json:"passwordHash"       orm:"password_hash"        ` // 密码
+	Salt               string      `json:"salt"               orm:"salt"                 ` // 密码盐
+	PasswordResetToken string      `json:"passwordResetToken" orm:"password_reset_token" ` // 密码重置令牌
+	RoleId             int64       `json:"roleId"             orm:"role_id"              ` // 角色ID
+	Avatar             string      `json:"avatar"             orm:"avatar"               ` // 头像
+	Sex                int         `json:"sex"                orm:"sex"                  ` // 性别
+	Email              string      `json:"email"              orm:"email"                ` // 邮箱
+	Mobile             string      `json:"mobile"             orm:"mobile"               ` // 手机号码
+	Address            string      `json:"address"            orm:"address"              ` // 联系地址
+	LastActiveAt       *gtime.Time `json:"lastActiveAt"       orm:"last_active_at"       ` // 最后活跃时间
+	Remark             string      `json:"remark"             orm:"remark"               ` // 备注
+	Status             int         `json:"status"             orm:"status"               ` // 状态
+	CreatedAt          *gtime.Time `json:"createdAt"          orm:"created_at"           ` // 创建时间
+	UpdatedAt          *gtime.Time `json:"updatedAt"          orm:"updated_at"           ` // 修改时间
+}
