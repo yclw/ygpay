@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	v1 "yclw/ygpay/api/user/v1"
-	"yclw/ygpay/util/captcha"
+	"yclw/ygpay/pkg/captcha"
 )
 
 func (c *ControllerV1) LoginCaptcha(ctx context.Context, _ *v1.LoginCaptchaReq) (res *v1.LoginCaptchaRes, err error) {

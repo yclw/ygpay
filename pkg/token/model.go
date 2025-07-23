@@ -8,7 +8,8 @@ import (
 // TokenConfig 登录令牌配置
 type TokenConfig struct {
 	SecretKey       string `json:"secretKey"`       // 密钥
-	Expires         int64  `json:"expires"`         // 过期时间
+	Expires         int64  `json:"expires"`         // 过期时长(秒)
+	AutoCache       bool   `json:"autoCache"`       // 是否自动缓存token
 	AutoRefresh     bool   `json:"autoRefresh"`     // 是否自动刷新
 	RefreshInterval int64  `json:"refreshInterval"` // 刷新间隔
 	MaxRefreshTimes int64  `json:"maxRefreshTimes"` // 最大刷新次数

@@ -6,7 +6,7 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 
 	v1 "yclw/ygpay/api/user/v1"
-	"yclw/ygpay/util/captcha"
+	"yclw/ygpay/pkg/captcha"
 )
 
 func (c *ControllerV1) AccountLogin(ctx context.Context, req *v1.AccountLoginReq) (res *v1.AccountLoginRes, err error) {
