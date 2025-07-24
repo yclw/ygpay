@@ -1,6 +1,6 @@
 package casbin
 
-// from https://github.com/hailaz/gf-casbin-adapter/blob/main/adapter.go
+// copy from https://github.com/hailaz/gf-casbin-adapter/blob/main/adapter.go
 
 import (
 	"context"

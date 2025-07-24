@@ -30,9 +30,16 @@ func (d *memberInfoDao) FindByUsername(ctx context.Context, username string) (me
 	return
 }
 
-// FindByID 根据ID查询用户信息
-func (d *memberInfoDao) FindByID(ctx context.Context, id int64) (memberInfo *entity.MemberInfo, err error) {
-	model := d.Ctx(ctx).WherePri(id)
+// FindIdByUid 根据UID查询用户ID
+func (d *memberInfoDao) FindIdByUid(ctx context.Context, uid string) (id int64, err error) {
+	model := d.Ctx(ctx).Where(d.Columns().Uid, uid)
+	err = model.Scan(&id)
+	return
+}
+
+// FindByUid 根据UID查询用户信息
+func (d *memberInfoDao) FindByUid(ctx context.Context, uid string) (memberInfo *entity.MemberInfo, err error) {
+	model := d.Ctx(ctx).Where(d.Columns().Uid, uid)
 	err = model.Scan(&memberInfo)
 	return
 }

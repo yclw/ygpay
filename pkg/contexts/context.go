@@ -38,9 +38,9 @@ func GetUser(ctx context.Context) *Identity {
 	return Get(ctx).User
 }
 
-// GetUserId 获取用户ID
-func GetUserId(ctx context.Context) int64 {
-	return GetUser(ctx).Id
+// GetUserUid 获取用户UID
+func GetUserUid(ctx context.Context) string {
+	return GetUser(ctx).Uid
 }
 
 // GetRoleId 获取用户角色ID

@@ -22,7 +22,7 @@ func NewMember() *Member {
 
 // MemberModel 用户模型
 type MemberModel struct {
-	Id          int64       `json:"id"                 dc:"用户ID"`
+	Uid         string      `json:"uid"                dc:"用户ID"`
 	RoleId      int64       `json:"roleId"             dc:"所属角色"`
 	Permissions []string    `json:"permissions"        dc:"权限信息"`
 	Username    string      `json:"username"           dc:"用户名"`
@@ -58,7 +58,7 @@ type CreateMemberModel struct {
 
 // UpdateMemberModel 更新用户模型
 type UpdateMemberModel struct {
-	Id           int64  `json:"id"                 dc:"用户ID"`
+	Uid          string `json:"uid"                dc:"用户ID"`
 	Username     string `json:"username"           dc:"用户名"`
 	PasswordHash string `json:"passwordHash"       dc:"密码"`
 	RoleId       int64  `json:"roleId"             dc:"角色ID"`
@@ -72,15 +72,15 @@ type UpdateMemberModel struct {
 }
 
 // GetOne 获取单个用户信息
-func (m *Member) GetOne(ctx context.Context, memberId int64) (res *MemberModel, err error) {
+func (m *Member) GetOne(ctx context.Context, uid string) (res *MemberModel, err error) {
 	res = &MemberModel{}
 
-	if memberId <= 0 {
+	if uid == "" {
 		err = gerror.New("用户身份异常，请重新登录！")
 		return
 	}
 
-	member, err := dao.MemberInfo.FindByID(ctx, memberId)
+	member, err := dao.MemberInfo.FindByUid(ctx, uid)
 	if err != nil {
 		err = gerror.Wrap(err, "获取用户信息失败")
 		return
@@ -97,7 +97,7 @@ func (m *Member) GetOne(ctx context.Context, memberId int64) (res *MemberModel, 
 	}
 
 	// 获取登录信息
-	stat, err := m.getLoginStat(ctx, memberId)
+	stat, err := m.getLoginStat(ctx, member.Id)
 	if err != nil {
 		return
 	}
@@ -109,8 +109,8 @@ func (m *Member) GetOne(ctx context.Context, memberId int64) (res *MemberModel, 
 }
 
 // GetOneEncrypt 获取单个用户信息--加密处理
-func (m *Member) GetOneEncrypt(ctx context.Context, memberId int64) (res *MemberModel, err error) {
-	res, err = m.GetOne(ctx, memberId)
+func (m *Member) GetOneEncrypt(ctx context.Context, uid string) (res *MemberModel, err error) {
+	res, err = m.GetOne(ctx, uid)
 	if err != nil {
 		return
 	}

@@ -29,10 +29,11 @@ type LoginCaptchaRes struct {
 
 // 登录统一返回
 type LoginRes struct {
-	Id       int64  `json:"id"              dc:"用户ID"`
-	Username string `json:"username"        dc:"用户名"`
-	Token    string `json:"token"           dc:"登录token"`
-	Expires  int64  `json:"expires"         dc:"登录有效期"`
+	Uid          string `json:"uid"              dc:"用户ID"`
+	Username     string `json:"username"        dc:"用户名"`
+	Token        string `json:"token"           dc:"登录token"`
+	Expires      int64  `json:"expires"         dc:"登录有效期"`
+	RefreshToken string `json:"refreshToken"    dc:"刷新token"`
 }
 
 // AccountLoginReq 提交账号登录
@@ -55,3 +56,14 @@ type LoginLogoutReq struct {
 }
 
 type LoginLogoutRes struct{}
+
+// LoginRefreshTokenReq 刷新token
+type LoginRefreshTokenReq struct {
+	g.Meta `path:"/login/refreshToken" method:"post" tags:"登录" summary:"刷新token"`
+}
+
+type LoginRefreshTokenRes struct {
+	Token        string `json:"token"           dc:"登录token"`
+	Expires      int64  `json:"expires"         dc:"登录有效期"`
+	RefreshToken string `json:"refreshToken"    dc:"刷新token"`
+}

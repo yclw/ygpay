@@ -17,7 +17,8 @@ func (c *ControllerV1) AccountLogin(ctx context.Context, req *v1.AccountLoginReq
 	}
 
 	// 校验验证码
-	if !req.IsLock && config == "1" && !captcha.Verify(req.Cid, req.Code) {
+	// 当前使用默认的验证码生成及其校验方式，可以改为使用redis存储验证码
+	if !req.IsLock && config == "1" && !captcha.DefaultCaptcha.Verify(req.Cid, req.Code) {
 		err = gerror.New("验证码错误")
 		return
 	}

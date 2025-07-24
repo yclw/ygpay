@@ -2,7 +2,7 @@ package global
 
 import (
 	"context"
-	"yclw/ygpay/pkg/token"
+	"yclw/ygpay/util/token"
 
 	"github.com/gogf/gf/v2/frame/g"
 )
@@ -22,9 +22,15 @@ func GetLanguage(ctx context.Context) string {
 	return g.Cfg().MustGet(ctx, "system.language").String()
 }
 
-// GetLoadToken 获取本地token配置
-func GetLoadToken(ctx context.Context) (conf *token.TokenConfig, err error) {
-	err = g.Cfg().MustGet(ctx, "token").Scan(&conf)
+// GetAccessTokenConfig 获取本地访问token配置
+func GetAccessTokenConfig(ctx context.Context) (conf *token.TokenConfig, err error) {
+	err = g.Cfg().MustGet(ctx, "token.access").Scan(&conf)
+	return
+}
+
+// GetRefreshTokenConfig 获取本地刷新token配置
+func GetRefreshTokenConfig(ctx context.Context) (conf *token.TokenConfig, err error) {
+	err = g.Cfg().MustGet(ctx, "token.refresh").Scan(&conf)
 	return
 }
 

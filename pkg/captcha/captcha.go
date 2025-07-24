@@ -2,75 +2,33 @@ package captcha
 
 import (
 	"context"
-	"image/color"
 
-	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/mojocn/base64Captcha"
 )
 
-const (
-	CaptchaTypeString = iota + 1 // 字符串
-	CaptchaTypeMath              // 数字计算
-)
+var DefaultCaptcha = NewCaptcha(base64Captcha.DefaultDriverDigit, base64Captcha.DefaultMemStore)
 
-// store 验证码存储方式
-var store = base64Captcha.DefaultMemStore
+type Captcha struct {
+	Driver  base64Captcha.Driver
+	Store   base64Captcha.Store
+	Captcha *base64Captcha.Captcha
+}
+
+func NewCaptcha(driver base64Captcha.Driver, store base64Captcha.Store) *Captcha {
+	return &Captcha{
+		Driver:  driver,
+		Store:   store,
+		Captcha: base64Captcha.NewCaptcha(driver, store),
+	}
+}
 
 // Generate 生成验证码
-func Generate(ctx context.Context, captchaType int) (id string, base64 string) {
-	var err error
-
-	switch captchaType {
-	// 算数
-	case CaptchaTypeMath:
-		driver := &base64Captcha.DriverMath{
-			Height:          42,
-			Width:           100,
-			NoiseCount:      0,
-			ShowLineOptions: 0,
-			BgColor: &color.RGBA{
-				R: 255,
-				G: 250,
-				B: 250,
-				A: 250,
-			},
-			Fonts: []string{"chromohv.ttf"},
-		}
-		c := base64Captcha.NewCaptcha(driver.ConvertFonts(), store)
-		id, base64, _, err = c.Generate()
-	// 字符
-	default:
-		driver := &base64Captcha.DriverString{
-			Height: 42,
-			Width:  100,
-			//NoiseCount:      50,
-			//ShowLineOptions: 20,
-			Length: 4,
-			BgColor: &color.RGBA{
-				R: 255,
-				G: 250,
-				B: 250,
-				A: 250,
-			},
-			Source: "abcdefghjkmnpqrstuvwxyz23456789", // abcdefghjkmnpqrstuvwxyz23456789
-			Fonts:  []string{"chromohv.ttf"},
-		}
-		c := base64Captcha.NewCaptcha(driver.ConvertFonts(), store)
-		id, base64, _, err = c.Generate()
-	}
-
-	if err != nil {
-		g.Log().Errorf(ctx, "captcha.Generate err:%+v", err)
-	}
-
+func (c *Captcha) Generate(ctx context.Context) (id, base64, answer string, err error) {
+	id, base64, _, err = c.Captcha.Generate()
 	return
 }
 
-// Verify 验证输入的验证码是否正确
-func Verify(id, answer string) bool {
-	if id == "" || answer == "" {
-		return false
-	}
-	return store.Verify(id, gstr.ToLower(answer), true)
+// Verify 使用内置的验证码存储方式验证输入的验证码是否正确
+func (c *Captcha) Verify(id, answer string) bool {
+	return c.Store.Verify(id, answer, true)
 }

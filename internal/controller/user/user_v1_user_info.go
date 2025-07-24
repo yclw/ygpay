@@ -10,8 +10,8 @@ import (
 )
 
 func (c *ControllerV1) UserInfo(ctx context.Context, _ *v1.UserInfoReq) (res *v1.UserInfoRes, err error) {
-	memberId := contexts.GetUserId(ctx)
-	member, err := c.MemberService.GetOneEncrypt(ctx, memberId)
+	uid := contexts.GetUserUid(ctx)
+	member, err := c.MemberService.GetOneEncrypt(ctx, uid)
 	if err != nil {
 		return
 	}

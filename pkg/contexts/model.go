@@ -20,7 +20,7 @@ type Context struct {
 
 // Identity 上下文用户身份模型
 type Identity struct {
-	Id      int64       `json:"id"              dc:"用户ID"`
+	Uid     string      `json:"uid"             dc:"用户ID"`
 	RoleId  int64       `json:"roleId"          dc:"角色ID"`
 	LoginAt *gtime.Time `json:"loginAt"         dc:"登录时间"`
 }

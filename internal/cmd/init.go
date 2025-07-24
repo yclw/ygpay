@@ -14,6 +14,7 @@ import (
 	"github.com/gogf/gf/v2/os/gfile"
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gmode"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func Init(ctx context.Context) {
@@ -100,10 +101,17 @@ func InitAdapter(ctx context.Context) {
 
 // InitToken 初始化token
 func InitToken(ctx context.Context) {
-	// 登录令牌配置
-	conf, err := global.GetLoadToken(ctx)
+	// 初始化访问令牌
+	conf, err := global.GetAccessTokenConfig(ctx)
 	if err != nil {
 		return
 	}
-	token.Init(conf)
+	token.AccessJwt = token.NewAccessJwtHandler(conf, jwt.SigningMethodHS256)
+
+	// 初始化刷新令牌
+	conf, err = global.GetRefreshTokenConfig(ctx)
+	if err != nil {
+		return
+	}
+	token.RefreshJwt = token.NewRefreshJwtHandler(conf, jwt.SigningMethodHS256)
 }
