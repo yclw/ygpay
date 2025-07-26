@@ -7,6 +7,7 @@ package dao
 import (
 	"context"
 	"yclw/ygpay/internal/dao/internal"
+	"yclw/ygpay/internal/model/do"
 	"yclw/ygpay/internal/model/entity"
 )
 
@@ -25,22 +26,23 @@ var (
 
 // FindByUsername 根据用户名查询用户信息
 func (d *memberInfoDao) FindByUsername(ctx context.Context, username string) (memberInfo *entity.MemberInfo, err error) {
-	model := d.Ctx(ctx).Where(d.Columns().Username, username)
-	err = model.Scan(&memberInfo)
+	err = d.Ctx(ctx).Where(d.Columns().Username, username).Scan(&memberInfo)
 	return
 }
 
 // FindIdByUid 根据UID查询用户ID
 func (d *memberInfoDao) FindIdByUid(ctx context.Context, uid string) (id int64, err error) {
-	model := d.Ctx(ctx).Where(d.Columns().Uid, uid)
-	err = model.Scan(&id)
+	model := entity.MemberInfo{}
+	err = d.Ctx(ctx).Where(d.Columns().Uid, uid).Scan(&model)
+	id = model.Id
 	return
 }
 
 // FindByUid 根据UID查询用户信息
 func (d *memberInfoDao) FindByUid(ctx context.Context, uid string) (memberInfo *entity.MemberInfo, err error) {
-	model := d.Ctx(ctx).Where(d.Columns().Uid, uid)
-	err = model.Scan(&memberInfo)
+	model := entity.MemberInfo{}
+	err = d.Ctx(ctx).Where(d.Columns().Uid, uid).Scan(&model)
+	memberInfo = &model
 	return
 }
 
@@ -57,6 +59,51 @@ func (d *memberInfoDao) FindAll(ctx context.Context) (memberInfos []*entity.Memb
 }
 
 // Create 创建用户
-func (d *memberInfoDao) Create(ctx context.Context, member *entity.MemberInfo) (err error) {
+func (d *memberInfoDao) Create(ctx context.Context, member *do.MemberInfo) (id int64, err error) {
+	cols := d.Columns()
+	res, err := d.Ctx(ctx).Fields(
+		cols.Uid,
+		cols.PasswordHash,
+		cols.Username,
+		cols.Avatar,
+		cols.Sex,
+		cols.Email,
+		cols.Mobile,
+		cols.Address,
+		cols.Remark,
+		cols.Sort,
+		cols.Status,
+	).Data(member).OmitEmpty().Insert()
+	if err != nil {
+		return
+	}
+	id, err = res.LastInsertId()
+	return
+}
+
+// Update 更新用户
+func (d *memberInfoDao) Update(ctx context.Context, member *do.MemberInfo) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Fields(
+		cols.Username,
+		cols.PasswordHash,
+		cols.Avatar,
+		cols.Sex,
+		cols.Email,
+		cols.Mobile,
+		cols.Address,
+		cols.Remark,
+		cols.Sort,
+		cols.Status,
+	).Data(member).OmitEmpty().Where(cols.Uid, member.Uid).Update()
+	if err != nil {
+		return
+	}
+	return
+}
+
+// Delete 删除用户
+func (d *memberInfoDao) DeleteByUid(ctx context.Context, uid string) (err error) {
+	_, err = d.Ctx(ctx).Where(d.Columns().Uid, uid).Delete()
 	return
 }

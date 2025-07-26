@@ -24,7 +24,6 @@ type RoleInfoColumns struct {
 	Id        string // 角色ID
 	Name      string // 角色名称
 	Key       string // 角色权限字符串
-	Level     string // 关系树等级
 	Remark    string // 备注
 	Sort      string // 排序
 	Status    string // 状态: 0禁用 1启用
@@ -37,7 +36,6 @@ var roleInfoColumns = RoleInfoColumns{
 	Id:        "id",
 	Name:      "name",
 	Key:       "key",
-	Level:     "level",
 	Remark:    "remark",
 	Sort:      "sort",
 	Status:    "status",

@@ -7,6 +7,8 @@ package dao
 import (
 	"context"
 	"yclw/ygpay/internal/dao/internal"
+	"yclw/ygpay/internal/model/do"
+	"yclw/ygpay/internal/model/entity"
 )
 
 // memberRoleDao is the data access object for the table t_member_role.
@@ -24,12 +26,35 @@ var (
 
 // FindRoleIdByMemberId 根据用户ID查询角色ID列表
 func (d *memberRoleDao) FindRoleIdByMemberId(ctx context.Context, memberId int64) (roleId int64, err error) {
-	err = d.Ctx(ctx).Where(d.Columns().MemberId, memberId).Fields(d.Columns().RoleId).Scan(&roleId)
+	value, err := d.Ctx(ctx).Where(d.Columns().MemberId, memberId).Fields(d.Columns().RoleId).Value()
+	if err != nil {
+		return 0, err
+	}
+	roleId = value.Int64()
 	return
 }
 
 // FindByRoleIds 根据角色ID列表查询用户ID列表
 func (d *memberRoleDao) FindUserIdsByRoleIds(ctx context.Context, roleIds []int64) (userIds []int64, err error) {
-	err = d.Ctx(ctx).WhereIn(d.Columns().RoleId, roleIds).Fields(d.Columns().MemberId).Scan(&userIds)
+	model := []entity.MemberRole{}
+	err = d.Ctx(ctx).WhereIn(d.Columns().RoleId, roleIds).Fields(d.Columns().MemberId).Scan(&model)
+	userIds = make([]int64, 0, len(model))
+	for _, v := range model {
+		userIds = append(userIds, v.MemberId)
+	}
+	return
+}
+
+// UpdateRoleIdByMemberId 更新用户角色
+func (d *memberRoleDao) UpdateRoleIdByMemberId(ctx context.Context, do *do.MemberRole) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Fields(cols.RoleId).Data(do).OmitEmpty().Where(cols.MemberId, do.MemberId).Update()
+	return
+}
+
+// Create 创建用户角色关系
+func (d *memberRoleDao) Create(ctx context.Context, do *do.MemberRole) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Fields(cols.MemberId, cols.RoleId).Data(do).Insert()
 	return
 }

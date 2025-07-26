@@ -3,7 +3,7 @@ package login
 import (
 	"context"
 	"time"
-	v1 "yclw/ygpay/api/user/v1"
+	v1 "yclw/ygpay/api/login/v1"
 	"yclw/ygpay/internal/consts"
 	"yclw/ygpay/internal/dao"
 	"yclw/ygpay/internal/global"
@@ -66,6 +66,7 @@ func checkPassword(input, hash string) (err error) {
 		err = gerror.New("密码解析失败")
 		return
 	}
+	// password := input
 
 	plainPassword := string(password)
 

@@ -5,7 +5,9 @@
 package dao
 
 import (
+	"context"
 	"yclw/ygpay/internal/dao/internal"
+	"yclw/ygpay/internal/model/entity"
 )
 
 // menuInfoDao is the data access object for the table t_menu_info.
@@ -20,3 +22,10 @@ var (
 )
 
 // Add your custom methods and functionality below.
+
+// FindByMenuIds 根据菜单ID获取菜单
+func (d *menuInfoDao) FindByMenuIds(ctx context.Context, menuIds []int64) (res []entity.MenuInfo, err error) {
+	cols := d.Columns()
+	err = d.Ctx(ctx).WhereIn(cols.Id, menuIds).Scan(&res)
+	return
+}

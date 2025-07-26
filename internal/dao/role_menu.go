@@ -5,7 +5,9 @@
 package dao
 
 import (
+	"context"
 	"yclw/ygpay/internal/dao/internal"
+	"yclw/ygpay/internal/model/entity"
 )
 
 // roleMenuDao is the data access object for the table t_role_menu.
@@ -20,3 +22,15 @@ var (
 )
 
 // Add your custom methods and functionality below.
+
+// FindMenuIdsByRoleId 根据角色ID获取菜单
+func (d *roleMenuDao) FindMenuIdsByRoleId(ctx context.Context, roleId int64) (res []int64, err error) {
+	cols := d.Columns()
+	model := []entity.RoleMenu{}
+	err = d.Ctx(ctx).Where(cols.RoleId, roleId).Fields(cols.MenuId).Scan(&model)
+	res = make([]int64, 0, len(model))
+	for _, v := range model {
+		res = append(res, v.MenuId)
+	}
+	return
+}

@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 	"yclw/ygpay/internal/dao"
+	"yclw/ygpay/internal/model/do"
 
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
@@ -58,5 +59,14 @@ func (c *Config) GetConfigByKey(ctx context.Context, key string) (res string, er
 		return
 	}
 	res = conf.Value
+	return
+}
+
+// 更新配置
+func (c *Config) UpdateConfig(ctx context.Context, key string, value string) (err error) {
+	err = dao.SysConfig.Update(ctx, &do.SysConfig{
+		Key:   key,
+		Value: value,
+	})
 	return
 }

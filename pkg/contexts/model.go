@@ -3,7 +3,6 @@ package contexts
 import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
-	"github.com/gogf/gf/v2/os/gtime"
 )
 
 const (
@@ -20,9 +19,8 @@ type Context struct {
 
 // Identity 上下文用户身份模型
 type Identity struct {
-	Uid     string      `json:"uid"             dc:"用户ID"`
-	RoleId  int64       `json:"roleId"          dc:"角色ID"`
-	LoginAt *gtime.Time `json:"loginAt"         dc:"登录时间"`
+	Uid    string `json:"uid"             dc:"用户UID"`
+	RoleId int64  `json:"roleId"          dc:"角色ID"`
 }
 
 // Response HTTP响应

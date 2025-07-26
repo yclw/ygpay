@@ -51,7 +51,6 @@ CREATE TABLE t_role_info (
     id         BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '角色ID',
     name       VARCHAR(32)  NOT NULL COMMENT '角色名称',
     `key`      VARCHAR(128) NOT NULL UNIQUE COMMENT '角色权限字符串',
-    level      INT          DEFAULT 1 NOT NULL COMMENT '关系树等级',
     remark     VARCHAR(255) NULL COMMENT '备注',
     sort       INT          DEFAULT 0 NOT NULL COMMENT '排序',
     status     TINYINT(1)   DEFAULT 1 NOT NULL COMMENT '状态: 0禁用 1启用',
@@ -87,18 +86,21 @@ CREATE TABLE t_menu_info (
     name        VARCHAR(128) NOT NULL COMMENT '菜单名称',
     path        VARCHAR(255) NOT NULL COMMENT '菜单路径',
     icon        VARCHAR(128) DEFAULT '' COMMENT '菜单图标',
+    title       VARCHAR(128) DEFAULT '' COMMENT '菜单标题',
+    showParent  TINYINT(1)   DEFAULT 0 NOT NULL COMMENT '是否显示父菜单: 0是 1否',
     component   VARCHAR(200) DEFAULT '' COMMENT '组件路径',
-    menu_type   TINYINT(1)   DEFAULT 1 NOT NULL COMMENT '菜单类型: 1目录 2菜单 3按钮',
-    is_visible  TINYINT(1)   DEFAULT 1 NOT NULL COMMENT '是否显示: 0否 1是',
+    noShowingChildren TINYINT(1)   DEFAULT 0 NOT NULL COMMENT '是否显示子菜单: 0是 1否',
+    value           VARCHAR(128) DEFAULT '' COMMENT '菜单值',
+    showTooltip     TINYINT(1)   DEFAULT 0 NOT NULL COMMENT '是否显示提示: 0是 1否',
+    parentId        BIGINT       NULL COMMENT '父菜单ID',
+    redirect        VARCHAR(255) DEFAULT '' COMMENT '重定向',
     description VARCHAR(255) NULL COMMENT '菜单描述',
-    sort        INT          DEFAULT 0 NOT NULL COMMENT '排序',
+    sort        INT          DEFAULT 10 NOT NULL COMMENT '排序',
     status      TINYINT(1)   DEFAULT 1 NOT NULL COMMENT '状态: 0禁用 1启用',
     created_at  DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     updated_at  DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     INDEX idx_path (path),
-    INDEX idx_status (status),
-    INDEX idx_menu_type (menu_type),
-    INDEX idx_is_visible (is_visible)
+    INDEX idx_status (status)
 ) COMMENT '菜单信息表' CHARSET=utf8mb4;
 
 -- 登录日志表
@@ -145,16 +147,16 @@ CREATE TABLE t_role_api (
 
 -- 菜单树关系表
 CREATE TABLE t_menu_tree (
-    id  BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '菜单ID',
+    id  BIGINT NOT NULL COMMENT '菜单ID',
     pid BIGINT NOT NULL COMMENT '父菜单ID',
-    INDEX idx_pid (pid)
+    PRIMARY KEY (id, pid)
 ) COMMENT '菜单树关系表' CHARSET=utf8mb4;
 
 -- 角色树关系表
 CREATE TABLE t_role_tree (
-    id  BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '角色ID',
+    id  BIGINT NOT NULL COMMENT '角色ID',
     pid BIGINT NOT NULL COMMENT '父角色ID',
-    INDEX idx_pid (pid)
+    PRIMARY KEY (id, pid)
 ) COMMENT '角色树关系表' CHARSET=utf8mb4;
 
 -- Casbin规则表

@@ -18,7 +18,7 @@ func GetTimeZone(ctx context.Context) string {
 }
 
 // GetLanguage 获取语言配置
-func GetLanguage(ctx context.Context) string {
+func GetLanguageConfig(ctx context.Context) string {
 	return g.Cfg().MustGet(ctx, "system.language").String()
 }
 
@@ -42,4 +42,9 @@ func AppName(ctx context.Context) string {
 // Debug debug
 func Debug(ctx context.Context) bool {
 	return g.Cfg().MustGet(ctx, "system.debug").Bool()
+}
+
+// CacheAdapterConfig 缓存适配器配置
+func CacheAdapterConfig(ctx context.Context) string {
+	return g.Cfg().MustGet(ctx, "cache.adapter").String()
 }

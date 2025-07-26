@@ -6,12 +6,12 @@ import (
 )
 
 // UserInfoReq 获取用户信息
-type UserInfoReq struct {
+type GetUserInfoReq struct {
 	g.Meta `path:"/user/info" method:"get" tags:"用户" summary:"获取登录用户信息"`
 }
 
-type UserInfoRes struct {
-	Id          int64       `json:"id"                 dc:"用户ID"`
+type GetUserInfoRes struct {
+	Uid         string      `json:"uid"                 dc:"用户UID"`
 	RoleId      int64       `json:"roleId"             dc:"所属角色"`
 	Permissions []string    `json:"permissions"        dc:"权限信息"`
 	Username    string      `json:"username"           dc:"用户名"`

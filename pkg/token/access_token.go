@@ -23,6 +23,12 @@ type AccessIdentity struct {
 	LoginAt  *gtime.Time `json:"loginAt"         description:"登录时间"`
 }
 
+// AccessClaims 访问令牌声明
+type AccessClaims struct {
+	Identity AccessIdentity `json:"Identity"`
+	jwt.RegisteredClaims
+}
+
 var AccessJwt *AccessJwtHandler
 
 type AccessJwtHandler struct {
@@ -31,21 +37,27 @@ type AccessJwtHandler struct {
 
 func NewAccessJwtHandler(c *token.TokenConfig, method jwt.SigningMethod) *AccessJwtHandler {
 	return &AccessJwtHandler{
-		token.NewJwtHandler(c, method),
+		token.NewJwtHandler(c, method, &AccessClaims{}),
 	}
 }
 
 // CreateToken 创建jwt token
 func (h *AccessJwtHandler) CreateToken(ctx context.Context, c AccessIdentity) (header string, expires int64, err error) {
-	header, expires, err = h.JwtHandler.CreateToken(ctx, c)
+	claims := &AccessClaims{
+		Identity: c,
+	}
+	header, expires, err = h.JwtHandler.CreateToken(ctx, claims)
 	return
 }
 
 func (h *AccessJwtHandler) VerifyToken(ctx context.Context, header string) (ok bool, identity AccessIdentity, err error) {
-	ok, refresh, err := h.JwtHandler.VerifyToken(ctx, header)
-	if err != nil {
+	ok, claims, err := h.JwtHandler.VerifyToken(ctx, header)
+	if err != nil || !ok {
 		return
 	}
-	identity = refresh.(AccessIdentity)
+
+	// 现在直接进行类型断言即可，因为JWT解析时使用了AccessClaims
+	identity = claims.(*AccessClaims).Identity
+
 	return
 }

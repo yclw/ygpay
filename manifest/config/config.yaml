@@ -42,7 +42,6 @@ server:
   address: ":8000"                            # 本地监听地址。默认":8000"，多个地址以","号分隔。例如："192.168.2.3:8000,10.0.3.10:8001"
   openapiPath: "/api.json"                    # OpenAPI接口文档地址
   swaggerPath: "/swagger"                     # 内置SwaggerUI展示地址
-  serverRoot: "resource/public"               # 静态文件服务的目录根路径，配置时自动开启静态文件服务。
   DumpRouterMap: false                        # 是否在Server启动时打印所有的路由列表。
   logPath: "logs/server"                      # 服务日志保存路径
   ErrorStack: true                            # 当Server捕获到异常时是否记录堆栈信息到日志中。默认为true
@@ -82,20 +81,6 @@ logger:
   tcpClient:
     path: "logs/tcpClient"                  # 日志文件路径。默认为空，表示关闭，仅输出到终端
     <<: *defaultLogger
-
-
-# Viewer. 配置参考：https://goframe.org/pages/viewpage.action?pageId=1114335
-viewer:
-  paths: "resource/template"
-  defaultFile: "index.html"
-  delimiters: [ "@{", "}" ]
-  homeLayout: "home/index.html"
-
-# 内容设置
-setting:
-  title: "HotGo"
-  keywords: "中后台解决方案,gf框架,vue3"
-  description: "hotgo 是一个基于 goframe2，vue3，vite2，TypeScript，uniapp 的中后台解决方案，它可以帮助你快速搭建企业级中后台项目，相信不管是从新技术使用还是其他方面，都能帮助到你，持续更新中。"
 
 # 路由配置
 router:
@@ -155,7 +140,7 @@ token:
   # 访问令牌
   access:
     secretKey: "ygpay1141514"                  # 令牌加密秘钥，考虑安全问题生产环境中请修改默认值
-    expires: 7200                        # 令牌有效期，单位：秒
+    expires: 10000                        # 令牌有效期，单位：秒
     issuer: "yclw"                        # 签发人
     audience: "ygpay"                      # 受众
   # 刷新令牌
@@ -177,7 +162,6 @@ database:
     link: "mysql:root:root@tcp(127.0.0.1:3306)/ygpay?loc=Local&parseTime=true&charset=utf8mb4"
     debug: true
     Prefix: "t_"
-
 
 # 链路追踪
 jaeger:

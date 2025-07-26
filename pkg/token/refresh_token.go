@@ -20,6 +20,12 @@ type RefreshIdentity struct {
 	Uid string `json:"uid"              dc:"用户ID"`
 }
 
+// RefreshClaims 刷新令牌声明
+type RefreshClaims struct {
+	Identity RefreshIdentity `json:"Identity"`
+	jwt.RegisteredClaims
+}
+
 var RefreshJwt *RefreshJwtHandler
 
 type RefreshJwtHandler struct {
@@ -28,22 +34,28 @@ type RefreshJwtHandler struct {
 
 func NewRefreshJwtHandler(c *token.TokenConfig, method jwt.SigningMethod) *RefreshJwtHandler {
 	return &RefreshJwtHandler{
-		token.NewJwtHandler(c, method),
+		token.NewJwtHandler(c, method, &RefreshClaims{}),
 	}
 }
 
 // CreateToken 创建jwt token
-func (h *RefreshJwtHandler) CreateToken(ctx context.Context, c RefreshIdentity) (header string, expires int64, err error) {
-	header, expires, err = h.JwtHandler.CreateToken(ctx, c)
+func (h *RefreshJwtHandler) CreateToken(ctx context.Context, identity RefreshIdentity) (header string, expires int64, err error) {
+	claims := &RefreshClaims{
+		Identity: identity,
+	}
+	header, expires, err = h.JwtHandler.CreateToken(ctx, claims)
 	return
 }
 
 func (h *RefreshJwtHandler) VerifyToken(ctx context.Context, header string) (ok bool, identity RefreshIdentity, err error) {
-	ok, refresh, err := h.JwtHandler.VerifyToken(ctx, header)
-	if err != nil {
+	ok, claims, err := h.JwtHandler.VerifyToken(ctx, header)
+	if err != nil || !ok {
 		return
 	}
-	identity = refresh.(RefreshIdentity)
+
+	// 现在直接进行类型断言即可，因为JWT解析时使用了RefreshClaims
+	identity = claims.(*RefreshClaims).Identity
+
 	return
 }
 

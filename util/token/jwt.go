@@ -2,6 +2,7 @@ package token
 
 import (
 	"context"
+	"reflect"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -17,22 +18,18 @@ type TokenConfig struct {
 	MultiLogin      bool   `json:"multiLogin"`      // 是否允许多端登录（内部没有使用，仅作为可读配置）
 }
 
-// Claims 令牌声明
-type Claims struct {
-	Identity interface{}
-	jwt.RegisteredClaims
-}
-
 // jwt 处理器
 type JwtHandler struct {
-	config *TokenConfig
-	method jwt.SigningMethod
+	config     *TokenConfig
+	method     jwt.SigningMethod
+	claimsType jwt.Claims // Claims类型实例
 }
 
-func NewJwtHandler(c *TokenConfig, method jwt.SigningMethod) *JwtHandler {
+func NewJwtHandler(c *TokenConfig, method jwt.SigningMethod, claimsExample jwt.Claims) *JwtHandler {
 	return &JwtHandler{
-		config: c,
-		method: method,
+		config:     c,
+		method:     method,
+		claimsType: claimsExample,
 	}
 }
 
@@ -42,26 +39,28 @@ func (h *JwtHandler) GetConfig() *TokenConfig {
 }
 
 // CreateToken 创建jwt token
-func (h *JwtHandler) CreateToken(ctx context.Context, c interface{}) (header string, expires int64, err error) {
+func (h *JwtHandler) CreateToken(ctx context.Context, c jwt.Claims) (header string, expires int64, err error) {
 	// 获取当前时间
 	now := time.Now()
 
 	// 过期时长
 	expires = h.config.Expires
 
-	// 创建claims
-	claims := Claims{
-		c,
-		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(now.Add(time.Duration(expires) * time.Second)), // 过期时间
-			NotBefore: jwt.NewNumericDate(now.Add(-1000)),                                // 生效时间
-			Issuer:    h.config.Issuer,                                                   // 签发人
-			Audience:  jwt.ClaimStrings{h.config.Audience},                               // 受众, 多个受众用逗号分隔
-		},
+	// 创建RegisteredClaims
+	registeredClaims := jwt.RegisteredClaims{
+		ExpiresAt: jwt.NewNumericDate(now.Add(time.Duration(expires) * time.Second)), // 过期时间
+		NotBefore: jwt.NewNumericDate(now.Add(-1000)),                                // 生效时间
+		Issuer:    h.config.Issuer,                                                   // 签发人
+		Audience:  jwt.ClaimStrings{h.config.Audience},                               // 受众, 多个受众用逗号分隔
+	}
+
+	// 使用反射设置RegisteredClaims字段
+	if err = setRegisteredClaims(c, registeredClaims); err != nil {
+		return "", 0, err
 	}
 
 	// 创建token
-	token := jwt.NewWithClaims(h.method, claims)
+	token := jwt.NewWithClaims(h.method, c)
 
 	// 签名
 	header, err = token.SignedString([]byte(h.config.SecretKey))
@@ -72,17 +71,49 @@ func (h *JwtHandler) CreateToken(ctx context.Context, c interface{}) (header str
 	return
 }
 
-// VerifyToken 验证jwt token
-func (h *JwtHandler) VerifyToken(ctx context.Context, header string) (ok bool, identity interface{}, err error) {
-	token, err := jwt.ParseWithClaims(header, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(h.config.SecretKey), nil
-	})
-	if ok = token.Valid; err != nil || !ok {
-		return
+// setRegisteredClaims 使用反射设置RegisteredClaims字段
+func setRegisteredClaims(claims jwt.Claims, registeredClaims jwt.RegisteredClaims) error {
+	// 获取claims的反射值
+	v := reflect.ValueOf(claims)
+	if v.Kind() == reflect.Ptr {
+		v = v.Elem()
 	}
 
-	claims := token.Claims.(*Claims)
-	identity = claims.Identity
+	// 查找RegisteredClaims字段
+	field := v.FieldByName("RegisteredClaims")
+	if !field.IsValid() {
+		// 如果没有找到RegisteredClaims字段，尝试查找嵌入的jwt.RegisteredClaims
+		for i := 0; i < v.NumField(); i++ {
+			fieldType := v.Type().Field(i)
+			if fieldType.Type == reflect.TypeOf(jwt.RegisteredClaims{}) {
+				field = v.Field(i)
+				break
+			}
+		}
+	}
 
-	return
+	if field.IsValid() && field.CanSet() {
+		field.Set(reflect.ValueOf(registeredClaims))
+	}
+
+	return nil
+}
+
+// VerifyToken 验证jwt token
+func (h *JwtHandler) VerifyToken(ctx context.Context, header string) (ok bool, claims jwt.Claims, err error) {
+	token, err := jwt.ParseWithClaims(header, h.claimsType, func(token *jwt.Token) (interface{}, error) {
+		return []byte(h.config.SecretKey), nil
+	})
+
+	// 先检查错误和token是否为nil
+	if err != nil || token == nil {
+		return false, nil, err
+	}
+
+	// 再检查token是否有效
+	if !token.Valid {
+		return false, nil, nil
+	}
+
+	return true, token.Claims, nil
 }

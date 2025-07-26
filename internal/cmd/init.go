@@ -6,6 +6,7 @@ import (
 	"runtime"
 	"yclw/ygpay/internal/global"
 	"yclw/ygpay/pkg/token"
+	"yclw/ygpay/util/i18n"
 
 	"github.com/gogf/gf/contrib/trace/jaeger/v2"
 	"github.com/gogf/gf/v2"
@@ -24,8 +25,8 @@ func Init(ctx context.Context) {
 	// 默认上海时区
 	SetTimeZone(ctx)
 
-	// 设置i18n
-	SetI18n(ctx)
+	// 初始化i18n
+	InitI18n(ctx)
 
 	// 输出欢迎信息
 	PrintWelcome(ctx)
@@ -57,9 +58,12 @@ func SetTimeZone(ctx context.Context) {
 }
 
 // SetI18n 设置i18n
-func SetI18n(ctx context.Context) {
-	language := global.GetLanguage(ctx)
-	g.I18n().SetLanguage(language)
+func InitI18n(ctx context.Context) {
+	language := global.GetLanguageConfig(ctx)
+	if !i18n.IsLang(language) {
+		language = i18n.LangZhCN
+	}
+	global.SetLanguage(language)
 	g.Log().Debug(ctx, "i18n设置成功：%v", language)
 }
 
@@ -88,7 +92,7 @@ func InitTrace(ctx context.Context) {
 
 // InitAdapter 设置缓存适配器
 func InitAdapter(ctx context.Context) {
-	adapterType := g.Cfg().MustGet(ctx, "cache.adapter").String()
+	adapterType := global.CacheAdapterConfig(ctx)
 	var adapter gcache.Adapter
 	switch adapterType {
 	case "redis":

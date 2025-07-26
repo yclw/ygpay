@@ -6,21 +6,18 @@ package user
 
 import (
 	"yclw/ygpay/api/user"
-	"yclw/ygpay/internal/logic/config"
-	"yclw/ygpay/internal/logic/login"
 	"yclw/ygpay/internal/logic/member"
+	"yclw/ygpay/internal/logic/menu"
 )
 
 type ControllerV1 struct {
-	ConfigService *config.Config
-	LoginService  *login.Login
 	MemberService *member.Member
+	MenuService   *menu.Menu
 }
 
 func NewV1() user.IUserV1 {
 	return &ControllerV1{
-		ConfigService: config.ConfigService,
-		LoginService:  login.LoginService,
 		MemberService: member.MemberService,
+		MenuService:   menu.MenuService,
 	}
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/gogf/gf/v2/errors/gcode"
 	"github.com/gogf/gf/v2/errors/gerror"
 
-	"yclw/ygpay/api/sys/v1"
+	v1 "yclw/ygpay/api/sys/v1"
 )
 
 func (c *ControllerV1) UpdateGroupConfig(ctx context.Context, req *v1.UpdateGroupConfigReq) (res *v1.UpdateGroupConfigRes, err error) {

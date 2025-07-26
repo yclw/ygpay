@@ -6,7 +6,9 @@ package dao
 
 import (
 	"context"
+	"yclw/ygpay/internal/consts"
 	"yclw/ygpay/internal/dao/internal"
+	"yclw/ygpay/internal/model/do"
 	"yclw/ygpay/internal/model/entity"
 )
 
@@ -25,21 +27,38 @@ var (
 
 // 获取配置
 func (d *sysConfigDao) GetConfig(ctx context.Context) (res []*entity.SysConfig, err error) {
-	db := d.Ctx(ctx).Where("status = ?", 1)
+	cols := d.Columns()
+	db := d.Ctx(ctx).Where(cols.Status, 1)
 	err = db.Scan(&res)
 	return
 }
 
 // 根据分组获取配置
 func (d *sysConfigDao) GetGroupConfig(ctx context.Context, group string) (res []*entity.SysConfig, err error) {
-	db := d.Ctx(ctx).Where("group = ?", group).Where("status = ?", 1)
+	cols := d.Columns()
+	db := d.Ctx(ctx).Where(cols.Group, group).Where(cols.Status, consts.StatusEnabled)
 	err = db.Scan(&res)
 	return
 }
 
 // 根据key获取配置
 func (d *sysConfigDao) GetConfigByKey(ctx context.Context, key string) (res *entity.SysConfig, err error) {
-	db := d.Ctx(ctx).Where("key = ?", key).Where("status = ?", 1)
+	cols := d.Columns()
+	db := d.Ctx(ctx).Where(cols.Key, key).Where(cols.Status, consts.StatusEnabled)
 	err = db.Scan(&res)
+	return
+}
+
+// 更新配置
+func (d *sysConfigDao) Update(ctx context.Context, conf *do.SysConfig) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Where(cols.Key, conf.Key).Fields(
+		cols.Group,
+		cols.Key,
+		cols.Value,
+		cols.Description,
+		cols.Sort,
+		cols.Status,
+	).Data(conf).OmitEmpty().Update()
 	return
 }

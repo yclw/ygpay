@@ -15,7 +15,6 @@ type RoleInfo struct {
 	Id        interface{} // 角色ID
 	Name      interface{} // 角色名称
 	Key       interface{} // 角色权限字符串
-	Level     interface{} // 关系树等级
 	Remark    interface{} // 备注
 	Sort      interface{} // 排序
 	Status    interface{} // 状态: 0禁用 1启用

@@ -3,12 +3,37 @@ package member
 import (
 	"context"
 
-	"github.com/gogf/gf/v2/errors/gcode"
-	"github.com/gogf/gf/v2/errors/gerror"
-
 	v1 "yclw/ygpay/api/member/v1"
 )
 
 func (c *ControllerV1) GetList(ctx context.Context, req *v1.GetListReq) (res *v1.GetListRes, err error) {
-	return nil, gerror.NewCode(gcode.CodeNotImplemented)
+	members, err := c.MemberService.GetAllList(ctx)
+	if err != nil {
+		return
+	}
+	res = &v1.GetListRes{}
+	res.List = make([]*v1.MemberModel, 0, len(members))
+	for _, member := range members {
+		res.List = append(res.List, &v1.MemberModel{
+			Uid:          member.Uid,
+			RoleId:       member.RoleId,
+			Username:     member.Username,
+			PasswordHash: member.PasswordHash,
+			Avatar:       member.Avatar,
+			Sex:          member.Sex,
+			Email:        member.Email,
+			Mobile:       member.Mobile,
+			Address:      member.Address,
+			LastActiveAt: member.LastActiveAt,
+			Remark:       member.Remark,
+			Sort:         member.Sort,
+			Status:       member.Status,
+			CreatedAt:    member.CreatedAt,
+			UpdatedAt:    member.UpdatedAt,
+			LoginCount:   member.LoginCount,
+			LastLoginAt:  member.LastLoginAt,
+			LastLoginIp:  member.LastLoginIp,
+		})
+	}
+	return
 }

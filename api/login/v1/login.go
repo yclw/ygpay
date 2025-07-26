@@ -8,11 +8,9 @@ type LoginConfigReq struct {
 }
 
 type LoginConfigRes struct {
-	RegisterSwitch int    `json:"loginRegisterSwitch" dc:"注册开关"`
-	CaptchaSwitch  int    `json:"loginCaptchaSwitch" dc:"验证码开关"`
+	RegisterSwitch bool   `json:"loginRegisterSwitch" dc:"注册开关"`
+	CaptchaSwitch  bool   `json:"loginCaptchaSwitch" dc:"验证码开关"`
 	CaptchaType    int    `json:"loginCaptchaType" dc:"验证码类型"`
-	Avatar         string `json:"loginAvatar" dc:"默认头像"`
-	RoleId         int64  `json:"loginRoleId" dc:"默认角色ID"`
 	Protocol       string `json:"loginProtocol" dc:"协议"`
 	Policy         string `json:"loginPolicy" dc:"政策"`
 }
@@ -39,11 +37,10 @@ type LoginRes struct {
 // AccountLoginReq 提交账号登录
 type AccountLoginReq struct {
 	g.Meta   `path:"/login/accountLogin" method:"post" tags:"登录" summary:"账号登录"`
-	Username string `json:"username" v:"required#用户名不能为空" dc:"用户名"`
-	Password string `json:"password" v:"required#密码不能为空" dc:"密码"`
+	Username string `json:"username" v:"required|length:1,30" dc:"用户名"`
+	Password string `json:"password" v:"required|length:1,30" dc:"密码"`
 	Cid      string `json:"cid"  dc:"验证码ID"`
 	Code     string `json:"code" dc:"验证码"`
-	IsLock   bool   `json:"isLock"  dc:"是否为锁屏状态"`
 }
 
 type AccountLoginRes struct {
@@ -59,7 +56,8 @@ type LoginLogoutRes struct{}
 
 // LoginRefreshTokenReq 刷新token
 type LoginRefreshTokenReq struct {
-	g.Meta `path:"/login/refreshToken" method:"post" tags:"登录" summary:"刷新token"`
+	g.Meta       `path:"/login/refreshToken" method:"post" tags:"登录" summary:"刷新token"`
+	RefreshToken string `json:"refreshToken" v:"required" dc:"刷新token"`
 }
 
 type LoginRefreshTokenRes struct {

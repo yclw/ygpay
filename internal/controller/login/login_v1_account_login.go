@@ -1,11 +1,12 @@
-package user
+package login
 
 import (
 	"context"
 
 	"github.com/gogf/gf/v2/errors/gerror"
+	"github.com/gogf/gf/v2/util/gconv"
 
-	v1 "yclw/ygpay/api/user/v1"
+	v1 "yclw/ygpay/api/login/v1"
 	"yclw/ygpay/pkg/captcha"
 )
 
@@ -18,7 +19,7 @@ func (c *ControllerV1) AccountLogin(ctx context.Context, req *v1.AccountLoginReq
 
 	// 校验验证码
 	// 当前使用默认的验证码生成及其校验方式，可以改为使用redis存储验证码
-	if !req.IsLock && config == "1" && !captcha.DefaultCaptcha.Verify(req.Cid, req.Code) {
+	if gconv.Bool(config) && !captcha.DefaultCaptcha.Verify(req.Cid, req.Code) {
 		err = gerror.New("验证码错误")
 		return
 	}
