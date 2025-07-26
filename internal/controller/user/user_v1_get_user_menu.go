@@ -8,8 +8,8 @@ import (
 )
 
 func (c *ControllerV1) GetUserMenu(ctx context.Context, req *v1.GetUserMenuReq) (res *v1.GetUserMenuRes, err error) {
-	uid := contexts.GetUserUid(ctx)
-	menus, err := c.MenuService.GetUserMenu(ctx, uid)
+	roleId := contexts.GetRoleId(ctx)
+	menus, err := c.MenuService.GetRoleMenu(ctx, roleId)
 	if err != nil {
 		return nil, err
 	}

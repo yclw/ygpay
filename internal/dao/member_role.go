@@ -36,8 +36,11 @@ func (d *memberRoleDao) FindRoleIdByMemberId(ctx context.Context, memberId int64
 
 // FindByRoleIds 根据角色ID列表查询用户ID列表
 func (d *memberRoleDao) FindUserIdsByRoleIds(ctx context.Context, roleIds []int64) (userIds []int64, err error) {
-	model := []entity.MemberRole{}
+	model := []*entity.MemberRole{}
 	err = d.Ctx(ctx).WhereIn(d.Columns().RoleId, roleIds).Fields(d.Columns().MemberId).Scan(&model)
+	if err != nil {
+		return
+	}
 	userIds = make([]int64, 0, len(model))
 	for _, v := range model {
 		userIds = append(userIds, v.MemberId)

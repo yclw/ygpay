@@ -21,12 +21,11 @@ type UserMenu struct {
 
 // 菜单元数据
 type UserMenuMeta struct {
-	Icon       string `json:"icon" dc:"图标"`
-	Title      string `json:"title" dc:"标题"`
-	Rank       int64  `json:"rank" dc:"排序"`
-	ShowParent bool   `json:"showParent" dc:"是否显示父菜单"`
-
-	Auths []string `json:"auths" dc:"控件权限"`
+	Icon       string   `json:"icon" dc:"图标"`
+	Title      string   `json:"title" dc:"标题"`
+	Rank       int64    `json:"rank" dc:"排序"`
+	ShowParent bool     `json:"showParent" dc:"是否显示父菜单"`
+	Auths      []string `json:"auths" dc:"控件权限"`
 }
 
 // 获取用户菜单树

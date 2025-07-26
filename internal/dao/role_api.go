@@ -5,7 +5,9 @@
 package dao
 
 import (
+	"context"
 	"yclw/ygpay/internal/dao/internal"
+	"yclw/ygpay/internal/model/entity"
 )
 
 // roleApiDao is the data access object for the table t_role_api.
@@ -20,3 +22,18 @@ var (
 )
 
 // Add your custom methods and functionality below.
+
+// FindRoleIdsByRoleIds 根据角色ID列表查询apiID列表
+func (d *roleApiDao) FindRoleIdsByRoleIds(ctx context.Context, roleIds []int64) (res []int64, err error) {
+	model := []*entity.RoleApi{}
+	cols := d.Columns()
+	err = d.Ctx(ctx).WhereIn(cols.RoleId, roleIds).Scan(&model)
+	if err != nil {
+		return
+	}
+	res = make([]int64, 0, len(model))
+	for _, v := range model {
+		res = append(res, v.ApiId)
+	}
+	return
+}

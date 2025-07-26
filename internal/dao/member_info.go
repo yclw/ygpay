@@ -34,6 +34,9 @@ func (d *memberInfoDao) FindByUsername(ctx context.Context, username string) (me
 func (d *memberInfoDao) FindIdByUid(ctx context.Context, uid string) (id int64, err error) {
 	model := entity.MemberInfo{}
 	err = d.Ctx(ctx).Where(d.Columns().Uid, uid).Scan(&model)
+	if err != nil {
+		return
+	}
 	id = model.Id
 	return
 }

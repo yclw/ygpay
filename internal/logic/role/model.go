@@ -10,6 +10,7 @@ type RoleModel struct {
 	*entity.RoleInfo
 	*entity.RoleMenu
 	*entity.RoleApi
+	*entity.RoleTree
 }
 
 // RoleUpdateModel 角色更新模型
@@ -18,6 +19,7 @@ type RoleUpdateModel struct {
 	*do.RoleInfo
 	*do.RoleMenu
 	*do.RoleApi
+	*do.RoleTree
 }
 
 // RoleCreateModel 角色创建模型
@@ -26,4 +28,5 @@ type RoleCreateModel struct {
 	*do.RoleInfo
 	*do.RoleMenu
 	*do.RoleApi
+	*do.RoleTree
 }

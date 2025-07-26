@@ -24,8 +24,21 @@ var (
 // Add your custom methods and functionality below.
 
 // FindByMenuIds 根据菜单ID获取菜单
-func (d *menuInfoDao) FindByMenuIds(ctx context.Context, menuIds []int64) (res []entity.MenuInfo, err error) {
+func (d *menuInfoDao) FindByMenuIds(ctx context.Context, menuIds []int64) (res []*entity.MenuInfo, err error) {
 	cols := d.Columns()
 	err = d.Ctx(ctx).WhereIn(cols.Id, menuIds).Scan(&res)
+	return
+}
+
+// FindByID 根据ID获取菜单
+func (d *menuInfoDao) FindByID(ctx context.Context, id int64) (res *entity.MenuInfo, err error) {
+	cols := d.Columns()
+	err = d.Ctx(ctx).Where(cols.Id, id).Scan(&res)
+	return
+}
+
+// FindAll 获取所有菜单
+func (d *menuInfoDao) FindAll(ctx context.Context) (res []*entity.MenuInfo, err error) {
+	err = d.Ctx(ctx).Scan(&res)
 	return
 }

@@ -26,7 +26,7 @@ var (
 // FindMenuIdsByRoleId 根据角色ID获取菜单
 func (d *roleMenuDao) FindMenuIdsByRoleId(ctx context.Context, roleId int64) (res []int64, err error) {
 	cols := d.Columns()
-	model := []entity.RoleMenu{}
+	model := []*entity.RoleMenu{}
 	err = d.Ctx(ctx).Where(cols.RoleId, roleId).Fields(cols.MenuId).Scan(&model)
 	res = make([]int64, 0, len(model))
 	for _, v := range model {

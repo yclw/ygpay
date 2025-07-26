@@ -5,7 +5,10 @@
 package dao
 
 import (
+	"context"
 	"yclw/ygpay/internal/dao/internal"
+	"yclw/ygpay/internal/model/do"
+	"yclw/ygpay/internal/model/entity"
 )
 
 // apiInfoDao is the data access object for the table t_api_info.
@@ -20,3 +23,67 @@ var (
 )
 
 // Add your custom methods and functionality below.
+
+// FindByID 根据ID查询
+func (d *apiInfoDao) FindByID(ctx context.Context, id int64) (res *entity.ApiInfo, err error) {
+	err = d.Ctx(ctx).Where("id = ?", id).Scan(&res)
+	return
+}
+
+// FindAll 查询所有
+func (d *apiInfoDao) FindAll(ctx context.Context) (res []*entity.ApiInfo, err error) {
+	err = d.Ctx(ctx).Scan(&res)
+	return
+}
+
+// FindByApiIds 根据apiID列表查询
+func (d *apiInfoDao) FindByApiIds(ctx context.Context, apiIds []int64) (res []*entity.ApiInfo, err error) {
+	cols := d.Columns()
+	err = d.Ctx(ctx).WhereIn(cols.Id, apiIds).Scan(&res)
+	return
+}
+
+// Create 创建
+func (d *apiInfoDao) Create(ctx context.Context, api *do.ApiInfo) (id int64, err error) {
+	cols := d.Columns()
+	res, err := d.Ctx(ctx).Fields(
+		cols.Name,
+		cols.Path,
+		cols.Method,
+		cols.GroupName,
+		cols.Description,
+		cols.NeedAuth,
+		cols.RateLimit,
+		cols.Sort,
+		cols.Status,
+	).Data(api).Insert()
+	if err != nil {
+		return
+	}
+	id, err = res.LastInsertId()
+	return
+}
+
+// Update 更新
+func (d *apiInfoDao) Update(ctx context.Context, api *do.ApiInfo) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Where(cols.Id, api.Id).Fields(
+		cols.Name,
+		cols.Path,
+		cols.Method,
+		cols.GroupName,
+		cols.Description,
+		cols.NeedAuth,
+		cols.RateLimit,
+		cols.Sort,
+		cols.Status,
+	).Data(api).Update()
+	return
+}
+
+// Delete 删除
+func (d *apiInfoDao) Delete(ctx context.Context, id int64) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Where(cols.Id, id).Delete()
+	return
+}
