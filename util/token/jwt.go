@@ -43,7 +43,7 @@ func (h *JwtHandler) CreateToken(ctx context.Context, c jwt.Claims) (header stri
 	// 获取当前时间
 	now := time.Now()
 
-	// 过期时长
+	// 过期时长(时间戳)
 	expires = h.config.Expires
 
 	// 创建RegisteredClaims

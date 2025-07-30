@@ -14,6 +14,7 @@ func (c *ControllerV1) Update(ctx context.Context, req *v1.UpdateReq) (res *v1.U
 	input := &member.MemberUpdateModel{}
 	input.Uid = req.Uid
 	input.Username = req.Username
+	input.Nickname = req.Nickname
 	input.Avatar = req.Avatar
 	input.Sex = req.Sex
 	input.Email = req.Email

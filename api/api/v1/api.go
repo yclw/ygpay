@@ -20,25 +20,39 @@ type ApiModel struct {
 	UpdatedAt   *gtime.Time
 }
 
-// GetListReq 获取用户列表
+// GetListReq 获取API列表
 type GetListReq struct {
-	g.Meta `path:"/api/list" method:"get" tags:"API管理" summary:"获取API列表"`
+	g.Meta    `path:"/api/list" method:"get" tags:"API管理" summary:"获取API列表"`
+	Page      int         `json:"page" v:"required|min:1" dc:"页码"`
+	Size      int         `json:"size" v:"required|between:1,100" dc:"每页条数"`
+	NeedAuth  *int        `json:"needAuth" dc:"是否需要认证（0:否 1:是）"`
+	StartDate *gtime.Time `json:"startDate" dc:"开始日期"`
+	EndDate   *gtime.Time `json:"endDate" dc:"结束日期"`
+	SortField string      `json:"sortField" dc:"排序字段"`
+	SortDesc  bool        `json:"sortDesc" dc:"是否降序"`
+	Name      string      `json:"name" dc:"API名称"`
+	Path      string      `json:"path" dc:"API路径"`
+	Method    string      `json:"method" dc:"API方法"`
+	GroupName string      `json:"groupName" dc:"API分组"`
+	Status    *int        `json:"status" dc:"状态筛选（0:禁用 1:启用）"`
 }
 
 type GetListRes struct {
-	List []*ApiModel
+	List  []*ApiModel `json:"list" dc:"API列表"`
+	Total int         `json:"total" dc:"总条数"`
 }
 
-// GetOneReq 获取用户详情
+// GetOneReq 获取API详情
 type GetOneReq struct {
 	g.Meta `path:"/api/one" method:"get" tags:"API管理" summary:"获取API详情"`
+	Id     int64 `json:"id" v:"required" dc:"APIID"`
 }
 
 type GetOneRes struct {
-	Member *ApiModel
+	*ApiModel
 }
 
-// CreateReq 创建用户
+// CreateReq 创建API
 type CreateReq struct {
 	g.Meta      `path:"/api/create" method:"post" tags:"API管理" summary:"创建API"`
 	Name        string `json:"name" v:"required" dc:"API名称"`
@@ -55,7 +69,7 @@ type CreateReq struct {
 type CreateRes struct {
 }
 
-// UpdateReq 更新用户
+// UpdateReq 更新API
 type UpdateReq struct {
 	g.Meta      `path:"/api/update" method:"put" tags:"API管理" summary:"更新API"`
 	Id          int64  `json:"id" v:"required" dc:"APIID"`
@@ -73,9 +87,10 @@ type UpdateReq struct {
 type UpdateRes struct {
 }
 
-// DeleteReq 删除用户
+// DeleteReq 删除API
 type DeleteReq struct {
 	g.Meta `path:"/api/delete" method:"delete" tags:"API管理" summary:"删除API"`
+	Id     int64 `json:"id" v:"required" dc:"APIID"`
 }
 
 type DeleteRes struct {

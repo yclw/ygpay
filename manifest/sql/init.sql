@@ -61,6 +61,90 @@ INSERT INTO t_role_menu (role_id, menu_id) VALUES (1, 1);
 INSERT INTO t_role_menu (role_id, menu_id) VALUES (1, 2);
 INSERT INTO t_role_menu (role_id, menu_id) VALUES (1, 3);
 
+-- api信息表
 
+-- api列表
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('api列表', '/api/list', 'GET', 'api', '获取api列表', 1, 1000, 1, NOW(), NOW());
 
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('api详情', '/api/one', 'GET', 'api', '获取api详情', 1, 1000, 1, NOW(), NOW());
 
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('api创建', '/api/create', 'POST', 'api', '创建api', 1, 1000, 1, NOW(), NOW());
+
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('api更新', '/api/update', 'PUT', 'api', '更新api', 1, 1000, 1, NOW(), NOW());
+
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('api删除', '/api/delete', 'DELETE', 'api', '删除api', 1, 1000, 1, NOW(), NOW());
+
+-- 角色列表
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('角色列表', '/role/list', 'GET', 'role', '获取角色列表', 1, 1000, 1, NOW(), NOW());
+
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('角色详情', '/role/one', 'GET', 'role', '获取角色详情', 1, 1000, 1, NOW(), NOW());
+
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('角色创建', '/role/create', 'POST', 'role', '创建角色', 1, 1000, 1, NOW(), NOW());
+
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('角色更新', '/role/update', 'PUT', 'role', '更新角色', 1, 1000, 1, NOW(), NOW());
+
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('角色删除', '/role/delete', 'DELETE', 'role', '删除角色', 1, 1000, 1, NOW(), NOW());
+
+-- 用户列表
+
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('用户列表', '/member/list', 'GET', 'member', '获取用户列表', 1, 1000, 1, NOW(), NOW());
+
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('用户详情', '/member/one', 'GET', 'member', '获取用户详情', 1, 1000, 1, NOW(), NOW());
+
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('用户创建', '/member/create', 'POST', 'member', '创建用户', 1, 1000, 1, NOW(), NOW());
+
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('用户更新', '/member/update', 'PUT', 'member', '更新用户', 1, 1000, 1, NOW(), NOW());
+
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('用户删除', '/member/delete', 'DELETE', 'member', '删除用户', 1, 1000, 1, NOW(), NOW());
+
+-- 菜单列表
+
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('菜单列表', '/menu/list', 'GET', 'menu', '获取菜单列表', 1, 1000, 1, NOW(), NOW());
+
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('菜单详情', '/menu/one', 'GET', 'menu', '获取菜单详情', 1, 1000, 1, NOW(), NOW());
+
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('菜单创建', '/menu/create', 'POST', 'menu', '创建菜单', 1, 1000, 1, NOW(), NOW());
+
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('菜单更新', '/menu/update', 'PUT', 'menu', '更新菜单', 1, 1000, 1, NOW(), NOW());
+
+INSERT INTO t_api_info 
+(name, path, method, group_name, description, need_auth, sort, status, created_at, updated_at) VALUES 
+('菜单删除', '/menu/delete', 'DELETE', 'menu', '删除菜单', 1, 1000, 1, NOW(), NOW());

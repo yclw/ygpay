@@ -68,6 +68,7 @@ func (d *memberInfoDao) Create(ctx context.Context, member *do.MemberInfo) (id i
 		cols.Uid,
 		cols.PasswordHash,
 		cols.Username,
+		cols.Nickname,
 		cols.Avatar,
 		cols.Sex,
 		cols.Email,
@@ -89,6 +90,7 @@ func (d *memberInfoDao) Update(ctx context.Context, member *do.MemberInfo) (err 
 	cols := d.Columns()
 	_, err = d.Ctx(ctx).Fields(
 		cols.Username,
+		cols.Nickname,
 		cols.PasswordHash,
 		cols.Avatar,
 		cols.Sex,

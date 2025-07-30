@@ -1,6 +1,8 @@
 package i18n
 
 const (
+	LangEn   = "en"    // 英语
+	LangZh   = "zh"    // 中文
 	LangZhCN = "zh-CN" // 简体中文
 	LangZhTW = "zh-TW" // 繁体中文
 	LangJaJP = "ja-JP" // 日语

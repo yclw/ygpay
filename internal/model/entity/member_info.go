@@ -25,4 +25,5 @@ type MemberInfo struct {
 	Status       int         `json:"status"       orm:"status"         ` // 状态: 0禁用 1启用
 	CreatedAt    *gtime.Time `json:"createdAt"    orm:"created_at"     ` // 创建时间
 	UpdatedAt    *gtime.Time `json:"updatedAt"    orm:"updated_at"     ` // 更新时间
+	Nickname     string      `json:"nickname"     orm:"nickname"       ` // 昵称
 }

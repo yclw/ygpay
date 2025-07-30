@@ -12,6 +12,7 @@ type GetUserInfoReq struct {
 
 type GetUserInfoRes struct {
 	Uid         string      `json:"uid"                 dc:"用户UID"`
+	Nickname    string      `json:"nickname"           dc:"昵称"`
 	RoleId      int64       `json:"roleId"             dc:"所属角色"`
 	Permissions []string    `json:"permissions"        dc:"权限信息"`
 	Username    string      `json:"username"           dc:"用户名"`

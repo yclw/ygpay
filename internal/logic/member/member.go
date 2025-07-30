@@ -4,6 +4,7 @@ import (
 	"context"
 	"yclw/ygpay/internal/dao"
 	"yclw/ygpay/internal/global"
+	"yclw/ygpay/internal/model/entity"
 	"yclw/ygpay/pkg/token"
 
 	"github.com/gogf/gf/v2/errors/gerror"
@@ -21,7 +22,9 @@ func NewMember() *Member {
 
 // GetOne 获取单个用户信息
 func (m *Member) GetOne(ctx context.Context, uid string) (res *MemberModel, err error) {
-	res = &MemberModel{}
+	res = &MemberModel{
+		MemberRole: &entity.MemberRole{},
+	}
 
 	if uid == "" {
 		err = gerror.New("用户身份异常，请重新登录！")
@@ -83,6 +86,7 @@ func (s *Member) GetAllList(ctx context.Context) (res []*MemberModel, err error)
 	for _, member := range members {
 		memberModel := &MemberModel{
 			MemberInfo: member,
+			MemberRole: &entity.MemberRole{},
 		}
 
 		// 获取登录统计信息

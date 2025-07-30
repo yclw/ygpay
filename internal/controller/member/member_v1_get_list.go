@@ -19,6 +19,7 @@ func (c *ControllerV1) GetList(ctx context.Context, req *v1.GetListReq) (res *v1
 			RoleId:       member.RoleId,
 			Username:     member.Username,
 			PasswordHash: member.PasswordHash,
+			Nickname:     member.Nickname,
 			Avatar:       member.Avatar,
 			Sex:          member.Sex,
 			Email:        member.Email,

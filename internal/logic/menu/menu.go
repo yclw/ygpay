@@ -3,6 +3,7 @@ package menu
 import (
 	"context"
 	"yclw/ygpay/internal/dao"
+	"yclw/ygpay/util/tree"
 )
 
 var MenuService = NewMenu()
@@ -24,37 +25,142 @@ func (m *Menu) GetOne(ctx context.Context, id int64) (res *MenuModel, err error)
 		return
 	}
 	res.MenuInfo = menu
+
+	// 获得pid
+	pid, err := dao.MenuTree.FindPidById(ctx, id)
+	if err != nil {
+		return
+	}
+	res.Pid = pid
 	return
 }
 
 // GetAllList 获取所有菜单列表
-func (m *Menu) GetAllList(ctx context.Context) (res []*MenuModel, err error) {
+func (m *Menu) GetAllList(ctx context.Context) (res []*MenuModel, idTree *tree.IdTree, err error) {
 	// 获取所有菜单信息
 	menus, err := dao.MenuInfo.FindAll(ctx)
 	if err != nil {
 		return
 	}
 
-	res = make([]*MenuModel, 0, len(menus))
-	for _, menu := range menus {
-		res = append(res, &MenuModel{MenuInfo: menu})
+	// 获取所有菜单id树关系
+	Ts, err := dao.MenuTree.FindAll(ctx)
+	if err != nil {
+		return
 	}
 
-	// 获取所有菜单id树
+	// 构建菜单树
+	Ts = append(Ts, tree.T{Id: 0, Pid: -1})
+	idTree, err = tree.BuildTree(Ts, 0)
+	if err != nil {
+		return
+	}
+
+	// 转换为MenuModel
+	res = make([]*MenuModel, 0, len(menus))
+	for _, menu := range menus {
+		res = append(res, &MenuModel{MenuInfo: menu, TreeNode: idTree.NodeMap[menu.Id]})
+		idTree.NodeMap[menu.Id].Data = menu
+	}
+
 	return
+}
+
+// GetListWithFilter 获取菜单列表
+func (m *Menu) GetListWithFilter(ctx context.Context, page, size int, filter *MenuListFilter) (res []*MenuModel, total int, err error) {
+	// 构建查询选项
+	options := m.buildQueryOptions(filter)
+
+	// 获取筛选后的菜单信息
+	menus, total, err := dao.MenuInfo.FindWithPageAndOptions(ctx, page, size, options...)
+	if err != nil {
+		return
+	}
+
+	// 获取所有菜单id树关系
+	Ts, err := dao.MenuTree.FindAll(ctx)
+	if err != nil {
+		return
+	}
+	pidMap := make(map[int64]int64)
+	for _, t := range Ts {
+		pidMap[t.Id] = t.Pid
+	}
+
+	// 转换为MenuModel
+	res = make([]*MenuModel, 0, len(menus))
+	for _, menu := range menus {
+		res = append(res, &MenuModel{MenuInfo: menu, TreeNode: &tree.TreeNode{Id: menu.Id, Pid: pidMap[menu.Id]}})
+	}
+
+	return
+}
+
+// buildQueryOptions 构建查询选项
+func (a *Menu) buildQueryOptions(filter *MenuListFilter) []dao.QueryOption {
+	if filter == nil {
+		return nil
+	}
+
+	var options []dao.QueryOption
+	cols := dao.MenuInfo.Columns()
+
+	if filter.Status != nil {
+		options = append(options, dao.Where(cols.Status, *filter.Status))
+	}
+
+	return options
 }
 
 // Create 创建菜单
 func (m *Menu) Create(ctx context.Context, req *MenuCreateModel) (err error) {
+	// 创建菜单
+	id, err := dao.MenuInfo.Create(ctx, req.MenuInfo)
+	if err != nil {
+		return
+	}
+
+	req.MenuTree.Id = id
+
+	// 创建菜单树
+	_, err = dao.MenuTree.Create(ctx, req.MenuTree)
+	if err != nil {
+		return
+	}
+
 	return
 }
 
 // Update 更新菜单
 func (m *Menu) Update(ctx context.Context, req *MenuUpdateModel) (err error) {
+	// 更新菜单
+	err = dao.MenuInfo.Update(ctx, req.MenuInfo)
+	if err != nil {
+		return
+	}
+
+	// 更新菜单树
+	err = dao.MenuTree.Update(ctx, req.MenuTree)
+	if err != nil {
+		return
+	}
+
 	return
 }
 
 // Delete 删除菜单
 func (m *Menu) Delete(ctx context.Context, id int64) (err error) {
+	// 删除菜单
+	err = dao.MenuInfo.Delete(ctx, id)
+	if err != nil {
+		return
+	}
+
+	// 删除菜单树
+	err = dao.MenuTree.Delete(ctx, id)
+	if err != nil {
+		return
+	}
+
 	return
 }

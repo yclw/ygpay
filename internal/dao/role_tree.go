@@ -7,6 +7,9 @@ package dao
 import (
 	"context"
 	"yclw/ygpay/internal/dao/internal"
+	"yclw/ygpay/internal/model/do"
+	"yclw/ygpay/internal/model/entity"
+	"yclw/ygpay/util/tree"
 )
 
 // roleTreeDao is the data access object for the table t_role_tree.
@@ -45,5 +48,54 @@ func (d *roleTreeDao) FindSubRoleIds(ctx context.Context, roleId int64) (roleIds
 		roleIds = append(roleIds, subChildIds...)
 	}
 
+	return
+}
+
+// FindPidById 根据菜单ID获取父菜单ID
+func (d *roleTreeDao) FindPidById(ctx context.Context, id int64) (res int64, err error) {
+	model := entity.RoleTree{}
+	cols := d.Columns()
+	err = d.Ctx(ctx).Where(cols.Id, id).Scan(&model)
+	if err != nil {
+		return
+	}
+	res = model.Pid
+	return
+}
+
+// FindAll 查询所有角色树
+func (d *roleTreeDao) FindAll(ctx context.Context) (res []tree.T, err error) {
+	err = d.Ctx(ctx).Scan(&res)
+	return
+}
+
+// Create 创建角色树
+func (d *roleTreeDao) Create(ctx context.Context, req *do.RoleTree) (id int64, err error) {
+	cols := d.Columns()
+	mod, err := d.Ctx(ctx).Fields(
+		cols.Pid,
+		cols.Id,
+	).Data(req).OmitEmpty().Insert()
+	if err != nil {
+		return
+	}
+	id, err = mod.LastInsertId()
+	return
+}
+
+// Update 更新角色树
+func (d *roleTreeDao) Update(ctx context.Context, req *do.RoleTree) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Where(cols.Id, req.Id).Fields(
+		cols.Pid,
+		cols.Id,
+	).Data(req).OmitEmpty().Update()
+	return
+}
+
+// Delete 删除角色树
+func (d *roleTreeDao) Delete(ctx context.Context, id int64) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Where(cols.Id, id).Delete()
 	return
 }

@@ -134,7 +134,7 @@ func (l *Login) handleLogin(ctx context.Context, member *entity.MemberInfo) (res
 		Username:     user.Username,
 		Uid:          user.Uid,
 		Token:        header,
-		Expires:      expires,
+		Expires:      gtime.Now().Add(time.Duration(expires) * time.Second).Unix(),
 		RefreshToken: refreshHeader,
 	}
 	return
@@ -218,10 +218,13 @@ func (l *Login) RefreshToken(ctx context.Context, refreshToken string) (res *v1.
 	// 更新刷新token缓存
 	global.Cache().Set(ctx, refreshKey, refreshHeader, time.Duration(refreshExpires)*time.Second)
 
+	// 获取当前时间
+	now := time.Now()
+
 	// 返回登录信息
 	res = &v1.LoginRefreshTokenRes{
 		Token:        header,
-		Expires:      expires,
+		Expires:      now.Add(time.Duration(expires) * time.Second).Unix(),
 		RefreshToken: refreshHeader,
 	}
 	return

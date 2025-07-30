@@ -6,10 +6,21 @@ package role
 
 import (
 	"yclw/ygpay/api/role"
+	apiService "yclw/ygpay/internal/logic/api"
+	menuService "yclw/ygpay/internal/logic/menu"
+	roleService "yclw/ygpay/internal/logic/role"
 )
 
-type ControllerV1 struct{}
+type ControllerV1 struct {
+	RoleService *roleService.Role
+	MenuService *menuService.Menu
+	ApiService  *apiService.Api
+}
 
 func NewV1() role.IRoleV1 {
-	return &ControllerV1{}
+	return &ControllerV1{
+		RoleService: roleService.RoleService,
+		MenuService: menuService.MenuService,
+		ApiService:  apiService.ApiService,
+	}
 }

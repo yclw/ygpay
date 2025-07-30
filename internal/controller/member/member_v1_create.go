@@ -14,6 +14,7 @@ func (c *ControllerV1) Create(ctx context.Context, req *v1.CreateReq) (res *v1.C
 	input := &member.MemberCreateModel{}
 	input.RoleId = req.RoleId
 	input.Username = req.Username
+	input.Nickname = req.Nickname
 	input.RoleId = req.RoleId
 	input.Avatar = req.Avatar
 	input.Sex = req.Sex

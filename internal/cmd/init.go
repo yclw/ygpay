@@ -60,9 +60,14 @@ func SetTimeZone(ctx context.Context) {
 // SetI18n 设置i18n
 func InitI18n(ctx context.Context) {
 	language := global.GetLanguageConfig(ctx)
-	if !i18n.IsLang(language) {
+
+	i18n.AddUseLang(i18n.LangZhCN)
+	i18n.AddUseLang(i18n.LangEn)
+
+	if !i18n.IsUseLang(language) {
 		language = i18n.LangZhCN
 	}
+
 	global.SetLanguage(language)
 	g.Log().Debug(ctx, "i18n设置成功：%v", language)
 }

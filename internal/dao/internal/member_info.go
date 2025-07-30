@@ -36,6 +36,7 @@ type MemberInfoColumns struct {
 	Status       string // 状态: 0禁用 1启用
 	CreatedAt    string // 创建时间
 	UpdatedAt    string // 更新时间
+	Nickname     string // 昵称
 }
 
 // memberInfoColumns holds the columns for the table t_member_info.
@@ -55,6 +56,7 @@ var memberInfoColumns = MemberInfoColumns{
 	Status:       "status",
 	CreatedAt:    "created_at",
 	UpdatedAt:    "updated_at",
+	Nickname:     "nickname",
 }
 
 // NewMemberInfoDao creates and returns a new DAO object for table data access.

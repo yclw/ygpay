@@ -9,7 +9,7 @@ import (
 
 func (c *ControllerV1) GetOne(ctx context.Context, req *v1.GetOneReq) (res *v1.GetOneRes, err error) {
 	uid := contexts.GetUserUid(ctx)
-	member, err := c.MemberService.GetOneEncrypt(ctx, uid)
+	member, err := c.MemberService.GetOne(ctx, uid)
 	if err != nil {
 		return
 	}
@@ -19,6 +19,7 @@ func (c *ControllerV1) GetOne(ctx context.Context, req *v1.GetOneReq) (res *v1.G
 		RoleId:       member.RoleId,
 		Username:     member.Username,
 		PasswordHash: member.PasswordHash,
+		Nickname:     member.Nickname,
 		Avatar:       member.Avatar,
 		Sex:          member.Sex,
 		Email:        member.Email,

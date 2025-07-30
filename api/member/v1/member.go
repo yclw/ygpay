@@ -10,6 +10,7 @@ type MemberModel struct {
 	RoleId       int64
 	Username     string
 	PasswordHash string
+	Nickname     string
 	Avatar       string
 	Sex          int
 	Email        string
@@ -48,6 +49,7 @@ type GetOneRes struct {
 type CreateReq struct {
 	g.Meta   `path:"/member/create" method:"post" tags:"用户管理" summary:"创建用户"`
 	Username string `json:"username"            dc:"用户名"`
+	Nickname string `json:"nickname"            dc:"昵称"`
 	Password string `json:"password"            dc:"密码"`
 	RoleId   int64  `json:"roleId"              dc:"角色ID"`
 	Avatar   string `json:"avatar"    dc:"头像"`
@@ -68,6 +70,7 @@ type UpdateReq struct {
 	g.Meta   `path:"/member/update" method:"put" tags:"用户管理" summary:"更新用户"`
 	Uid      string `json:"uid" v:"required"                 dc:"用户ID"`
 	Username string `json:"username" v:"required"  dc:"用户名"`
+	Nickname string `json:"nickname" v:"required"  dc:"昵称"`
 	Avatar   string `json:"avatar" v:"required"    dc:"头像"`
 	Sex      int    `json:"sex" v:"required"       dc:"性别"`
 	Email    string `json:"email" v:"required"     dc:"邮箱"`

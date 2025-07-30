@@ -8,6 +8,7 @@ USE ygpay;
 CREATE TABLE t_member_info (
     id                   BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '用户ID',
     uid                  VARCHAR(36)  DEFAULT '' NOT NULL COMMENT '用户UID',
+    nickname             VARCHAR(20)  DEFAULT '' NOT NULL COMMENT '昵称',
     username             VARCHAR(20)  DEFAULT '' NOT NULL COMMENT '帐号',
     password_hash        VARCHAR(255) DEFAULT '' NOT NULL COMMENT '密码哈希',
     avatar               VARCHAR(255) DEFAULT '' NULL COMMENT '头像',

@@ -27,4 +27,5 @@ type MemberInfo struct {
 	Status       interface{} // 状态: 0禁用 1启用
 	CreatedAt    *gtime.Time // 创建时间
 	UpdatedAt    *gtime.Time // 更新时间
+	Nickname     interface{} // 昵称
 }

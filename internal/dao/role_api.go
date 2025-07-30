@@ -23,11 +23,11 @@ var (
 
 // Add your custom methods and functionality below.
 
-// FindRoleIdsByRoleIds 根据角色ID列表查询apiID列表
-func (d *roleApiDao) FindRoleIdsByRoleIds(ctx context.Context, roleIds []int64) (res []int64, err error) {
+// FindApiIdsByRoleId 根据角色ID查询apiID列表
+func (d *roleApiDao) FindApiIdsByRoleId(ctx context.Context, roleId int64) (res []int64, err error) {
 	model := []*entity.RoleApi{}
 	cols := d.Columns()
-	err = d.Ctx(ctx).WhereIn(cols.RoleId, roleIds).Scan(&model)
+	err = d.Ctx(ctx).Where(cols.RoleId, roleId).Scan(&model)
 	if err != nil {
 		return
 	}

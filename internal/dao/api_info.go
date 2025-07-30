@@ -26,13 +26,41 @@ var (
 
 // FindByID 根据ID查询
 func (d *apiInfoDao) FindByID(ctx context.Context, id int64) (res *entity.ApiInfo, err error) {
-	err = d.Ctx(ctx).Where("id = ?", id).Scan(&res)
+	cols := d.Columns()
+	err = d.Ctx(ctx).Where(cols.Id, id).Scan(&res)
 	return
 }
 
 // FindAll 查询所有
 func (d *apiInfoDao) FindAll(ctx context.Context) (res []*entity.ApiInfo, err error) {
 	err = d.Ctx(ctx).Scan(&res)
+	return
+}
+
+// FindWithPage 分页查询
+func (d *apiInfoDao) FindWithPage(ctx context.Context, page, pageSize int) (res []*entity.ApiInfo, err error) {
+	cols := d.Columns()
+	err = d.Ctx(ctx).OrderAsc(cols.Sort).OrderDesc(cols.CreatedAt).Page(page, pageSize).Scan(&res)
+	return
+}
+
+// FindWithPageAndOptions 带筛选条件的分页查询
+func (d *apiInfoDao) FindWithPageAndOptions(ctx context.Context, page, pageSize int, options ...QueryOption) (res []*entity.ApiInfo, total int, err error) {
+
+	// 基础查询模型
+	model := d.Ctx(ctx)
+
+	// 应用筛选选项
+	model = applyOptions(model, options...)
+
+	// 获取总数
+	total, err = model.Count()
+	if err != nil {
+		return
+	}
+
+	// 默认排序 + 分页查询
+	err = model.Page(page, pageSize).Scan(&res)
 	return
 }
 

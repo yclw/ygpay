@@ -7,6 +7,7 @@ package dao
 import (
 	"context"
 	"yclw/ygpay/internal/dao/internal"
+	"yclw/ygpay/internal/model/do"
 	"yclw/ygpay/internal/model/entity"
 )
 
@@ -40,5 +41,80 @@ func (d *menuInfoDao) FindByID(ctx context.Context, id int64) (res *entity.MenuI
 // FindAll 获取所有菜单
 func (d *menuInfoDao) FindAll(ctx context.Context) (res []*entity.MenuInfo, err error) {
 	err = d.Ctx(ctx).Scan(&res)
+	return
+}
+
+// FindWithPageAndOptions 带筛选条件的分页查询
+func (d *menuInfoDao) FindWithPageAndOptions(ctx context.Context, page, pageSize int, options ...QueryOption) (res []*entity.MenuInfo, total int, err error) {
+
+	// 基础查询模型
+	model := d.Ctx(ctx)
+
+	// 应用筛选选项
+	model = applyOptions(model, options...)
+
+	// 获取总数
+	total, err = model.Count()
+	if err != nil {
+		return
+	}
+
+	// 默认排序 + 分页查询
+	err = model.Page(page, pageSize).Scan(&res)
+	return
+}
+
+// Create 创建菜单
+func (d *menuInfoDao) Create(ctx context.Context, req *do.MenuInfo) (id int64, err error) {
+	cols := d.Columns()
+	mod, err := d.Ctx(ctx).Fields(
+		cols.Name,
+		cols.Path,
+		cols.Icon,
+		cols.Title,
+		cols.ShowParent,
+		cols.Component,
+		cols.NoShowingChildren,
+		cols.Value,
+		cols.ShowTooltip,
+		cols.ParentId,
+		cols.Redirect,
+		cols.Description,
+		cols.Sort,
+		cols.Status,
+	).Data(req).OmitEmpty().Insert()
+	if err != nil {
+		return
+	}
+	id, err = mod.LastInsertId()
+	return
+}
+
+// Update 更新菜单
+func (d *menuInfoDao) Update(ctx context.Context, req *do.MenuInfo) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Where(cols.Id, req.Id).Fields(
+		cols.Name,
+		cols.Path,
+		cols.Icon,
+		cols.Title,
+		cols.ShowParent,
+		cols.Component,
+		cols.NoShowingChildren,
+		cols.Value,
+		cols.ShowTooltip,
+		cols.ParentId,
+		cols.Redirect,
+		cols.Description,
+		cols.Sort,
+		cols.Status,
+	).Data(req).OmitEmpty().Update()
+	return
+}
+
+// Delete 删除菜单
+func (d *menuInfoDao) Delete(ctx context.Context, id int64) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Where(cols.Id, id).Delete()
 	return
 }

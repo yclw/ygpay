@@ -6,10 +6,15 @@ package api
 
 import (
 	"yclw/ygpay/api/api"
+	apiService "yclw/ygpay/internal/logic/api"
 )
 
-type ControllerV1 struct{}
+type ControllerV1 struct {
+	ApiService *apiService.Api
+}
 
 func NewV1() api.IApiV1 {
-	return &ControllerV1{}
+	return &ControllerV1{
+		ApiService: apiService.ApiService,
+	}
 }

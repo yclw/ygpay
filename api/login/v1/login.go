@@ -8,11 +8,11 @@ type LoginConfigReq struct {
 }
 
 type LoginConfigRes struct {
-	RegisterSwitch bool   `json:"loginRegisterSwitch" dc:"注册开关"`
-	CaptchaSwitch  bool   `json:"loginCaptchaSwitch" dc:"验证码开关"`
-	CaptchaType    int    `json:"loginCaptchaType" dc:"验证码类型"`
-	Protocol       string `json:"loginProtocol" dc:"协议"`
-	Policy         string `json:"loginPolicy" dc:"政策"`
+	RegisterSwitch bool   `json:"registerSwitch" dc:"注册开关"`
+	CaptchaSwitch  bool   `json:"captchaSwitch" dc:"验证码开关"`
+	CaptchaType    int    `json:"captchaType" dc:"验证码类型"`
+	Protocol       string `json:"protocol" dc:"协议"`
+	Policy         string `json:"policy" dc:"政策"`
 }
 
 // LoginCaptchaReq 获取登录验证码

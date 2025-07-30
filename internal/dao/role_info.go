@@ -7,6 +7,7 @@ package dao
 import (
 	"context"
 	"yclw/ygpay/internal/dao/internal"
+	"yclw/ygpay/internal/model/do"
 	"yclw/ygpay/internal/model/entity"
 )
 
@@ -33,5 +34,48 @@ func (d *roleInfoDao) FindByID(ctx context.Context, id int64) (role *entity.Role
 // FindByRoleIds 根据角色ID列表查询角色信息
 func (d *roleInfoDao) FindByRoleIds(ctx context.Context, roleIds []int64) (roles []*entity.RoleInfo, err error) {
 	err = d.Ctx(ctx).WhereIn(d.Columns().Id, roleIds).Scan(&roles)
+	return
+}
+
+// FindAll 查询所有角色信息
+func (d *roleInfoDao) FindAll(ctx context.Context) (roles []*entity.RoleInfo, err error) {
+	err = d.Ctx(ctx).Scan(&roles)
+	return
+}
+
+// Create 创建角色
+func (d *roleInfoDao) Create(ctx context.Context, req *do.RoleInfo) (id int64, err error) {
+	cols := d.Columns()
+	mod, err := d.Ctx(ctx).Fields(
+		cols.Name,
+		cols.Key,
+		cols.Remark,
+		cols.Sort,
+		cols.Status,
+	).Data(req).OmitEmpty().Insert()
+	if err != nil {
+		return
+	}
+	id, err = mod.LastInsertId()
+	return
+}
+
+// Update 更新角色
+func (d *roleInfoDao) Update(ctx context.Context, req *do.RoleInfo) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Where(cols.Id, req.Id).Fields(
+		cols.Name,
+		cols.Key,
+		cols.Remark,
+		cols.Sort,
+		cols.Status,
+	).Data(req).OmitEmpty().Update()
+	return
+}
+
+// Delete 删除角色
+func (d *roleInfoDao) Delete(ctx context.Context, id int64) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Where(cols.Id, id).Delete()
 	return
 }
