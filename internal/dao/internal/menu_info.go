@@ -21,44 +21,44 @@ type MenuInfoDao struct {
 
 // MenuInfoColumns defines and stores column names for the table t_menu_info.
 type MenuInfoColumns struct {
-	Id                string // 菜单ID
-	Name              string // 菜单名称
-	Path              string // 菜单路径
-	Icon              string // 菜单图标
-	Title             string // 菜单标题
-	ShowParent        string // 是否显示父菜单: 0是 1否
-	Component         string // 组件路径
-	NoShowingChildren string // 是否显示子菜单: 0是 1否
-	Value             string // 菜单值
-	ShowTooltip       string // 是否显示提示: 0是 1否
-	ParentId          string // 父菜单ID
-	Redirect          string // 重定向
-	Description       string // 菜单描述
-	Sort              string // 排序
-	Status            string // 状态: 0禁用 1启用
-	CreatedAt         string // 创建时间
-	UpdatedAt         string // 更新时间
+	Id         string // 菜单ID
+	Type       string // 菜单类型: 0目录 1菜单 2外链
+	Name       string // 菜单名称
+	Path       string // 菜单路径
+	Title      string // 菜单标题
+	Icon       string // 菜单图标
+	Sort       string // 排序
+	ShowParent string // 是否显示父菜单: 0是 1否
+	ShowLink   string // 是否显示该菜单: 0是 1否
+	KeepAlive  string // 是否缓存: 0是 1否
+	Redirect   string // 重定向
+	Component  string // 组件路径
+	FrameSrc   string // 内嵌地址
+	Url        string // 外部链接
+	Status     string // 状态: 0禁用 1启用
+	CreatedAt  string // 创建时间
+	UpdatedAt  string // 更新时间
 }
 
 // menuInfoColumns holds the columns for the table t_menu_info.
 var menuInfoColumns = MenuInfoColumns{
-	Id:                "id",
-	Name:              "name",
-	Path:              "path",
-	Icon:              "icon",
-	Title:             "title",
-	ShowParent:        "showParent",
-	Component:         "component",
-	NoShowingChildren: "noShowingChildren",
-	Value:             "value",
-	ShowTooltip:       "showTooltip",
-	ParentId:          "parentId",
-	Redirect:          "redirect",
-	Description:       "description",
-	Sort:              "sort",
-	Status:            "status",
-	CreatedAt:         "created_at",
-	UpdatedAt:         "updated_at",
+	Id:         "id",
+	Type:       "type",
+	Name:       "name",
+	Path:       "path",
+	Title:      "title",
+	Icon:       "icon",
+	Sort:       "sort",
+	ShowParent: "showParent",
+	ShowLink:   "showLink",
+	KeepAlive:  "keepAlive",
+	Redirect:   "redirect",
+	Component:  "component",
+	FrameSrc:   "frameSrc",
+	Url:        "url",
+	Status:     "status",
+	CreatedAt:  "created_at",
+	UpdatedAt:  "updated_at",
 }
 
 // NewMenuInfoDao creates and returns a new DAO object for table data access.

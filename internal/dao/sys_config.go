@@ -59,6 +59,6 @@ func (d *sysConfigDao) Update(ctx context.Context, conf *do.SysConfig) (err erro
 		cols.Description,
 		cols.Sort,
 		cols.Status,
-	).Data(conf).OmitEmpty().Update()
+	).Data(conf).OmitNil().Update()
 	return
 }

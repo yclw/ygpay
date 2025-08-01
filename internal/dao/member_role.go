@@ -51,7 +51,7 @@ func (d *memberRoleDao) FindUserIdsByRoleIds(ctx context.Context, roleIds []int6
 // UpdateRoleIdByMemberId 更新用户角色
 func (d *memberRoleDao) UpdateRoleIdByMemberId(ctx context.Context, do *do.MemberRole) (err error) {
 	cols := d.Columns()
-	_, err = d.Ctx(ctx).Fields(cols.RoleId).Data(do).OmitEmpty().Where(cols.MemberId, do.MemberId).Update()
+	_, err = d.Ctx(ctx).Fields(cols.RoleId).Data(do).OmitNil().Where(cols.MemberId, do.MemberId).Update()
 	return
 }
 

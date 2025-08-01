@@ -17,25 +17,26 @@ func (c *ControllerV2) GetOne(ctx context.Context, req *v2.GetOneReq) (res *v2.G
 	}, nil
 }
 
-func (c *ControllerV2) menuModelToV2(menu *menu.MenuModel) *v2.MenuModel {
+func (c *ControllerV2) menuModelToV2(menuInfo *menu.MenuModel) *v2.MenuModel {
 	return &v2.MenuModel{
-		Id:                menu.MenuInfo.Id,
-		Pid:               menu.TreeNode.Pid,
-		Name:              menu.MenuInfo.Name,
-		Path:              menu.MenuInfo.Path,
-		Icon:              menu.MenuInfo.Icon,
-		Title:             menu.MenuInfo.Title,
-		ShowParent:        menu.MenuInfo.ShowParent == 1,
-		Component:         menu.MenuInfo.Component,
-		NoShowingChildren: menu.MenuInfo.NoShowingChildren == 1,
-		Value:             menu.MenuInfo.Value,
-		ShowTooltip:       menu.MenuInfo.ShowTooltip == 1,
-		ParentId:          menu.MenuInfo.ParentId,
-		Redirect:          menu.MenuInfo.Redirect,
-		Description:       menu.MenuInfo.Description,
-		Sort:              menu.MenuInfo.Sort,
-		Status:            menu.MenuInfo.Status,
-		CreatedAt:         menu.MenuInfo.CreatedAt,
-		UpdatedAt:         menu.MenuInfo.UpdatedAt,
+		Id:          menuInfo.MenuInfo.Id,
+		Type:        menuInfo.MenuInfo.Type,
+		Name:        menuInfo.MenuInfo.Name,
+		Path:        menuInfo.MenuInfo.Path,
+		Title:       menuInfo.MenuInfo.Title,
+		Icon:        menuInfo.MenuInfo.Icon,
+		Sort:        menuInfo.MenuInfo.Sort,
+		ShowParent:  menuInfo.MenuInfo.ShowParent == 1,
+		ShowLink:    menuInfo.MenuInfo.ShowLink == 1,
+		KeepAlive:   menuInfo.MenuInfo.KeepAlive == 1,
+		ParentId:    &menuInfo.TreeNode.Pid,
+		ParentTitle: menuInfo.ParentTitle,
+		Redirect:    menuInfo.MenuInfo.Redirect,
+		Component:   menuInfo.MenuInfo.Component,
+		FrameSrc:    menuInfo.MenuInfo.FrameSrc,
+		Url:         menuInfo.MenuInfo.Url,
+		Status:      menuInfo.MenuInfo.Status,
+		CreatedAt:   menuInfo.MenuInfo.CreatedAt,
+		UpdatedAt:   menuInfo.MenuInfo.UpdatedAt,
 	}
 }

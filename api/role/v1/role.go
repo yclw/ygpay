@@ -7,19 +7,19 @@ import (
 
 // 角色模型
 type RoleModel struct {
-	Id        int64
-	Name      string
-	Key       string
-	Remark    string
-	Sort      int
-	Status    int
-	CreatedAt *gtime.Time
-	UpdatedAt *gtime.Time
+	Id        int64       `json:"id" dc:"角色ID"`
+	Name      string      `json:"name" dc:"角色名称"`
+	Key       string      `json:"key" dc:"角色权限字符串"`
+	Remark    string      `json:"remark" dc:"备注"`
+	Sort      int         `json:"sort" dc:"排序"`
+	Status    int         `json:"status" dc:"状态"`
+	CreatedAt *gtime.Time `json:"createdAt" dc:"创建时间"`
+	UpdatedAt *gtime.Time `json:"updatedAt" dc:"更新时间"`
 }
 
 // 角色树模型
 type RoleTreeModel struct {
-	Children []*RoleTreeModel `json:"children"` // 子节点列表
+	Children []*RoleTreeModel `json:"children,omitempty"` // 子节点列表
 	*RoleModel
 }
 

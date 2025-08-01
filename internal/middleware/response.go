@@ -19,7 +19,8 @@ import (
 type Response struct {
 	Success bool        `json:"success" dc:"Success"`
 	Code    int         `json:"code"    dc:"Error code"`
-	Message string      `json:"message" dc:"Error message"`
+	Message string      `json:"message" dc:"message"`
+	Level   string      `json:"level"   dc:"Message level"`
 	Data    interface{} `json:"data"    dc:"Result data for certain request according API definition"`
 }
 
@@ -81,9 +82,16 @@ func (m *Middleware) Response(r *ghttp.Request) {
 		msg = code.Message()
 	}
 
+	level := "info"
+	success := code.Code() == gcode.CodeOK.Code()
+	if !success {
+		level = "error"
+	}
+
 	r.Response.WriteJson(Response{
 		Success: code.Code() == gcode.CodeOK.Code(),
 		Code:    code.Code(),
+		Level:   level,
 		Message: msg,
 		Data:    res,
 	})

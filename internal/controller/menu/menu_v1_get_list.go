@@ -4,7 +4,6 @@ import (
 	"context"
 
 	v1 "yclw/ygpay/api/menu/v1"
-	"yclw/ygpay/internal/logic/menu"
 	"yclw/ygpay/util/tree"
 )
 
@@ -30,27 +29,27 @@ func (c *ControllerV1) menuModelToV1Trees(idTree *tree.IdTree) []*v1.MenuTreeMod
 // RoleModelToV1Tree 递归构建RoleTreeModel
 func (c *ControllerV1) menuModelToV1Tree(node *tree.TreeNode) *v1.MenuTreeModel {
 	// 构建RoleTreeModel
-	menuModel := node.Data.(*menu.MenuModel)
+	// menuModel := node.Data.(*menu.MenuModel)
 	menuTreeModel := &v1.MenuTreeModel{
 		MenuModel: &v1.MenuModel{
-			Id:                menuModel.MenuInfo.Id,
-			Pid:               node.Pid,
-			Name:              menuModel.MenuInfo.Name,
-			Path:              menuModel.MenuInfo.Path,
-			Icon:              menuModel.MenuInfo.Icon,
-			Title:             menuModel.MenuInfo.Title,
-			ShowParent:        menuModel.MenuInfo.ShowParent,
-			Component:         menuModel.MenuInfo.Component,
-			NoShowingChildren: menuModel.MenuInfo.NoShowingChildren,
-			Value:             menuModel.MenuInfo.Value,
-			ShowTooltip:       menuModel.MenuInfo.ShowTooltip,
-			ParentId:          menuModel.MenuInfo.ParentId,
-			Redirect:          menuModel.MenuInfo.Redirect,
-			Description:       menuModel.MenuInfo.Description,
-			Sort:              menuModel.MenuInfo.Sort,
-			Status:            menuModel.MenuInfo.Status,
-			CreatedAt:         menuModel.MenuInfo.CreatedAt,
-			UpdatedAt:         menuModel.MenuInfo.UpdatedAt,
+			// Id:                menuModel.MenuInfo.Id,
+			// Pid:               node.Pid,
+			// Name:              menuModel.MenuInfo.Name,
+			// Path:              menuModel.MenuInfo.Path,
+			// Icon:              menuModel.MenuInfo.Icon,
+			// Title:             menuModel.MenuInfo.Title,
+			// ShowParent:        menuModel.MenuInfo.ShowParent,
+			// Component:         menuModel.MenuInfo.Component,
+			// NoShowingChildren: menuModel.MenuInfo.NoShowingChildren,
+			// Value:             menuModel.MenuInfo.Value,
+			// ShowTooltip:       menuModel.MenuInfo.ShowTooltip,
+			// ParentId:          menuModel.MenuInfo.ParentId,
+			// Redirect:          menuModel.MenuInfo.Redirect,
+			// Description:       menuModel.MenuInfo.Description,
+			// Sort:              menuModel.MenuInfo.Sort,
+			// Status:            menuModel.MenuInfo.Status,
+			// CreatedAt:         menuModel.MenuInfo.CreatedAt,
+			// UpdatedAt:         menuModel.MenuInfo.UpdatedAt,
 		},
 	}
 	// 递归构建子节点

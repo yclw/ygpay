@@ -5,12 +5,12 @@ import (
 )
 
 type RoleApiModel struct {
-	Id        int64
-	Name      string
-	Path      string
-	Method    string
-	GroupName string
-	Use       bool
+	Id        int64  `json:"id" dc:"APIID"`
+	Name      string `json:"name" dc:"API名称"`
+	Path      string `json:"path" dc:"API路径"`
+	Method    string `json:"method" dc:"API方法"`
+	GroupName string `json:"groupName" dc:"API分组"`
+	Use       bool   `json:"use" dc:"是否使用"`
 }
 
 // GetRoleApiReq 获取角色API

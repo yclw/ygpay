@@ -14,6 +14,7 @@ type RoleMenuModel struct {
 type MenuModel struct {
 	*entity.MenuInfo
 	*tree.TreeNode
+	ParentTitle string
 }
 
 type MenuCreateModel struct {
@@ -32,3 +33,9 @@ type MenuUpdateModel struct {
 type MenuListFilter struct {
 	Status *int `json:"status"` // 状态筛选
 }
+
+const (
+	MenuTypeDir  = 0
+	MenuTypeMenu = 1
+	MenuTypeLink = 2
+)

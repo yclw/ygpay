@@ -24,3 +24,13 @@ func NewV1() role.IRoleV1 {
 		ApiService:  apiService.ApiService,
 	}
 }
+
+type ControllerV2 struct {
+	RoleService *roleService.Role
+}
+
+func NewV2() role.IRoleV2 {
+	return &ControllerV2{
+		RoleService: roleService.RoleService,
+	}
+}

@@ -11,7 +11,7 @@ import (
 
 // VersionApp 应用版本
 const (
-	VersionApp       = "2.17.8"
+	VersionApp       = "0.0.1"
 	EventServerClose = "server.close" // 服务关闭事件
 )
 

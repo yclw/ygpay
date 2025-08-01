@@ -52,7 +52,7 @@ func (d *roleInfoDao) Create(ctx context.Context, req *do.RoleInfo) (id int64, e
 		cols.Remark,
 		cols.Sort,
 		cols.Status,
-	).Data(req).OmitEmpty().Insert()
+	).Data(req).OmitNil().Insert()
 	if err != nil {
 		return
 	}
@@ -69,7 +69,27 @@ func (d *roleInfoDao) Update(ctx context.Context, req *do.RoleInfo) (err error) 
 		cols.Remark,
 		cols.Sort,
 		cols.Status,
-	).Data(req).OmitEmpty().Update()
+	).Data(req).OmitNil().Update()
+	return
+}
+
+// FindWithPageAndOptions 带筛选条件的分页查询
+func (d *roleInfoDao) FindWithPageAndOptions(ctx context.Context, page, pageSize int, options ...QueryOption) (res []*entity.RoleInfo, total int, err error) {
+
+	// 基础查询模型
+	model := d.Ctx(ctx)
+
+	// 应用筛选选项
+	model = applyOptions(model, options...)
+
+	// 获取总数
+	total, err = model.Count()
+	if err != nil {
+		return
+	}
+
+	// 默认排序 + 分页查询
+	err = model.Page(page, pageSize).Scan(&res)
 	return
 }
 

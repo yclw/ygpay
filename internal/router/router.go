@@ -26,9 +26,9 @@ func Router(ctx context.Context, group *ghttp.Server) {
 		)
 		group.Middleware(middleware.DefaultMiddleware.Jwt) // jwt认证中间件
 		group.Bind(
-			user.NewV1(),
+			user.NewV2(),
 			member.NewV1(),
-			role.NewV1(),
+			role.NewV2(),
 			menu.NewV2(),
 		)
 	})

@@ -6,18 +6,18 @@ import (
 )
 
 type ApiModel struct {
-	Id          int64
-	Name        string
-	Path        string
-	Method      string
-	GroupName   string
-	Description string
-	NeedAuth    int
-	RateLimit   int
-	Sort        int
-	Status      int
-	CreatedAt   *gtime.Time
-	UpdatedAt   *gtime.Time
+	Id          int64       `json:"id" dc:"APIID"`
+	Name        string      `json:"name" dc:"API名称"`
+	Path        string      `json:"path" dc:"API路径"`
+	Method      string      `json:"method" dc:"API方法"`
+	GroupName   string      `json:"groupName" dc:"API分组"`
+	Description string      `json:"description" dc:"API描述"`
+	NeedAuth    int         `json:"needAuth" dc:"是否需要认证"`
+	RateLimit   int         `json:"rateLimit" dc:"限流次数/分钟"`
+	Sort        int         `json:"sort" dc:"排序"`
+	Status      int         `json:"status" dc:"状态"`
+	CreatedAt   *gtime.Time `json:"createdAt" dc:"创建时间"`
+	UpdatedAt   *gtime.Time `json:"updatedAt" dc:"更新时间"`
 }
 
 // GetListReq 获取API列表

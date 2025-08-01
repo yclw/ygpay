@@ -4,7 +4,7 @@ import (
 	"context"
 
 	v1 "yclw/ygpay/api/role/v1"
-	"yclw/ygpay/internal/logic/role"
+	"yclw/ygpay/internal/model/entity"
 	"yclw/ygpay/util/tree"
 )
 
@@ -30,12 +30,17 @@ func (c *ControllerV1) roleModelToV1Trees(idTree *tree.IdTree) []*v1.RoleTreeMod
 // roleModelToV1Tree 递归构建RoleTreeModel
 func (c *ControllerV1) roleModelToV1Tree(node *tree.TreeNode) *v1.RoleTreeModel {
 	// 构建RoleTreeModel
-	roleModel := node.Data.(*role.RoleModel)
+	roleModel := node.Data.(*entity.RoleInfo)
 	roleTreeModel := &v1.RoleTreeModel{
 		RoleModel: &v1.RoleModel{
-			Id:   roleModel.RoleInfo.Id,
-			Name: roleModel.RoleInfo.Name,
-			Key:  roleModel.RoleInfo.Key,
+			Id:        roleModel.Id,
+			Name:      roleModel.Name,
+			Key:       roleModel.Key,
+			Remark:    roleModel.Remark,
+			Sort:      roleModel.Sort,
+			Status:    roleModel.Status,
+			CreatedAt: roleModel.CreatedAt,
+			UpdatedAt: roleModel.UpdatedAt,
 		},
 	}
 	// 递归构建子节点

@@ -51,7 +51,7 @@ func (d *roleTreeDao) FindSubRoleIds(ctx context.Context, roleId int64) (roleIds
 	return
 }
 
-// FindPidById 根据菜单ID获取父菜单ID
+// FindPidById 根据ID获取父ID
 func (d *roleTreeDao) FindPidById(ctx context.Context, id int64) (res int64, err error) {
 	model := entity.RoleTree{}
 	cols := d.Columns()
@@ -75,7 +75,7 @@ func (d *roleTreeDao) Create(ctx context.Context, req *do.RoleTree) (id int64, e
 	mod, err := d.Ctx(ctx).Fields(
 		cols.Pid,
 		cols.Id,
-	).Data(req).OmitEmpty().Insert()
+	).Data(req).OmitNil().Insert()
 	if err != nil {
 		return
 	}
@@ -89,7 +89,7 @@ func (d *roleTreeDao) Update(ctx context.Context, req *do.RoleTree) (err error) 
 	_, err = d.Ctx(ctx).Where(cols.Id, req.Id).Fields(
 		cols.Pid,
 		cols.Id,
-	).Data(req).OmitEmpty().Update()
+	).Data(req).OmitNil().Update()
 	return
 }
 

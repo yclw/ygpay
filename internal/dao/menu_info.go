@@ -68,21 +68,21 @@ func (d *menuInfoDao) FindWithPageAndOptions(ctx context.Context, page, pageSize
 func (d *menuInfoDao) Create(ctx context.Context, req *do.MenuInfo) (id int64, err error) {
 	cols := d.Columns()
 	mod, err := d.Ctx(ctx).Fields(
+		cols.Type,
 		cols.Name,
 		cols.Path,
-		cols.Icon,
 		cols.Title,
-		cols.ShowParent,
-		cols.Component,
-		cols.NoShowingChildren,
-		cols.Value,
-		cols.ShowTooltip,
-		cols.ParentId,
-		cols.Redirect,
-		cols.Description,
+		cols.Icon,
 		cols.Sort,
+		cols.ShowParent,
+		cols.ShowLink,
+		cols.KeepAlive,
+		cols.Redirect,
+		cols.Component,
+		cols.FrameSrc,
+		cols.Url,
 		cols.Status,
-	).Data(req).OmitEmpty().Insert()
+	).Data(req).OmitNil().Insert()
 	if err != nil {
 		return
 	}
@@ -94,21 +94,21 @@ func (d *menuInfoDao) Create(ctx context.Context, req *do.MenuInfo) (id int64, e
 func (d *menuInfoDao) Update(ctx context.Context, req *do.MenuInfo) (err error) {
 	cols := d.Columns()
 	_, err = d.Ctx(ctx).Where(cols.Id, req.Id).Fields(
+		cols.Type,
 		cols.Name,
 		cols.Path,
-		cols.Icon,
 		cols.Title,
-		cols.ShowParent,
-		cols.Component,
-		cols.NoShowingChildren,
-		cols.Value,
-		cols.ShowTooltip,
-		cols.ParentId,
-		cols.Redirect,
-		cols.Description,
+		cols.Icon,
 		cols.Sort,
+		cols.ShowParent,
+		cols.ShowLink,
+		cols.KeepAlive,
+		cols.Redirect,
+		cols.Component,
+		cols.FrameSrc,
+		cols.Url,
 		cols.Status,
-	).Data(req).OmitEmpty().Update()
+	).Data(req).OmitNil().Update()
 	return
 }
 

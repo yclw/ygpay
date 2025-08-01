@@ -77,7 +77,7 @@ func (d *memberInfoDao) Create(ctx context.Context, member *do.MemberInfo) (id i
 		cols.Remark,
 		cols.Sort,
 		cols.Status,
-	).Data(member).OmitEmpty().Insert()
+	).Data(member).Insert()
 	if err != nil {
 		return
 	}
@@ -100,7 +100,7 @@ func (d *memberInfoDao) Update(ctx context.Context, member *do.MemberInfo) (err 
 		cols.Remark,
 		cols.Sort,
 		cols.Status,
-	).Data(member).OmitEmpty().Where(cols.Uid, member.Uid).Update()
+	).Data(member).OmitNil().Where(cols.Uid, member.Uid).Update()
 	if err != nil {
 		return
 	}

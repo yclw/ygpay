@@ -174,3 +174,75 @@ CREATE TABLE t_casbin_rule (
     INDEX idx_v0 (v0),
     INDEX idx_v1 (v1)
 ) COMMENT 'Casbin规则表' CHARSET=utf8mb4;
+
+
+
+-- id // 菜单id（主键id）
+
+-- type // 分类（目录/菜单/外链）
+
+-- 共有：
+
+-- path // 路径（必要，唯一）
+
+-- name // 名称（必要，唯一）
+
+-- title // 标题（必要）
+
+-- icon // 图标（非必要）
+
+-- rank // 排序（默认10）
+
+-- showParent // 是否显示父级菜单（当父级菜单只有唯一子菜单时生效，默认false）
+
+-- keepAlive // 是否缓存（默认false）
+
+-- showLink // 是否显示该菜单（默认ture）
+
+-- 目录：
+
+-- redirect // 重定向到其他path（非必要）
+
+-- children // 子菜单（必要）
+
+-- 菜单：
+
+-- component // 页面路径（必要）
+
+-- 外链：
+
+-- 外部链接：name为地址
+
+-- 内嵌：frameSrc为地址 
+
+-- 菜单信息表
+CREATE TABLE t_menu_info (
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '菜单ID',
+    type        INT          DEFAULT 1 NOT NULL COMMENT '菜单类型: 0目录 1菜单 2外链',
+    name        VARCHAR(128) NOT NULL COMMENT '菜单名称',
+    path        VARCHAR(255) NOT NULL COMMENT '菜单路径',
+    title       VARCHAR(128) NOT NULL COMMENT '菜单标题',
+    icon        VARCHAR(128) COMMENT '菜单图标',
+    sort        INT          DEFAULT 10 NOT NULL COMMENT '排序',
+    showParent  TINYINT(1)   DEFAULT 0 NOT NULL COMMENT '是否显示父菜单: 0是 1否',
+    showLink    TINYINT(1)   DEFAULT 1 NOT NULL COMMENT '是否显示该菜单: 0是 1否',
+    keepAlive   TINYINT(1)   DEFAULT 0 NOT NULL COMMENT '是否缓存: 0是 1否',
+    
+    redirect    VARCHAR(255) COMMENT '重定向',
+
+    component   VARCHAR(200) COMMENT '组件路径',
+
+    frameSrc    VARCHAR(255) COMMENT '内嵌地址',
+    url         VARCHAR(255) COMMENT '外部链接',
+
+    status      TINYINT(1)   DEFAULT 1 NOT NULL COMMENT '状态: 0禁用 1启用',
+    created_at  DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at  DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    
+    UNIQUE INDEX uniq_path (path),
+    UNIQUE INDEX uniq_name (name),
+    INDEX idx_type (type),
+    INDEX idx_path (path),
+    INDEX idx_status (status)
+) COMMENT '菜单信息表' CHARSET=utf8mb4;
+

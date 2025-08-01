@@ -3,6 +3,7 @@ package menu
 import (
 	"context"
 	"yclw/ygpay/internal/dao"
+	"yclw/ygpay/internal/model/entity"
 	"yclw/ygpay/util/tree"
 )
 
@@ -32,6 +33,13 @@ func (m *Menu) GetOne(ctx context.Context, id int64) (res *MenuModel, err error)
 		return
 	}
 	res.Pid = pid
+
+	pMenu, err := dao.MenuInfo.FindByID(ctx, pid)
+	if err != nil {
+		return
+	}
+	res.ParentTitle = pMenu.Title
+
 	return
 }
 
@@ -56,11 +64,24 @@ func (m *Menu) GetAllList(ctx context.Context) (res []*MenuModel, idTree *tree.I
 		return
 	}
 
+	// 创建菜单信息映射表，用于快速查找父菜单标题
+	menuMap := make(map[int64]*entity.MenuInfo)
+	for _, menu := range menus {
+		menuMap[menu.Id] = menu
+	}
+
 	// 转换为MenuModel
 	res = make([]*MenuModel, 0, len(menus))
 	for _, menu := range menus {
-		res = append(res, &MenuModel{MenuInfo: menu, TreeNode: idTree.NodeMap[menu.Id]})
 		idTree.NodeMap[menu.Id].Data = menu
+		treeNode := idTree.NodeMap[menu.Id]
+
+		menuModel := &MenuModel{
+			MenuInfo:    menu,
+			TreeNode:    treeNode,
+			ParentTitle: menuMap[treeNode.Pid].Title,
+		}
+		res = append(res, menuModel)
 	}
 
 	return
@@ -90,7 +111,16 @@ func (m *Menu) GetListWithFilter(ctx context.Context, page, size int, filter *Me
 	// 转换为MenuModel
 	res = make([]*MenuModel, 0, len(menus))
 	for _, menu := range menus {
-		res = append(res, &MenuModel{MenuInfo: menu, TreeNode: &tree.TreeNode{Id: menu.Id, Pid: pidMap[menu.Id]}})
+		pMenu, err := dao.MenuInfo.FindByID(ctx, pidMap[menu.Id])
+		if err != nil {
+			continue
+		}
+		menuModel := &MenuModel{
+			MenuInfo:    menu,
+			TreeNode:    &tree.TreeNode{Id: menu.Id, Pid: pidMap[menu.Id]},
+			ParentTitle: pMenu.Title,
+		}
+		res = append(res, menuModel)
 	}
 
 	return
