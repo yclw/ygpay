@@ -4,21 +4,35 @@ import (
 	"context"
 
 	v1 "yclw/ygpay/api/member/v1"
-	"yclw/ygpay/pkg/contexts"
+	"yclw/ygpay/internal/logic/member"
 )
 
 func (c *ControllerV1) GetOne(ctx context.Context, req *v1.GetOneReq) (res *v1.GetOneRes, err error) {
-	uid := contexts.GetUserUid(ctx)
-	member, err := c.MemberService.GetOne(ctx, uid)
+	member, err := c.MemberService.GetOne(ctx, req.Uid)
 	if err != nil {
 		return
 	}
-	res = &v1.GetOneRes{}
-	res.Member = &v1.MemberModel{
+
+	// 转换基本用户信息
+	memberModel := c.memberModelToV1(member)
+
+	// 获取角色名称
+	role, roleErr := c.RoleService.GetOne(ctx, member.RoleId)
+	if roleErr == nil && role != nil && role.RoleInfo != nil {
+		memberModel.RoleName = role.RoleInfo.Name
+	}
+
+	res = &v1.GetOneRes{
+		MemberModel: memberModel,
+	}
+	return
+}
+
+func (c *ControllerV1) memberModelToV1(member *member.MemberModel) *v1.MemberModel {
+	return &v1.MemberModel{
 		Uid:          member.Uid,
 		RoleId:       member.RoleId,
 		Username:     member.Username,
-		PasswordHash: member.PasswordHash,
 		Nickname:     member.Nickname,
 		Avatar:       member.Avatar,
 		Sex:          member.Sex,
@@ -31,9 +45,5 @@ func (c *ControllerV1) GetOne(ctx context.Context, req *v1.GetOneReq) (res *v1.G
 		Status:       member.Status,
 		CreatedAt:    member.CreatedAt,
 		UpdatedAt:    member.UpdatedAt,
-		LoginCount:   member.LoginCount,
-		LastLoginAt:  member.LastLoginAt,
-		LastLoginIp:  member.LastLoginIp,
 	}
-	return
 }

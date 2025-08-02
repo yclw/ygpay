@@ -10,7 +10,15 @@ import (
 func (c *ControllerV2) GetList(ctx context.Context, req *v2.GetListReq) (res *v2.GetListRes, err error) {
 	// 构建筛选参数
 	filter := &menu.MenuListFilter{
-		Status: req.Status,
+		Status:    req.Status,
+		Type:      req.Type,
+		Name:      req.Name,
+		Path:      req.Path,
+		Title:     req.Title,
+		StartDate: req.StartDate,
+		EndDate:   req.EndDate,
+		SortField: req.SortField,
+		SortDesc:  req.SortDesc,
 	}
 
 	// 调用带筛选的查询方法

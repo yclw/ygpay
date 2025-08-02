@@ -25,4 +25,5 @@ type IMenuV2 interface {
 	Create(ctx context.Context, req *v2.CreateReq) (res *v2.CreateRes, err error)
 	Update(ctx context.Context, req *v2.UpdateReq) (res *v2.UpdateRes, err error)
 	Delete(ctx context.Context, req *v2.DeleteReq) (res *v2.DeleteRes, err error)
+	GetTree(ctx context.Context, req *v2.GetTreeReq) (res *v2.GetTreeRes, err error)
 }

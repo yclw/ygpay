@@ -20,7 +20,7 @@ type UserMenu struct {
 type UserMenuMeta struct {
 	Icon       string `json:"icon,omitempty" dc:"图标"`
 	Title      string `json:"title" dc:"标题"`
-	Rank       int64  `json:"rank" dc:"排序"`
+	Rank       int64  `json:"-" dc:"排序"`
 	ShowParent bool   `json:"showParent" dc:"是否显示父菜单"`
 	KeepAlive  bool   `json:"keepAlive" dc:"是否缓存"`
 	ShowLink   bool   `json:"showLink" dc:"是否显示链接"`

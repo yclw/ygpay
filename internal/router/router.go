@@ -23,13 +23,13 @@ func Router(ctx context.Context, group *ghttp.Server) {
 		group.Bind(
 			api.NewV1(),
 			login.NewV1(),
+			menu.NewV2(),
 		)
 		group.Middleware(middleware.DefaultMiddleware.Jwt) // jwt认证中间件
 		group.Bind(
 			user.NewV2(),
 			member.NewV1(),
 			role.NewV2(),
-			menu.NewV2(),
 		)
 	})
 }

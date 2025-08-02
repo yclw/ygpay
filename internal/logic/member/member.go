@@ -152,6 +152,107 @@ func (s *Member) Update(ctx context.Context, req *MemberUpdateModel) (err error)
 	return
 }
 
+// GetListWithFilter 获取用户列表（带分页和筛选）
+func (s *Member) GetListWithFilter(ctx context.Context, page, size int, filter *MemberListFilter) (res []*MemberModel, total int, err error) {
+	// 构建查询选项
+	options := s.buildQueryOptions(filter)
+
+	// 获取筛选后的用户信息
+	members, total, err := dao.MemberInfo.FindWithPageAndOptions(ctx, page, size, options...)
+	if err != nil {
+		return
+	}
+
+	res = make([]*MemberModel, 0, len(members))
+	for _, member := range members {
+		memberModel := &MemberModel{
+			MemberInfo: member,
+			MemberRole: &entity.MemberRole{},
+		}
+
+		// 获取登录统计信息
+		memberModel.MemberLoginStatModel, err = s.getLoginStat(ctx, member.Id)
+		if err != nil {
+			return nil, 0, err
+		}
+
+		// 获取角色ID
+		roleId, err := dao.MemberRole.FindRoleIdByMemberId(ctx, member.Id)
+		if err != nil {
+			return nil, 0, err
+		}
+		memberModel.RoleId = roleId
+
+		res = append(res, memberModel)
+	}
+	return
+}
+
+// buildQueryOptions 构建查询选项
+func (s *Member) buildQueryOptions(filter *MemberListFilter) []dao.QueryOption {
+	if filter == nil {
+		return nil
+	}
+
+	var options []dao.QueryOption
+	cols := dao.MemberInfo.Columns()
+
+	// 用户名筛选
+	if filter.Username != "" {
+		options = append(options, dao.WhereLike(cols.Username, "%"+filter.Username+"%"))
+	}
+
+	// 昵称筛选
+	if filter.Nickname != "" {
+		options = append(options, dao.WhereLike(cols.Nickname, "%"+filter.Nickname+"%"))
+	}
+
+	// 邮箱筛选
+	if filter.Email != "" {
+		options = append(options, dao.WhereLike(cols.Email, "%"+filter.Email+"%"))
+	}
+
+	// 手机号筛选
+	if filter.Mobile != "" {
+		options = append(options, dao.WhereLike(cols.Mobile, "%"+filter.Mobile+"%"))
+	}
+
+	// 性别筛选
+	if filter.Sex != nil {
+		options = append(options, dao.Where(cols.Sex, *filter.Sex))
+	}
+
+	// 状态筛选
+	if filter.Status != nil {
+		options = append(options, dao.Where(cols.Status, *filter.Status))
+	}
+
+	// 日期范围筛选
+	if filter.StartDate != nil || filter.EndDate != nil {
+		if filter.StartDate != nil && filter.EndDate != nil {
+			options = append(options, dao.WhereBetween(cols.CreatedAt, filter.StartDate, filter.EndDate))
+		} else if filter.StartDate != nil {
+			options = append(options, dao.Where(cols.CreatedAt+" >=", filter.StartDate))
+		} else if filter.EndDate != nil {
+			options = append(options, dao.Where(cols.CreatedAt+" <=", filter.EndDate))
+		}
+	}
+
+	// 排序
+	if filter.SortField != "" {
+		if filter.SortDesc {
+			options = append(options, dao.OrderDesc(filter.SortField))
+		} else {
+			options = append(options, dao.OrderAsc(filter.SortField))
+		}
+	} else {
+		// 默认按创建时间降序
+		options = append(options, dao.OrderDesc(cols.CreatedAt))
+	}
+
+	return options
+}
+
 // Delete 删除用户
 func (s *Member) Delete(ctx context.Context, uid string) (err error) {
 	if err = dao.MemberInfo.DeleteByUid(ctx, uid); err != nil {

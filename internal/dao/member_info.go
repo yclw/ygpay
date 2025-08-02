@@ -107,6 +107,25 @@ func (d *memberInfoDao) Update(ctx context.Context, member *do.MemberInfo) (err 
 	return
 }
 
+// FindWithPageAndOptions 带筛选条件的分页查询
+func (d *memberInfoDao) FindWithPageAndOptions(ctx context.Context, page, pageSize int, options ...QueryOption) (res []*entity.MemberInfo, total int, err error) {
+	// 基础查询模型
+	model := d.Ctx(ctx)
+
+	// 应用筛选选项
+	model = applyOptions(model, options...)
+
+	// 获取总数
+	total, err = model.Count()
+	if err != nil {
+		return
+	}
+
+	// 默认排序 + 分页查询
+	err = model.Page(page, pageSize).Scan(&res)
+	return
+}
+
 // Delete 删除用户
 func (d *memberInfoDao) DeleteByUid(ctx context.Context, uid string) (err error) {
 	_, err = d.Ctx(ctx).Where(d.Columns().Uid, uid).Delete()

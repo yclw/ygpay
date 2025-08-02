@@ -2,7 +2,6 @@ package user
 
 import (
 	"context"
-	"fmt"
 
 	v2 "yclw/ygpay/api/user/v2"
 	"yclw/ygpay/pkg/contexts"
@@ -28,7 +27,6 @@ func (c *ControllerV2) GetUserInfo(ctx context.Context, req *v2.GetUserInfoReq) 
 	if err != nil {
 		return
 	}
-	fmt.Println(role)
 
 	res = &v2.GetUserInfoRes{
 		Uid:       uid,

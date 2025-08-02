@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"sort"
 
 	v2 "yclw/ygpay/api/user/v2"
 	"yclw/ygpay/internal/logic/menu"
@@ -30,6 +31,10 @@ func (c *ControllerV2) treeToRoleMenu(idTree *tree.IdTree) []v2.UserMenu {
 		menu := c.nodeToUserMenu(node)
 		menus = append(menus, menu)
 	}
+	// 排序
+	sort.Slice(menus, func(i, j int) bool {
+		return menus[i].Meta.Rank > menus[j].Meta.Rank
+	})
 	return menus
 }
 
@@ -58,7 +63,14 @@ func (c *ControllerV2) nodeToUserMenu(node *tree.TreeNode) v2.UserMenu {
 		userMenu.FrameSrc = menuModel.FrameSrc
 	}
 	for _, child := range node.Children {
-		userMenu.Children = append(userMenu.Children, c.nodeToUserMenu(child))
+		childMenu := c.nodeToUserMenu(child)
+		userMenu.Children = append(userMenu.Children, childMenu)
 	}
+
+	// 排序
+	sort.Slice(userMenu.Children, func(i, j int) bool {
+		return userMenu.Children[i].Meta.Rank > userMenu.Children[j].Meta.Rank
+	})
+
 	return userMenu
 }

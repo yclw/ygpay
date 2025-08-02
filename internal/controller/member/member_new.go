@@ -7,14 +7,17 @@ package member
 import (
 	"yclw/ygpay/api/member"
 	service "yclw/ygpay/internal/logic/member"
+	roleService "yclw/ygpay/internal/logic/role"
 )
 
 type ControllerV1 struct {
 	MemberService *service.Member
+	RoleService   *roleService.Role
 }
 
 func NewV1() member.IMemberV1 {
 	return &ControllerV1{
 		MemberService: service.MemberService,
+		RoleService:   roleService.RoleService,
 	}
 }

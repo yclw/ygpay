@@ -13,10 +13,10 @@ type T struct {
 // TreeNode 树节点结构
 type TreeNode struct {
 	Id       int64       `json:"id"`                 // 节点ID
+	Title    string      `json:"title,omitempty"`    // 节点标题
 	Pid      int64       `json:"pid"`                // 父节点ID
 	Children []*TreeNode `json:"children,omitempty"` // 子节点列表
-	Title    string      `json:"title,omitempty"`    // 节点标题
-	Data     interface{} `json:"data,omitempty"`     // 附加数据，可以存储完整的业务对象
+	Data     interface{} `json:"-"`                  // 附加数据，可以存储完整的业务对象
 }
 
 // IdTree ID树结构

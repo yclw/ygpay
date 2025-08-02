@@ -18,7 +18,9 @@ func NewMenu() *Menu {
 
 // GetOne 获取单个菜单信息
 func (m *Menu) GetOne(ctx context.Context, id int64) (res *MenuModel, err error) {
-	res = &MenuModel{}
+	res = &MenuModel{
+		TreeNode: &tree.TreeNode{Id: id},
+	}
 
 	// 获取菜单信息
 	menu, err := dao.MenuInfo.FindByID(ctx, id)
@@ -77,9 +79,11 @@ func (m *Menu) GetAllList(ctx context.Context) (res []*MenuModel, idTree *tree.I
 		treeNode := idTree.NodeMap[menu.Id]
 
 		menuModel := &MenuModel{
-			MenuInfo:    menu,
-			TreeNode:    treeNode,
-			ParentTitle: menuMap[treeNode.Pid].Title,
+			MenuInfo: menu,
+			TreeNode: treeNode,
+		}
+		if menuMap[treeNode.Pid] != nil {
+			menuModel.ParentTitle = menuMap[treeNode.Pid].Title
 		}
 		res = append(res, menuModel)
 	}
@@ -112,9 +116,10 @@ func (m *Menu) GetListWithFilter(ctx context.Context, page, size int, filter *Me
 	res = make([]*MenuModel, 0, len(menus))
 	for _, menu := range menus {
 		pMenu, err := dao.MenuInfo.FindByID(ctx, pidMap[menu.Id])
-		if err != nil {
+		if err != nil || pMenu == nil {
 			continue
 		}
+
 		menuModel := &MenuModel{
 			MenuInfo:    menu,
 			TreeNode:    &tree.TreeNode{Id: menu.Id, Pid: pidMap[menu.Id]},
@@ -135,8 +140,43 @@ func (a *Menu) buildQueryOptions(filter *MenuListFilter) []dao.QueryOption {
 	var options []dao.QueryOption
 	cols := dao.MenuInfo.Columns()
 
+	// 状态筛选
 	if filter.Status != nil {
 		options = append(options, dao.Where(cols.Status, *filter.Status))
+	}
+
+	// 菜单类型筛选
+	if filter.Type != nil {
+		options = append(options, dao.Where(cols.Type, *filter.Type))
+	}
+
+	// 菜单名称筛选（模糊匹配）
+	if filter.Name != "" {
+		options = append(options, dao.WhereLike(cols.Name, "%"+filter.Name+"%"))
+	}
+
+	// 菜单路径筛选（模糊匹配）
+	if filter.Path != "" {
+		options = append(options, dao.WhereLike(cols.Path, "%"+filter.Path+"%"))
+	}
+
+	// 菜单标题筛选（模糊匹配）
+	if filter.Title != "" {
+		options = append(options, dao.WhereLike(cols.Title, "%"+filter.Title+"%"))
+	}
+
+	// 日期范围筛选
+	if filter.StartDate != nil || filter.EndDate != nil {
+		options = append(options, dao.WhereBetween(cols.CreatedAt, filter.StartDate, filter.EndDate))
+	}
+
+	// 自定义排序
+	if filter.SortField != "" {
+		if filter.SortDesc {
+			options = append(options, dao.OrderDesc(filter.SortField))
+		} else {
+			options = append(options, dao.OrderAsc(filter.SortField))
+		}
 	}
 
 	return options

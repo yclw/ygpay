@@ -30,10 +30,18 @@ type MenuModel struct {
 
 // GetListReq 获取菜单列表
 type GetListReq struct {
-	g.Meta `path:"/menu/list" method:"get" tags:"菜单管理" summary:"获取菜单列表"`
-	Page   int  `json:"page" v:"required|min:1" dc:"页码"`
-	Size   int  `json:"size" v:"required|between:1,100" dc:"每页条数"`
-	Status *int `json:"status" dc:"状态筛选（0:禁用 1:启用）"`
+	g.Meta    `path:"/menu/list" method:"get" tags:"菜单管理" summary:"获取菜单列表"`
+	Page      int         `json:"page" v:"required|min:1" dc:"页码"`
+	Size      int         `json:"size" v:"required|between:1,100" dc:"每页条数"`
+	Status    *int        `json:"status" dc:"状态筛选（0:禁用 1:启用）"`
+	Type      *int        `json:"type" dc:"菜单类型: 0目录 1菜单 2外链"`
+	Name      string      `json:"name" dc:"菜单名称"`
+	Path      string      `json:"path" dc:"菜单路径"`
+	Title     string      `json:"title" dc:"菜单标题"`
+	StartDate *gtime.Time `json:"startDate" dc:"开始日期"`
+	EndDate   *gtime.Time `json:"endDate" dc:"结束日期"`
+	SortField string      `json:"sortField" dc:"排序字段"`
+	SortDesc  bool        `json:"sortDesc" dc:"是否降序"`
 }
 
 type GetListRes struct {
