@@ -14,23 +14,11 @@ import (
 type ControllerV1 struct {
 	MemberService *member.Member
 	MenuService   *menu.Menu
+	RoleService   *role.Role
 }
 
 func NewV1() user.IUserV1 {
 	return &ControllerV1{
-		MemberService: member.MemberService,
-		MenuService:   menu.MenuService,
-	}
-}
-
-type ControllerV2 struct {
-	MemberService *member.Member
-	MenuService   *menu.Menu
-	RoleService   *role.Role
-}
-
-func NewV2() user.IUserV2 {
-	return &ControllerV2{
 		MemberService: member.MemberService,
 		MenuService:   menu.MenuService,
 		RoleService:   role.RoleService,

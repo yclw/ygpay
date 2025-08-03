@@ -10,32 +10,38 @@ import (
 func (c *ControllerV1) GetOne(ctx context.Context, req *v1.GetOneReq) (res *v1.GetOneRes, err error) {
 	menu, err := c.menuService.GetOne(ctx, req.Id)
 	if err != nil {
-		return nil, err
+		return
 	}
-	return &v1.GetOneRes{
+
+	res = &v1.GetOneRes{
 		MenuModel: c.menuModelToV1(menu),
-	}, nil
+	}
+
+	return
 }
 
-func (c *ControllerV1) menuModelToV1(menu *menu.MenuModel) *v1.MenuModel {
-	return &v1.MenuModel{
-		// Id:                menu.MenuInfo.Id,
-		// Pid:               menu.TreeNode.Pid,
-		// Name:              menu.MenuInfo.Name,
-		// Path:              menu.MenuInfo.Path,
-		// Icon:              menu.MenuInfo.Icon,
-		// Title:             menu.MenuInfo.Title,
-		// ShowParent:        menu.MenuInfo.ShowParent,
-		// Component:         menu.MenuInfo.Component,
-		// NoShowingChildren: menu.MenuInfo.NoShowingChildren,
-		// Value:             menu.MenuInfo.Value,
-		// ShowTooltip:       menu.MenuInfo.ShowTooltip,
-		// ParentId:          menu.MenuInfo.ParentId,
-		// Redirect:          menu.MenuInfo.Redirect,
-		// Description:       menu.MenuInfo.Description,
-		// Sort:              menu.MenuInfo.Sort,
-		// Status:            menu.MenuInfo.Status,
-		// CreatedAt:         menu.MenuInfo.CreatedAt,
-		// UpdatedAt:         menu.MenuInfo.UpdatedAt,
+func (c *ControllerV1) menuModelToV1(menuInfo *menu.MenuModel) *v1.MenuModel {
+	res := &v1.MenuModel{
+		Id:          menuInfo.MenuInfo.Id,
+		Type:        menuInfo.MenuInfo.Type,
+		Name:        menuInfo.MenuInfo.Name,
+		Path:        menuInfo.MenuInfo.Path,
+		Title:       menuInfo.MenuInfo.Title,
+		Icon:        menuInfo.MenuInfo.Icon,
+		Sort:        menuInfo.MenuInfo.Sort,
+		ShowParent:  menuInfo.MenuInfo.ShowParent == 1,
+		ShowLink:    menuInfo.MenuInfo.ShowLink == 1,
+		KeepAlive:   menuInfo.MenuInfo.KeepAlive == 1,
+		ParentId:    menuInfo.MenuInfo.Pid,
+		ParentTitle: menuInfo.ParentTitle,
+		Redirect:    menuInfo.MenuInfo.Redirect,
+		Component:   menuInfo.MenuInfo.Component,
+		FrameSrc:    menuInfo.MenuInfo.FrameSrc,
+		Url:         menuInfo.MenuInfo.Url,
+		Status:      menuInfo.MenuInfo.Status,
+		CreatedAt:   menuInfo.MenuInfo.CreatedAt,
+		UpdatedAt:   menuInfo.MenuInfo.UpdatedAt,
 	}
+
+	return res
 }

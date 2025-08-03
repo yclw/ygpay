@@ -13,6 +13,7 @@ import (
 type RoleInfo struct {
 	g.Meta    `orm:"table:t_role_info, do:true"`
 	Id        interface{} // 角色ID
+	Pid       interface{} // 父角色ID
 	Name      interface{} // 角色名称
 	Key       interface{} // 角色权限字符串
 	Remark    interface{} // 备注

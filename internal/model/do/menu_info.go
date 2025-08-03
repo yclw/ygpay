@@ -13,6 +13,7 @@ import (
 type MenuInfo struct {
 	g.Meta     `orm:"table:t_menu_info, do:true"`
 	Id         interface{} // 菜单ID
+	Pid        interface{} // 父菜单ID
 	Type       interface{} // 菜单类型: 0目录 1菜单 2外链
 	Name       interface{} // 菜单名称
 	Path       interface{} // 菜单路径

@@ -4,57 +4,47 @@ import (
 	"context"
 
 	v1 "yclw/ygpay/api/menu/v1"
-	"yclw/ygpay/util/tree"
 )
 
 func (c *ControllerV1) GetList(ctx context.Context, req *v1.GetListReq) (res *v1.GetListRes, err error) {
-	_, idTree, err := c.menuService.GetAllList(ctx)
+	// 获取所有菜单
+	models, err := c.menuService.GetAllList(ctx)
 	if err != nil {
 		return
 	}
-	res = &v1.GetListRes{}
-	res.Tree = c.menuModelToV1Trees(idTree)
+
+	// 转换为v2.MenuModel，并映射 id->MenuModel
+	menus := make([]*v1.MenuModel, 0, len(models))
+	menuMap := make(map[int64]*v1.MenuModel)
+	for _, model := range models {
+		menu := c.menuModelToV1(model)
+		menus = append(menus, menu)
+		menuMap[model.Id] = menu
+	}
+
+	// 构建菜单树
+	tree := buildMenuTree(menus, menuMap)
+
+	// 构建响应
+	res = &v1.GetListRes{
+		List: tree,
+		Tree: menus,
+	}
 	return
 }
 
-// RoleModelToV1Trees 构建RoleTreeModel列表
-func (c *ControllerV1) menuModelToV1Trees(idTree *tree.IdTree) []*v1.MenuTreeModel {
-	res := make([]*v1.MenuTreeModel, 0, len(idTree.Root.Children))
-	for _, node := range idTree.Root.Children {
-		res = append(res, c.menuModelToV1Tree(node))
+// buildMenuTree 构建菜单树
+func buildMenuTree(menus []*v1.MenuModel, menuMap map[int64]*v1.MenuModel) (tree []*v1.MenuModel) {
+	for _, node := range menus {
+		parentId := node.ParentId
+		// 查找父节点
+		if parent, exists := menuMap[parentId]; exists {
+			// 将当前节点添加到父节点的Children中
+			parent.Children = append(parent.Children, node)
+		} else {
+			// 无父节点，作为根节点
+			tree = append(tree, node)
+		}
 	}
-	return res
-}
-
-// RoleModelToV1Tree 递归构建RoleTreeModel
-func (c *ControllerV1) menuModelToV1Tree(node *tree.TreeNode) *v1.MenuTreeModel {
-	// 构建RoleTreeModel
-	// menuModel := node.Data.(*menu.MenuModel)
-	menuTreeModel := &v1.MenuTreeModel{
-		MenuModel: &v1.MenuModel{
-			// Id:                menuModel.MenuInfo.Id,
-			// Pid:               node.Pid,
-			// Name:              menuModel.MenuInfo.Name,
-			// Path:              menuModel.MenuInfo.Path,
-			// Icon:              menuModel.MenuInfo.Icon,
-			// Title:             menuModel.MenuInfo.Title,
-			// ShowParent:        menuModel.MenuInfo.ShowParent,
-			// Component:         menuModel.MenuInfo.Component,
-			// NoShowingChildren: menuModel.MenuInfo.NoShowingChildren,
-			// Value:             menuModel.MenuInfo.Value,
-			// ShowTooltip:       menuModel.MenuInfo.ShowTooltip,
-			// ParentId:          menuModel.MenuInfo.ParentId,
-			// Redirect:          menuModel.MenuInfo.Redirect,
-			// Description:       menuModel.MenuInfo.Description,
-			// Sort:              menuModel.MenuInfo.Sort,
-			// Status:            menuModel.MenuInfo.Status,
-			// CreatedAt:         menuModel.MenuInfo.CreatedAt,
-			// UpdatedAt:         menuModel.MenuInfo.UpdatedAt,
-		},
-	}
-	// 递归构建子节点
-	for _, child := range node.Children {
-		menuTreeModel.Children = append(menuTreeModel.Children, c.menuModelToV1Tree(child))
-	}
-	return menuTreeModel
+	return
 }

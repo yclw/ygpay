@@ -18,13 +18,3 @@ func NewV1() menu.IMenuV1 {
 		menuService: menuService.MenuService,
 	}
 }
-
-type ControllerV2 struct {
-	menuService *menuService.Menu
-}
-
-func NewV2() menu.IMenuV2 {
-	return &ControllerV2{
-		menuService: menuService.MenuService,
-	}
-}

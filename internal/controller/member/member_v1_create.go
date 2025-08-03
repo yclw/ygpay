@@ -48,8 +48,8 @@ func (c *ControllerV1) createReqToCreateModel(req *v1.CreateReq) (*member.Member
 	}
 
 	return &member.MemberCreateModel{
-		Uid: guid.S(),
 		MemberInfo: &do.MemberInfo{
+			Uid:          guid.S(),
 			Username:     req.Username,
 			Nickname:     req.Nickname,
 			PasswordHash: passwordHash,

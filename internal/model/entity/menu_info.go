@@ -11,6 +11,7 @@ import (
 // MenuInfo is the golang structure for table menu_info.
 type MenuInfo struct {
 	Id         int64       `json:"id"         orm:"id"         ` // 菜单ID
+	Pid        int64       `json:"pid"        orm:"pid"        ` // 父菜单ID
 	Type       int         `json:"type"       orm:"type"       ` // 菜单类型: 0目录 1菜单 2外链
 	Name       string      `json:"name"       orm:"name"       ` // 菜单名称
 	Path       string      `json:"path"       orm:"path"       ` // 菜单路径

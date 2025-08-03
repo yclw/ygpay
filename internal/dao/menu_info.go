@@ -6,6 +6,7 @@ package dao
 
 import (
 	"context"
+	"yclw/ygpay/internal/consts"
 	"yclw/ygpay/internal/dao/internal"
 	"yclw/ygpay/internal/model/do"
 	"yclw/ygpay/internal/model/entity"
@@ -25,9 +26,9 @@ var (
 // Add your custom methods and functionality below.
 
 // FindByMenuIds 根据菜单ID获取菜单
-func (d *menuInfoDao) FindByMenuIds(ctx context.Context, menuIds []int64) (res []*entity.MenuInfo, err error) {
+func (d *menuInfoDao) FindEnabledByMenuIds(ctx context.Context, menuIds []int64) (res []*entity.MenuInfo, err error) {
 	cols := d.Columns()
-	err = d.Ctx(ctx).WhereIn(cols.Id, menuIds).Scan(&res)
+	err = d.Ctx(ctx).WhereIn(cols.Id, menuIds).Where(cols.Status, consts.StatusEnabled).Scan(&res)
 	return
 }
 
@@ -68,6 +69,7 @@ func (d *menuInfoDao) FindWithPageAndOptions(ctx context.Context, page, pageSize
 func (d *menuInfoDao) Create(ctx context.Context, req *do.MenuInfo) (id int64, err error) {
 	cols := d.Columns()
 	mod, err := d.Ctx(ctx).Fields(
+		cols.Pid,
 		cols.Type,
 		cols.Name,
 		cols.Path,
@@ -94,6 +96,7 @@ func (d *menuInfoDao) Create(ctx context.Context, req *do.MenuInfo) (id int64, e
 func (d *menuInfoDao) Update(ctx context.Context, req *do.MenuInfo) (err error) {
 	cols := d.Columns()
 	_, err = d.Ctx(ctx).Where(cols.Id, req.Id).Fields(
+		cols.Pid,
 		cols.Type,
 		cols.Name,
 		cols.Path,

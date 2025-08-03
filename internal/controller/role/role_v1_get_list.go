@@ -2,50 +2,59 @@ package role
 
 import (
 	"context"
+	"sort"
 
 	v1 "yclw/ygpay/api/role/v1"
-	"yclw/ygpay/internal/model/entity"
-	"yclw/ygpay/util/tree"
 )
 
 func (c *ControllerV1) GetList(ctx context.Context, req *v1.GetListReq) (res *v1.GetListRes, err error) {
-	_, idTree, err := c.RoleService.GetAllList(ctx)
+
+	// 获取所有角色
+	roles, err := c.RoleService.GetAllList(ctx)
 	if err != nil {
 		return
 	}
-	res = &v1.GetListRes{}
-	res.Tree = c.roleModelToV1Trees(idTree)
+
+	// 转换为v1.RoleModel，并映射 id->RoleModel
+	models := make([]*v1.RoleModel, 0, len(roles))
+	roleMap := make(map[int64]*v1.RoleModel)
+	for _, role := range roles {
+		roleModel := c.roleModelToV1(role)
+		models = append(models, roleModel)
+		roleMap[role.Id] = roleModel
+	}
+
+	// 构建角色树
+	tree := buildRoleTree(models, roleMap)
+
+	// 排序
+	for _, model := range models {
+		sort.Slice(model.Children, func(i, j int) bool {
+			return model.Children[i].Sort < model.Children[j].Sort
+		})
+	}
+
+	// 构建响应
+	res = &v1.GetListRes{
+		List: models,
+		Tree: tree,
+	}
+
 	return
 }
 
-// roleModelToV1Trees 构建RoleTreeModel列表
-func (c *ControllerV1) roleModelToV1Trees(idTree *tree.IdTree) []*v1.RoleTreeModel {
-	res := make([]*v1.RoleTreeModel, 0, len(idTree.Root.Children))
-	for _, node := range idTree.Root.Children {
-		res = append(res, c.roleModelToV1Tree(node))
+// buildRoleTree 构建角色树
+func buildRoleTree(roles []*v1.RoleModel, roleMap map[int64]*v1.RoleModel) (tree []*v1.RoleModel) {
+	for _, node := range roles {
+		parentId := node.ParentId
+		// 查找父节点
+		if parent, exists := roleMap[parentId]; exists {
+			// 将当前节点添加到父节点的Children中
+			parent.Children = append(parent.Children, node)
+		} else {
+			// 无父节点，作为根节点
+			tree = append(tree, node)
+		}
 	}
-	return res
-}
-
-// roleModelToV1Tree 递归构建RoleTreeModel
-func (c *ControllerV1) roleModelToV1Tree(node *tree.TreeNode) *v1.RoleTreeModel {
-	// 构建RoleTreeModel
-	roleModel := node.Data.(*entity.RoleInfo)
-	roleTreeModel := &v1.RoleTreeModel{
-		RoleModel: &v1.RoleModel{
-			Id:        roleModel.Id,
-			Name:      roleModel.Name,
-			Key:       roleModel.Key,
-			Remark:    roleModel.Remark,
-			Sort:      roleModel.Sort,
-			Status:    roleModel.Status,
-			CreatedAt: roleModel.CreatedAt,
-			UpdatedAt: roleModel.UpdatedAt,
-		},
-	}
-	// 递归构建子节点
-	for _, child := range node.Children {
-		roleTreeModel.Children = append(roleTreeModel.Children, c.roleModelToV1Tree(child))
-	}
-	return roleTreeModel
+	return tree
 }

@@ -22,6 +22,7 @@ type MenuInfoDao struct {
 // MenuInfoColumns defines and stores column names for the table t_menu_info.
 type MenuInfoColumns struct {
 	Id         string // 菜单ID
+	Pid        string // 父菜单ID
 	Type       string // 菜单类型: 0目录 1菜单 2外链
 	Name       string // 菜单名称
 	Path       string // 菜单路径
@@ -43,6 +44,7 @@ type MenuInfoColumns struct {
 // menuInfoColumns holds the columns for the table t_menu_info.
 var menuInfoColumns = MenuInfoColumns{
 	Id:         "id",
+	Pid:        "pid",
 	Type:       "type",
 	Name:       "name",
 	Path:       "path",

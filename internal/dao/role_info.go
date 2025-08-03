@@ -47,6 +47,7 @@ func (d *roleInfoDao) FindAll(ctx context.Context) (roles []*entity.RoleInfo, er
 func (d *roleInfoDao) Create(ctx context.Context, req *do.RoleInfo) (id int64, err error) {
 	cols := d.Columns()
 	mod, err := d.Ctx(ctx).Fields(
+		cols.Pid,
 		cols.Name,
 		cols.Key,
 		cols.Remark,
@@ -64,6 +65,7 @@ func (d *roleInfoDao) Create(ctx context.Context, req *do.RoleInfo) (id int64, e
 func (d *roleInfoDao) Update(ctx context.Context, req *do.RoleInfo) (err error) {
 	cols := d.Columns()
 	_, err = d.Ctx(ctx).Where(cols.Id, req.Id).Fields(
+		cols.Pid,
 		cols.Name,
 		cols.Key,
 		cols.Remark,

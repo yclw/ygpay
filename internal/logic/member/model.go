@@ -23,7 +23,6 @@ type MemberUpdateModel struct {
 
 // MemberCreateModel 用户创建模型
 type MemberCreateModel struct {
-	Uid string `json:"uid"                 dc:"用户ID"`
 	*do.MemberInfo
 	*do.MemberRole
 }

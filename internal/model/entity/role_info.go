@@ -11,6 +11,7 @@ import (
 // RoleInfo is the golang structure for table role_info.
 type RoleInfo struct {
 	Id        int64       `json:"id"        orm:"id"         ` // 角色ID
+	Pid       int64       `json:"pid"       orm:"pid"        ` // 父角色ID
 	Name      string      `json:"name"      orm:"name"       ` // 角色名称
 	Key       string      `json:"key"       orm:"key"        ` // 角色权限字符串
 	Remark    string      `json:"remark"    orm:"remark"     ` // 备注

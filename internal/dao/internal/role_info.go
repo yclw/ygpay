@@ -22,6 +22,7 @@ type RoleInfoDao struct {
 // RoleInfoColumns defines and stores column names for the table t_role_info.
 type RoleInfoColumns struct {
 	Id        string // 角色ID
+	Pid       string // 父角色ID
 	Name      string // 角色名称
 	Key       string // 角色权限字符串
 	Remark    string // 备注
@@ -34,6 +35,7 @@ type RoleInfoColumns struct {
 // roleInfoColumns holds the columns for the table t_role_info.
 var roleInfoColumns = RoleInfoColumns{
 	Id:        "id",
+	Pid:       "pid",
 	Name:      "name",
 	Key:       "key",
 	Remark:    "remark",
