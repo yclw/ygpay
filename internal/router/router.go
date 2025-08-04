@@ -3,6 +3,7 @@ package router
 import (
 	"context"
 	"yclw/ygpay/internal/controller/api"
+	"yclw/ygpay/internal/controller/casbin"
 	"yclw/ygpay/internal/controller/login"
 	"yclw/ygpay/internal/controller/member"
 	"yclw/ygpay/internal/controller/menu"
@@ -21,15 +22,18 @@ func Router(ctx context.Context, group *ghttp.Server) {
 		// group.Middleware(ghttp.MiddlewareHandlerResponse)
 		group.Middleware(middleware.DefaultMiddleware.Lang) // 语言中间件
 		group.Bind(
-			api.NewV1(),
 			login.NewV1(),
-			menu.NewV1(),
 		)
-		group.Middleware(middleware.DefaultMiddleware.Jwt) // jwt认证中间件
+		group.Middleware(middleware.DefaultMiddleware.Jwt)    // jwt认证中间件
+		group.Middleware(middleware.DefaultMiddleware.Casbin) // casbin认证中间件
 		group.Bind(
+			menu.NewV1(),
+			api.NewV1(),
 			user.NewV1(),
 			member.NewV1(),
 			role.NewV1(),
+			casbin.NewV1(),
 		)
+		group.Bind()
 	})
 }

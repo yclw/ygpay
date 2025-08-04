@@ -7,7 +7,9 @@ package dao
 import (
 	"context"
 	"yclw/ygpay/internal/dao/internal"
-	"yclw/ygpay/internal/model/entity"
+	"yclw/ygpay/internal/model/do"
+
+	"github.com/gogf/gf/v2/util/gconv"
 )
 
 // roleMenuDao is the data access object for the table t_role_menu.
@@ -23,14 +25,47 @@ var (
 
 // Add your custom methods and functionality below.
 
-// FindMenuIdsByRoleId 根据角色ID获取菜单
+// FindMenuIdsByRoleId 根据角色ID获取菜单ID列表
 func (d *roleMenuDao) FindMenuIdsByRoleId(ctx context.Context, roleId int64) (res []int64, err error) {
 	cols := d.Columns()
-	model := []*entity.RoleMenu{}
-	err = d.Ctx(ctx).Where(cols.RoleId, roleId).Fields(cols.MenuId).Scan(&model)
-	res = make([]int64, 0, len(model))
-	for _, v := range model {
-		res = append(res, v.MenuId)
+	array, err := d.Ctx(ctx).Where(cols.RoleId, roleId).Fields(cols.MenuId).Array()
+	if err != nil {
+		return
 	}
+	res = gconv.Int64s(array)
+	return
+}
+
+// DeleteByRoleId 根据角色ID删除角色菜单
+func (d *roleMenuDao) DeleteByRoleId(ctx context.Context, roleId int64) (count int64, err error) {
+	cols := d.Columns()
+	mod, err := d.Ctx(ctx).Where(cols.RoleId, roleId).Delete()
+	if err != nil {
+		return
+	}
+
+	count, err = mod.RowsAffected()
+	return
+}
+
+// AddRoleMenu 添加角色菜单
+func (d *roleMenuDao) AddRoleMenus(ctx context.Context, roleId int64, menuIds []int64) (count int64, err error) {
+
+	// 构建插入数据
+	data := make([]do.RoleMenu, 0, len(menuIds))
+	for _, menuId := range menuIds {
+		data = append(data, do.RoleMenu{
+			RoleId: roleId,
+			MenuId: menuId,
+		})
+	}
+
+	// 批量插入
+	mod, err := d.Ctx(ctx).Data(data).Insert()
+	if err != nil {
+		return
+	}
+
+	count, err = mod.RowsAffected()
 	return
 }

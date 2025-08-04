@@ -5,7 +5,10 @@
 package dao
 
 import (
+	"context"
+	"yclw/ygpay/internal/consts"
 	"yclw/ygpay/internal/dao/internal"
+	"yclw/ygpay/internal/model/entity"
 )
 
 // casbinRuleDao is the data access object for the table t_casbin_rule.
@@ -20,3 +23,40 @@ var (
 )
 
 // Add your custom methods and functionality below.
+
+// FindByPtype 根据策略类型查询
+func (d *casbinRuleDao) FindByPtype(ctx context.Context, ptype string) (res []*entity.CasbinRule, err error) {
+	cols := d.Columns()
+	err = d.Ctx(ctx).Where(cols.Ptype, ptype).Scan(&res)
+	return
+}
+
+// FindByRoleId 根据角色ID查询策略（V0字段存储角色ID）
+func (d *casbinRuleDao) FindByRoleId(ctx context.Context, roleId string) (res []*entity.CasbinRule, err error) {
+	cols := d.Columns()
+	err = d.Ctx(ctx).Where(cols.Ptype, consts.CasbinPolicyTypeP).Where(cols.V0, roleId).Scan(&res)
+	return
+}
+
+// DeleteByRoleId 根据角色ID删除策略
+func (d *casbinRuleDao) DeleteByRoleId(ctx context.Context, roleId string) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Where(cols.Ptype, consts.CasbinPolicyTypeP).Where(cols.V0, roleId).Delete()
+	return
+}
+
+// DeleteAll 删除所有策略
+func (d *casbinRuleDao) DeleteAll(ctx context.Context) (err error) {
+	_, err = d.Ctx(ctx).Delete()
+	return
+}
+
+// FindPolicy 查找特定的策略
+func (d *casbinRuleDao) FindPolicy(ctx context.Context, roleId, path, method string) (res *entity.CasbinRule, err error) {
+	cols := d.Columns()
+	err = d.Ctx(ctx).Where(cols.Ptype, consts.CasbinPolicyTypeP).
+		Where(cols.V0, roleId).
+		Where(cols.V1, path).
+		Where(cols.V2, method).Scan(&res)
+	return
+}

@@ -6,6 +6,7 @@ package dao
 
 import (
 	"context"
+	"yclw/ygpay/internal/consts"
 	"yclw/ygpay/internal/dao/internal"
 	"yclw/ygpay/internal/model/do"
 	"yclw/ygpay/internal/model/entity"
@@ -68,6 +69,13 @@ func (d *apiInfoDao) FindWithPageAndOptions(ctx context.Context, page, pageSize 
 func (d *apiInfoDao) FindByApiIds(ctx context.Context, apiIds []int64) (res []*entity.ApiInfo, err error) {
 	cols := d.Columns()
 	err = d.Ctx(ctx).WhereIn(cols.Id, apiIds).Scan(&res)
+	return
+}
+
+// FindEnabledByApiIds 根据apiID列表查询启用状态的API
+func (d *apiInfoDao) FindEnabledByApiIds(ctx context.Context, apiIds []int64) (res []*entity.ApiInfo, err error) {
+	cols := d.Columns()
+	err = d.Ctx(ctx).WhereIn(cols.Id, apiIds).Where(cols.Status, consts.StatusEnabled).Scan(&res)
 	return
 }
 

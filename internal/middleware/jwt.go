@@ -5,7 +5,6 @@ import (
 	"yclw/ygpay/pkg/contexts"
 	"yclw/ygpay/pkg/token"
 
-	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 )
@@ -29,7 +28,6 @@ func (m *Middleware) Jwt(r *ghttp.Request) {
 	}
 	ok, identity, err := token.AccessJwt.VerifyToken(ctx, tk)
 	if err != nil || !ok {
-		r.SetError(gerror.Wrap(err, "请先重新登录"))
 		return
 	}
 

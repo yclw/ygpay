@@ -5,6 +5,7 @@ import (
 	"yclw/ygpay/pkg/event"
 	"yclw/ygpay/util/i18n"
 
+	"github.com/casbin/casbin/v2"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gcache"
 )
@@ -16,10 +17,11 @@ const (
 )
 
 var (
-	cache       *gcache.Cache
-	serverEvent *event.SEvent
-	language    string
-	once        sync.Once
+	cache          *gcache.Cache
+	serverEvent    *event.SEvent
+	language       string
+	casbinEnforcer *casbin.Enforcer
+	once           sync.Once
 )
 
 func Cache() *gcache.Cache {
@@ -39,4 +41,12 @@ func SetLanguage(l string) {
 	}
 	language = l
 	g.I18n().SetLanguage(language)
+}
+
+func SetCasbin(e *casbin.Enforcer) {
+	casbinEnforcer = e
+}
+
+func Casbin() *casbin.Enforcer {
+	return casbinEnforcer
 }

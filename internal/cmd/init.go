@@ -5,9 +5,12 @@ import (
 	"fmt"
 	"runtime"
 	"yclw/ygpay/internal/global"
+	casbinAdapter "yclw/ygpay/pkg/casbin"
 	"yclw/ygpay/pkg/token"
 	"yclw/ygpay/util/i18n"
 
+	"github.com/casbin/casbin/v2"
+	"github.com/casbin/casbin/v2/model"
 	"github.com/gogf/gf/contrib/trace/jaeger/v2"
 	"github.com/gogf/gf/v2"
 	"github.com/gogf/gf/v2/frame/g"
@@ -39,6 +42,9 @@ func Init(ctx context.Context) {
 
 	// 初始化token
 	InitToken(ctx)
+
+	// 初始化casbin
+	InitCasbin(ctx)
 }
 
 // SetGFMode 设置gf运行模式
@@ -123,4 +129,37 @@ func InitToken(ctx context.Context) {
 		return
 	}
 	token.RefreshJwt = token.NewRefreshJwtHandler(conf, jwt.SigningMethodHS256)
+}
+
+// InitCasbin 初始化casbin
+func InitCasbin(ctx context.Context) {
+	model, err := model.NewModelFromString(`
+	[request_definition]
+	r = sub, obj, act
+
+	[policy_definition]
+	p = sub, obj, act
+
+	[policy_effect]
+	e = some(where (p.eft == allow))
+
+	[matchers]
+	m = r.sub == p.sub && r.obj == p.obj && r.act == p.act
+	`)
+	if err != nil {
+		g.Log().Fatal(ctx, err)
+		return
+	}
+	adapter := casbinAdapter.NewAdapter(casbinAdapter.Options{
+		Ctx: ctx,
+		GDB: g.DB(),
+	})
+	enforcer, err := casbin.NewEnforcer(model, adapter)
+	if err != nil {
+		g.Log().Fatal(ctx, err)
+		return
+	}
+	global.SetCasbin(enforcer)
+	enforcer.LoadPolicy()
+	g.Log().Debug(ctx, "casbin初始化成功")
 }

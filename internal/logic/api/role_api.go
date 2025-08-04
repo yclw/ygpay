@@ -5,17 +5,16 @@ import (
 	"yclw/ygpay/internal/dao"
 )
 
-// GetRoleApiList 获取角色api列表
-func (a *Api) GetRoleApiList(ctx context.Context, roleId int64) (res []*ApiModel, err error) {
-
-	// 获取角色api列表
+// GetRoleApi 获取角色api列表
+func (a *Api) GetRoleApi(ctx context.Context, roleId int64) (res []*ApiModel, err error) {
+	// 获取角色apiID列表
 	apiIds, err := dao.RoleApi.FindApiIdsByRoleId(ctx, roleId)
 	if err != nil {
 		return
 	}
 
-	// 获取api列表
-	apis, err := dao.ApiInfo.FindByApiIds(ctx, apiIds)
+	// 获取角色api信息
+	apis, err := dao.ApiInfo.FindEnabledByApiIds(ctx, apiIds)
 	if err != nil {
 		return
 	}
@@ -29,7 +28,17 @@ func (a *Api) GetRoleApiList(ctx context.Context, roleId int64) (res []*ApiModel
 	return
 }
 
-// SyncCasbin 同步Casbin
-func (a *Api) SyncCasbin(ctx context.Context) (err error) {
+// UpdateRoleApi 更新角色API
+func (a *Api) UpdateRoleApi(ctx context.Context, roleId int64, apiIds []int64) (err error) {
+	//TODO: 考虑事务
+
+	// 删除角色API
+	_, err = dao.RoleApi.DeleteByRoleId(ctx, roleId)
+	if err != nil {
+		return
+	}
+
+	// 添加角色API
+	_, err = dao.RoleApi.AddRoleApi(ctx, roleId, apiIds)
 	return
 }

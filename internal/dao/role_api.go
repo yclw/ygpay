@@ -7,7 +7,9 @@ package dao
 import (
 	"context"
 	"yclw/ygpay/internal/dao/internal"
-	"yclw/ygpay/internal/model/entity"
+	"yclw/ygpay/internal/model/do"
+
+	"github.com/gogf/gf/v2/util/gconv"
 )
 
 // roleApiDao is the data access object for the table t_role_api.
@@ -25,15 +27,44 @@ var (
 
 // FindApiIdsByRoleId 根据角色ID查询apiID列表
 func (d *roleApiDao) FindApiIdsByRoleId(ctx context.Context, roleId int64) (res []int64, err error) {
-	model := []*entity.RoleApi{}
 	cols := d.Columns()
-	err = d.Ctx(ctx).Where(cols.RoleId, roleId).Scan(&model)
+	apiIds, err := d.Ctx(ctx).Where(cols.RoleId, roleId).Array(cols.ApiId)
 	if err != nil {
 		return
 	}
-	res = make([]int64, 0, len(model))
-	for _, v := range model {
-		res = append(res, v.ApiId)
+	res = gconv.Int64s(apiIds)
+	return
+}
+
+// DeleteByRoleId 根据角色ID删除
+func (d *roleApiDao) DeleteByRoleId(ctx context.Context, roleId int64) (count int64, err error) {
+	cols := d.Columns()
+	mod, err := d.Ctx(ctx).Where(cols.RoleId, roleId).Delete()
+	if err != nil {
+		return
 	}
+	count, err = mod.RowsAffected()
+	return
+}
+
+// AddRoleApi 添加角色API
+func (d *roleApiDao) AddRoleApi(ctx context.Context, roleId int64, apiIds []int64) (count int64, err error) {
+
+	// 构建插入数据
+	data := make([]do.RoleApi, 0, len(apiIds))
+	for _, apiId := range apiIds {
+		data = append(data, do.RoleApi{
+			RoleId: roleId,
+			ApiId:  apiId,
+		})
+	}
+
+	// 批量插入
+	mod, err := d.Ctx(ctx).Data(data).Insert()
+	if err != nil {
+		return
+	}
+
+	count, err = mod.RowsAffected()
 	return
 }

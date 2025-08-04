@@ -25,7 +25,7 @@ var (
 
 // Add your custom methods and functionality below.
 
-// FindByMenuIds 根据菜单ID获取菜单
+// FindEnabledByMenuIds 根据菜单ID获取菜单
 func (d *menuInfoDao) FindEnabledByMenuIds(ctx context.Context, menuIds []int64) (res []*entity.MenuInfo, err error) {
 	cols := d.Columns()
 	err = d.Ctx(ctx).WhereIn(cols.Id, menuIds).Where(cols.Status, consts.StatusEnabled).Scan(&res)

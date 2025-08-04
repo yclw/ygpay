@@ -4,13 +4,20 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 )
 
-type RoleApiModel struct {
-	Id        int64  `json:"id" dc:"APIID"`
-	Name      string `json:"name" dc:"API名称"`
-	Path      string `json:"path" dc:"API路径"`
-	Method    string `json:"method" dc:"API方法"`
-	GroupName string `json:"groupName" dc:"API分组"`
-	Use       bool   `json:"use" dc:"是否使用"`
+// API模型
+type ApiModel struct {
+	Id     int64  `json:"id" dc:"APIID"`
+	Path   string `json:"path" dc:"API路径"`
+	Method string `json:"method" dc:"API方法"`
+	Sort   int    `json:"-" dc:"排序"`
+	Group  string `json:"-" dc:"API分组"`
+	Use    bool   `json:"use" dc:"是否使用"`
+}
+
+// API分组模型
+type ApiGroupModel struct {
+	GroupName string      `json:"groupName" dc:"API分组"`
+	Children  []*ApiModel `json:"children" dc:"子API"`
 }
 
 // GetRoleApiReq 获取角色API
@@ -20,7 +27,7 @@ type GetRoleApiReq struct {
 }
 
 type GetRoleApiRes struct {
-	ApiList []RoleApiModel `json:"apiList" dc:"API列表"`
+	ApiList []*ApiGroupModel `json:"apiList" dc:"API列表"`
 }
 
 // UpdateRoleApiReq 更新角色API

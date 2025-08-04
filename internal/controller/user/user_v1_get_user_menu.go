@@ -27,7 +27,7 @@ func (c *ControllerV1) GetUserMenu(ctx context.Context, req *v1.GetUserMenuReq) 
 	}
 
 	// 构建菜单树
-	tree := buildUserMenuTree(userMenus, menuMap)
+	tree := c.buildUserMenuTree(userMenus, menuMap)
 
 	res = &v1.GetUserMenuRes{
 		Menu: tree,
@@ -61,7 +61,7 @@ func (c *ControllerV1) menuModelToUserMenu(menuModel *menu.RoleMenuModel) *v1.Us
 	return &userMenu
 }
 
-func buildUserMenuTree(userMenus []*v1.UserMenu, menuMap map[int64]*v1.UserMenu) (tree []*v1.UserMenu) {
+func (c *ControllerV1) buildUserMenuTree(userMenus []*v1.UserMenu, menuMap map[int64]*v1.UserMenu) (tree []*v1.UserMenu) {
 	for _, node := range userMenus {
 		parentId := node.ParentId
 		// 查找父节点

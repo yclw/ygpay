@@ -6,6 +6,7 @@ package dao
 
 import (
 	"context"
+	"yclw/ygpay/internal/consts"
 	"yclw/ygpay/internal/dao/internal"
 	"yclw/ygpay/internal/model/do"
 	"yclw/ygpay/internal/model/entity"
@@ -40,6 +41,13 @@ func (d *roleInfoDao) FindByRoleIds(ctx context.Context, roleIds []int64) (roles
 // FindAll 查询所有角色信息
 func (d *roleInfoDao) FindAll(ctx context.Context) (roles []*entity.RoleInfo, err error) {
 	err = d.Ctx(ctx).Scan(&roles)
+	return
+}
+
+// FindAllEnabled 查询所有启用角色信息
+func (d *roleInfoDao) FindAllEnabled(ctx context.Context) (roles []*entity.RoleInfo, err error) {
+	cols := d.Columns()
+	err = d.Ctx(ctx).Where(cols.Status, consts.StatusEnabled).Scan(&roles)
 	return
 }
 
