@@ -1,7 +1,9 @@
 package user
 
 import (
+	"cmp"
 	"context"
+	"slices"
 
 	v1 "yclw/ygpay/api/user/v1"
 	"yclw/ygpay/internal/logic/menu"
@@ -26,6 +28,11 @@ func (c *ControllerV1) GetUserMenu(ctx context.Context, req *v1.GetUserMenuReq) 
 		menuMap[menu.MenuInfo.Id] = userMenu
 	}
 
+	// 排序
+	slices.SortFunc(userMenus, func(a, b *v1.UserMenu) int {
+		return cmp.Compare(a.Meta.Rank, b.Meta.Rank)
+	})
+
 	// 构建菜单树
 	tree := c.buildUserMenuTree(userMenus, menuMap)
 
@@ -37,6 +44,7 @@ func (c *ControllerV1) GetUserMenu(ctx context.Context, req *v1.GetUserMenuReq) 
 
 func (c *ControllerV1) menuModelToUserMenu(menuModel *menu.RoleMenuModel) *v1.UserMenu {
 	userMenu := v1.UserMenu{
+		Id:       menuModel.MenuInfo.Id,
 		ParentId: menuModel.MenuInfo.Pid,
 		Type:     menuModel.MenuInfo.Type,
 		Name:     menuModel.MenuInfo.Name,
@@ -56,11 +64,15 @@ func (c *ControllerV1) menuModelToUserMenu(menuModel *menu.RoleMenuModel) *v1.Us
 	case menu.MenuTypeMenu:
 		userMenu.Component = menuModel.MenuInfo.Component
 	case menu.MenuTypeLink:
-		userMenu.FrameSrc = menuModel.MenuInfo.FrameSrc
+		userMenu.Meta.FrameSrc = menuModel.MenuInfo.FrameSrc
+		if menuModel.MenuInfo.Url != "" {
+			userMenu.Name = menuModel.MenuInfo.Url
+		}
 	}
 	return &userMenu
 }
 
+// 构建用户菜单树（userMenus和menuMap的内容其实是相同的，这里menuMap也可以用userMenus构建，但是需要遍历两次，第一次遍历构建map，第二次遍历构建树）
 func (c *ControllerV1) buildUserMenuTree(userMenus []*v1.UserMenu, menuMap map[int64]*v1.UserMenu) (tree []*v1.UserMenu) {
 	for _, node := range userMenus {
 		parentId := node.ParentId

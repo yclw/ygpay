@@ -112,7 +112,6 @@ func (s *Member) Create(ctx context.Context, req *MemberCreateModel) (err error)
 	// 创建用户
 	id, err := dao.MemberInfo.Create(ctx, req.MemberInfo)
 	if err != nil {
-		err = gerror.Wrap(err, "创建用户失败")
 		return
 	}
 
@@ -120,7 +119,6 @@ func (s *Member) Create(ctx context.Context, req *MemberCreateModel) (err error)
 	req.MemberRole.MemberId = id
 	err = dao.MemberRole.Create(ctx, req.MemberRole)
 	if err != nil {
-		err = gerror.Wrap(err, "创建用户角色关系失败")
 		return
 	}
 	return

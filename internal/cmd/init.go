@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"runtime"
 	"yclw/ygpay/internal/global"
-	casbinAdapter "yclw/ygpay/pkg/casbin"
+
 	"yclw/ygpay/pkg/token"
 	"yclw/ygpay/util/i18n"
 
@@ -19,6 +19,7 @@ import (
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gmode"
 	"github.com/golang-jwt/jwt/v5"
+	gfadapter "github.com/yclw/gf-casbin-adapter"
 )
 
 func Init(ctx context.Context) {
@@ -150,10 +151,13 @@ func InitCasbin(ctx context.Context) {
 		g.Log().Fatal(ctx, err)
 		return
 	}
-	adapter := casbinAdapter.NewAdapter(casbinAdapter.Options{
-		Ctx: ctx,
-		GDB: g.DB(),
-	})
+
+	adapter, err := gfadapter.NewAdapterWithName("t_casbin_rule", gfadapter.DisabledFiltered)
+	if err != nil {
+		g.Log().Fatal(ctx, err)
+		return
+	}
+
 	enforcer, err := casbin.NewEnforcer(model, adapter)
 	if err != nil {
 		g.Log().Fatal(ctx, err)

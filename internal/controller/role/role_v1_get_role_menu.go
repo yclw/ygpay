@@ -1,7 +1,9 @@
 package role
 
 import (
+	"cmp"
 	"context"
+	"slices"
 
 	v1 "yclw/ygpay/api/role/v1"
 	"yclw/ygpay/internal/logic/menu"
@@ -37,6 +39,11 @@ func (c *ControllerV1) GetRoleMenu(ctx context.Context, req *v1.GetRoleMenuReq) 
 		roleMenus = append(roleMenus, roleMenu)
 		enabledMenusMap[menu.MenuInfo.Id] = roleMenu
 	}
+
+	// 排序
+	slices.SortFunc(roleMenus, func(a, b *v1.MenuModel) int {
+		return cmp.Compare(a.Sort, b.Sort)
+	})
 
 	// 构建菜单树
 	tree := c.buildRoleMenuTree(roleMenus, enabledMenusMap)

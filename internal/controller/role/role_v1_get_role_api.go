@@ -1,7 +1,9 @@
 package role
 
 import (
+	"cmp"
 	"context"
+	"slices"
 
 	v1 "yclw/ygpay/api/role/v1"
 	"yclw/ygpay/internal/logic/api"
@@ -35,6 +37,11 @@ func (c *ControllerV1) GetRoleApi(ctx context.Context, req *v1.GetRoleApiReq) (r
 		roleApi := c.apiModelToRoleApi(api, usedApisMap)
 		roleApis = append(roleApis, roleApi)
 	}
+
+	// 排序
+	slices.SortFunc(roleApis, func(a, b *v1.ApiModel) int {
+		return cmp.Compare(a.Sort, b.Sort)
+	})
 
 	// 按照Group分组
 	groupList := c.groupApis(roleApis)

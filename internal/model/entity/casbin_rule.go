@@ -6,7 +6,7 @@ package entity
 
 // CasbinRule is the golang structure for table casbin_rule.
 type CasbinRule struct {
-	Id    int    `json:"id"    orm:"id"    ` //
+	Id    int64  `json:"id"    orm:"id"    ` //
 	Ptype string `json:"ptype" orm:"ptype" ` //
 	V0    string `json:"v0"    orm:"v0"    ` //
 	V1    string `json:"v1"    orm:"v1"    ` //

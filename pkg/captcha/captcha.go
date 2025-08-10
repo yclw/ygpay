@@ -6,6 +6,10 @@ import (
 	"github.com/mojocn/base64Captcha"
 )
 
+const (
+	CaptchaKeyPrefix = "captcha_"
+)
+
 var DefaultCaptcha = NewCaptcha(base64Captcha.DefaultDriverDigit, base64Captcha.DefaultMemStore)
 
 type Captcha struct {

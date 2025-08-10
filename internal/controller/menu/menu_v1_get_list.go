@@ -1,7 +1,9 @@
 package menu
 
 import (
+	"cmp"
 	"context"
+	"slices"
 
 	v1 "yclw/ygpay/api/menu/v1"
 )
@@ -22,13 +24,18 @@ func (c *ControllerV1) GetList(ctx context.Context, req *v1.GetListReq) (res *v1
 		menuMap[model.Id] = menu
 	}
 
+	// 排序
+	slices.SortFunc(menus, func(a, b *v1.MenuModel) int {
+		return cmp.Compare(a.Sort, b.Sort)
+	})
+
 	// 构建菜单树
 	tree := buildMenuTree(menus, menuMap)
 
 	// 构建响应
 	res = &v1.GetListRes{
-		List: tree,
-		Tree: menus,
+		List: menus,
+		Tree: tree,
 	}
 	return
 }

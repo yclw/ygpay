@@ -138,9 +138,9 @@ func (a *Api) buildQueryOptions(filter *ApiListFilter) []dao.QueryOption {
 }
 
 // Create 创建api
-func (a *Api) Create(ctx context.Context, req *ApiCreateModel) (err error) {
+func (a *Api) Create(ctx context.Context, req *ApiCreateModel) (id int64, err error) {
 	// 创建api信息
-	_, err = dao.ApiInfo.Create(ctx, req.ApiInfo)
+	id, err = dao.ApiInfo.Create(ctx, req.ApiInfo)
 	if err != nil {
 		return
 	}

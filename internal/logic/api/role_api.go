@@ -42,3 +42,9 @@ func (a *Api) UpdateRoleApi(ctx context.Context, roleId int64, apiIds []int64) (
 	_, err = dao.RoleApi.AddRoleApi(ctx, roleId, apiIds)
 	return
 }
+
+// AddRoleApi 添加角色API
+func (a *Api) AddRoleApi(ctx context.Context, roleId int64, apiId int64) (err error) {
+	_, err = dao.RoleApi.AddRoleApi(ctx, roleId, []int64{apiId})
+	return
+}

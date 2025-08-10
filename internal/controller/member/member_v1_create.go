@@ -11,7 +11,7 @@ import (
 
 	"github.com/gogf/gf/v2/encoding/gbase64"
 	"github.com/gogf/gf/v2/errors/gerror"
-	"github.com/gogf/gf/v2/util/guid"
+	"github.com/google/uuid"
 )
 
 func (c *ControllerV1) Create(ctx context.Context, req *v1.CreateReq) (res *v1.CreateRes, err error) {
@@ -47,9 +47,12 @@ func (c *ControllerV1) createReqToCreateModel(req *v1.CreateReq) (*member.Member
 		return nil, gerror.Wrap(err, "密码加密失败")
 	}
 
+	// 生成uid
+	uid := uuid.New().String()
+
 	return &member.MemberCreateModel{
 		MemberInfo: &do.MemberInfo{
-			Uid:          guid.S(),
+			Uid:          uid,
 			Username:     req.Username,
 			Nickname:     req.Nickname,
 			PasswordHash: passwordHash,

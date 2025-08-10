@@ -1,8 +1,9 @@
 package role
 
 import (
+	"cmp"
 	"context"
-	"sort"
+	"slices"
 
 	v1 "yclw/ygpay/api/role/v1"
 )
@@ -24,15 +25,13 @@ func (c *ControllerV1) GetList(ctx context.Context, req *v1.GetListReq) (res *v1
 		roleMap[role.Id] = roleModel
 	}
 
+	// 排序
+	slices.SortFunc(models, func(a, b *v1.RoleModel) int {
+		return cmp.Compare(a.Sort, b.Sort)
+	})
+
 	// 构建角色树
 	tree := buildRoleTree(models, roleMap)
-
-	// 排序
-	for _, model := range models {
-		sort.Slice(model.Children, func(i, j int) bool {
-			return model.Children[i].Sort < model.Children[j].Sort
-		})
-	}
 
 	// 构建响应
 	res = &v1.GetListRes{

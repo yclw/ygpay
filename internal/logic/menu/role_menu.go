@@ -42,3 +42,9 @@ func (m *Menu) UpdateRoleMenu(ctx context.Context, roleId int64, menuIds []int64
 	_, err = dao.RoleMenu.AddRoleMenus(ctx, roleId, menuIds)
 	return
 }
+
+// AddRoleMenu 添加角色菜单
+func (m *Menu) AddRoleMenu(ctx context.Context, roleId int64, menuId int64) (err error) {
+	_, err = dao.RoleMenu.AddRoleMenus(ctx, roleId, []int64{menuId})
+	return
+}

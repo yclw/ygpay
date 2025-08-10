@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"yclw/ygpay/internal/global"
 	"yclw/ygpay/pkg/contexts"
 	"yclw/ygpay/pkg/token"
 
@@ -20,13 +21,26 @@ func (m *Middleware) Jwt(r *ghttp.Request) {
 		return
 	}
 
-	// 验证token
+	// 验证access token
 	tk := r.GetHeader("Authorization")
 	// 去掉Bearer前缀
 	if len(tk) > 7 && tk[:7] == "Bearer " {
 		tk = tk[7:]
 	}
 	ok, identity, err := token.AccessJwt.VerifyToken(ctx, tk)
+	if err != nil || !ok {
+		return
+	}
+
+	// 查看refresh token缓存是否存在
+	refreshKey := token.RefreshJwt.GetCacheKey(ctx, identity.Uid)
+	cacheToken, err := global.Cache().Get(ctx, refreshKey)
+	if err != nil {
+		return
+	}
+
+	// 验证 refresh token
+	ok, _, err = token.RefreshJwt.VerifyToken(ctx, cacheToken.String())
 	if err != nil || !ok {
 		return
 	}

@@ -6,13 +6,13 @@ import "github.com/gogf/gf/v2/frame/g"
 
 // 菜单
 type UserMenu struct {
+	Id        int64        `json:"-" dc:"菜单ID"`
 	ParentId  int64        `json:"-" dc:"父菜单ID"`
 	Type      int          `json:"type" dc:"类型（0:目录 1:菜单 2:按钮）"`
 	Name      string       `json:"name" dc:"名称"`
 	Path      string       `json:"path" dc:"路径"`
 	Component string       `json:"component,omitempty" dc:"组件路径（内链返回）"`
 	Redirect  string       `json:"redirect,omitempty" dc:"重定向（目录返回）"`
-	FrameSrc  string       `json:"frameSrc,omitempty" dc:"内嵌地址（外链时有效）"`
 	Children  []*UserMenu  `json:"children,omitempty" dc:"子菜单"`
 	Meta      UserMenuMeta `json:"meta" dc:"元数据"`
 }
@@ -21,6 +21,7 @@ type UserMenu struct {
 type UserMenuMeta struct {
 	Icon       string `json:"icon,omitempty" dc:"图标"`
 	Title      string `json:"title" dc:"标题"`
+	FrameSrc   string `json:"frameSrc,omitempty" dc:"内嵌地址（外链时有效）"`
 	Rank       int64  `json:"-" dc:"排序"`
 	ShowParent bool   `json:"showParent" dc:"是否显示父菜单"`
 	KeepAlive  bool   `json:"keepAlive" dc:"是否缓存"`

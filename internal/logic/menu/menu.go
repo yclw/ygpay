@@ -70,9 +70,9 @@ func (m *Menu) GetAllList(ctx context.Context) (res []*MenuModel, err error) {
 }
 
 // Create 创建菜单
-func (m *Menu) Create(ctx context.Context, req *MenuCreateModel) (err error) {
+func (m *Menu) Create(ctx context.Context, req *MenuCreateModel) (id int64, err error) {
 	// 创建菜单
-	_, err = dao.MenuInfo.Create(ctx, req.MenuInfo)
+	id, err = dao.MenuInfo.Create(ctx, req.MenuInfo)
 	return
 }
 

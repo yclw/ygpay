@@ -8,8 +8,5 @@ import (
 
 func (c *ControllerV1) SyncRoleApi(ctx context.Context, req *v1.SyncRoleApiReq) (res *v1.SyncRoleApiRes, err error) {
 	err = c.CasbinService.SyncRoleApi(ctx)
-	if err != nil {
-		return nil, err
-	}
-	return &v1.SyncRoleApiRes{}, nil
+	return
 }

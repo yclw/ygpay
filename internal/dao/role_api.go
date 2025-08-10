@@ -36,6 +36,17 @@ func (d *roleApiDao) FindApiIdsByRoleId(ctx context.Context, roleId int64) (res 
 	return
 }
 
+// FindApiIdsByRoleIds 根据角色ID列表查询apiID列表
+func (d *roleApiDao) FindApiIdsByRoleIds(ctx context.Context, roleIds []int64) (res []int64, err error) {
+	cols := d.Columns()
+	apiIds, err := d.Ctx(ctx).WhereIn(cols.RoleId, roleIds).Array(cols.ApiId)
+	if err != nil {
+		return
+	}
+	res = gconv.Int64s(apiIds)
+	return
+}
+
 // DeleteByRoleId 根据角色ID删除
 func (d *roleApiDao) DeleteByRoleId(ctx context.Context, roleId int64) (count int64, err error) {
 	cols := d.Columns()
