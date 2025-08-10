@@ -11,10 +11,11 @@ import (
 // RoleInfo is the golang structure for table role_info.
 type RoleInfo struct {
 	Id        int64       `json:"id"        orm:"id"         ` // 角色ID
+	RoleUid   string      `json:"roleUid"   orm:"role_uid"   ` //
 	Pid       int64       `json:"pid"       orm:"pid"        ` // 父角色ID
 	Name      string      `json:"name"      orm:"name"       ` // 角色名称
 	Key       string      `json:"key"       orm:"key"        ` // 角色权限字符串
-	Remark    string      `json:"remark"    orm:"remark"     ` // 备注
+	Remark    string      `json:"remark"    orm:"remark"     ` //
 	Sort      int         `json:"sort"      orm:"sort"       ` // 排序
 	Status    int         `json:"status"    orm:"status"     ` // 状态: 0禁用 1启用
 	CreatedAt *gtime.Time `json:"createdAt" orm:"created_at" ` // 创建时间

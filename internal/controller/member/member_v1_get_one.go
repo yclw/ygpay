@@ -43,7 +43,7 @@ func (c *ControllerV1) memberModelToV1(member *member.MemberModel) *v1.MemberMod
 		Remark:       member.Remark,
 		Sort:         member.Sort,
 		Status:       member.Status,
-		CreatedAt:    member.CreatedAt,
-		UpdatedAt:    member.UpdatedAt,
+		CreatedAt:    member.MemberInfo.CreatedAt,
+		UpdatedAt:    member.MemberInfo.UpdatedAt,
 	}
 }

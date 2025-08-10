@@ -18,14 +18,14 @@ func (c *ControllerV1) UpdateRoleApi(ctx context.Context, req *v1.UpdateRoleApiR
 	}
 
 	// 构建可用API map
-	enabledApisMap := make(map[int64]bool)
+	enabledApisMap := make(map[string]bool)
 	for _, api := range enabledApis {
-		enabledApisMap[api.ApiInfo.Id] = true
+		enabledApisMap[api.ApiInfo.ApiUid] = true
 	}
 
 	// 过滤掉无权限的API
-	req.ApiList = slices.DeleteFunc(req.ApiList, func(apiId int64) bool {
-		return !enabledApisMap[apiId]
+	req.ApiList = slices.DeleteFunc(req.ApiList, func(apiUid string) bool {
+		return !enabledApisMap[apiUid]
 	})
 
 	err = c.ApiService.UpdateRoleApi(ctx, req.Id, req.ApiList)

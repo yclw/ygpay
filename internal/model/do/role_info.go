@@ -13,10 +13,11 @@ import (
 type RoleInfo struct {
 	g.Meta    `orm:"table:t_role_info, do:true"`
 	Id        interface{} // 角色ID
+	RoleUid   interface{} //
 	Pid       interface{} // 父角色ID
 	Name      interface{} // 角色名称
 	Key       interface{} // 角色权限字符串
-	Remark    interface{} // 备注
+	Remark    interface{} //
 	Sort      interface{} // 排序
 	Status    interface{} // 状态: 0禁用 1启用
 	CreatedAt *gtime.Time // 创建时间

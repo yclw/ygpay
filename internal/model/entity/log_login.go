@@ -14,7 +14,7 @@ type LogLogin struct {
 	MemberId      int64       `json:"memberId"      orm:"member_id"      ` // 用户ID
 	Username      string      `json:"username"      orm:"username"       ` // 登录账号
 	IpAddress     string      `json:"ipAddress"     orm:"ip_address"     ` // IP地址
-	UserAgent     string      `json:"userAgent"     orm:"user_agent"     ` // 用户代理
+	UserAgent     string      `json:"userAgent"     orm:"user_agent"     ` //
 	LoginLocation string      `json:"loginLocation" orm:"login_location" ` // 登录地点
 	Browser       string      `json:"browser"       orm:"browser"        ` // 浏览器
 	Os            string      `json:"os"            orm:"os"             ` // 操作系统

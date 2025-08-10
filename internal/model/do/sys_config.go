@@ -16,7 +16,7 @@ type SysConfig struct {
 	Group       interface{} // 配置分组
 	Key         interface{} // 参数键名
 	Value       interface{} // 参数值
-	Description interface{} // 配置描述
+	Description interface{} //
 	Sort        interface{} // 排序
 	Status      interface{} // 状态: 0禁用 1启用
 	CreatedAt   *gtime.Time // 创建时间

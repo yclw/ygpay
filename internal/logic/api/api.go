@@ -2,7 +2,10 @@ package api
 
 import (
 	"context"
+	"yclw/ygpay/internal/consts"
 	"yclw/ygpay/internal/dao"
+
+	"github.com/google/uuid"
 )
 
 var ApiService = NewApi()
@@ -15,11 +18,11 @@ func NewApi() *Api {
 }
 
 // GetOne 获取单个api信息
-func (a *Api) GetOne(ctx context.Context, id int64) (res *ApiModel, err error) {
+func (a *Api) GetOne(ctx context.Context, apiUid string) (res *ApiModel, err error) {
 	res = &ApiModel{}
 
 	// 获取api信息
-	res.ApiInfo, err = dao.ApiInfo.FindByID(ctx, id)
+	res.ApiInfo, err = dao.ApiInfo.FindByApiUid(ctx, apiUid)
 	if err != nil {
 		return
 	}
@@ -138,31 +141,32 @@ func (a *Api) buildQueryOptions(filter *ApiListFilter) []dao.QueryOption {
 }
 
 // Create 创建api
-func (a *Api) Create(ctx context.Context, req *ApiCreateModel) (id int64, err error) {
+func (a *Api) Create(ctx context.Context, req *ApiCreateModel) (apiUid string, err error) {
+	// 生成ApiUid
+	apiUid = uuid.New().String()
+	req.ApiInfo.ApiUid = apiUid
+
 	// 创建api信息
-	id, err = dao.ApiInfo.Create(ctx, req.ApiInfo)
+	id, err := dao.ApiInfo.Create(ctx, req.ApiInfo)
 	if err != nil {
 		return
 	}
+
+	// 添加到超级管理员角色
+	_, err = dao.RoleApi.AddRoleApi(ctx, consts.SuperAdminRoleId, []int64{id})
 	return
 }
 
 // Update 更新api
 func (a *Api) Update(ctx context.Context, req *ApiUpdateModel) (err error) {
-	// 更新api信息
-	err = dao.ApiInfo.Update(ctx, req.ApiInfo)
-	if err != nil {
-		return
-	}
+	// 使用ApiUid更新api信息
+	err = dao.ApiInfo.UpdateByApiUid(ctx, req.ApiInfo)
 	return
 }
 
 // Delete 删除api
-func (a *Api) Delete(ctx context.Context, id int64) (err error) {
+func (a *Api) Delete(ctx context.Context, apiUid string) (err error) {
 	// 删除api信息
-	err = dao.ApiInfo.Delete(ctx, id)
-	if err != nil {
-		return
-	}
+	err = dao.ApiInfo.DeleteByApiUid(ctx, apiUid)
 	return
 }

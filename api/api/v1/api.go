@@ -6,14 +6,14 @@ import (
 )
 
 type ApiModel struct {
-	Id          int64       `json:"id" dc:"APIID"`
+	ApiUid      string      `json:"apiUid" dc:"API唯一标识"`
 	Name        string      `json:"name" dc:"API名称"`
 	Path        string      `json:"path" dc:"API路径"`
 	Method      string      `json:"method" dc:"API方法"`
 	GroupName   string      `json:"groupName" dc:"API分组"`
 	Description string      `json:"description" dc:"API描述"`
 	NeedAuth    int         `json:"needAuth" dc:"是否需要认证"`
-	RateLimit   int         `json:"rateLimit" dc:"限流次数/分钟"`
+	RateLimit   uint        `json:"rateLimit" dc:"限流次数/分钟"`
 	Sort        int         `json:"sort" dc:"排序"`
 	Status      int         `json:"status" dc:"状态"`
 	CreatedAt   *gtime.Time `json:"createdAt" dc:"创建时间"`
@@ -45,7 +45,7 @@ type GetListRes struct {
 // GetOneReq 获取API详情
 type GetOneReq struct {
 	g.Meta `path:"/api/one" method:"get" tags:"API管理" summary:"获取API详情"`
-	Id     int64 `json:"id" v:"required" dc:"APIID"`
+	ApiUid string `json:"apiUid" v:"required" dc:"API唯一标识"`
 }
 
 type GetOneRes struct {
@@ -72,7 +72,7 @@ type CreateRes struct {
 // UpdateReq 更新API
 type UpdateReq struct {
 	g.Meta      `path:"/api/update" method:"put" tags:"API管理" summary:"更新API"`
-	Id          int64  `json:"id" v:"required" dc:"APIID"`
+	ApiUid      string `json:"apiUid" v:"required" dc:"API唯一标识"`
 	Name        string `json:"name" v:"required" dc:"API名称"`
 	Path        string `json:"path" v:"required" dc:"API路径"`
 	Method      string `json:"method" v:"required" dc:"API方法"`
@@ -90,7 +90,7 @@ type UpdateRes struct {
 // DeleteReq 删除API
 type DeleteReq struct {
 	g.Meta `path:"/api/delete" method:"delete" tags:"API管理" summary:"删除API"`
-	Id     int64 `json:"id" v:"required" dc:"APIID"`
+	ApiUid string `json:"apiUid" v:"required" dc:"API唯一标识"`
 }
 
 type DeleteRes struct {

@@ -22,13 +22,14 @@ type ApiInfoDao struct {
 // ApiInfoColumns defines and stores column names for the table t_api_info.
 type ApiInfoColumns struct {
 	Id          string // API ID
+	ApiUid      string //
 	Name        string // API名称
 	Path        string // API路径
 	Method      string // API方法
 	GroupName   string // API分组
-	Description string // API描述
+	Description string //
 	NeedAuth    string // 是否需要认证: 0否 1是
-	RateLimit   string // 限流次数/分钟
+	RateLimit   string //
 	Sort        string // 排序
 	Status      string // 状态: 0禁用 1启用
 	CreatedAt   string // 创建时间
@@ -38,6 +39,7 @@ type ApiInfoColumns struct {
 // apiInfoColumns holds the columns for the table t_api_info.
 var apiInfoColumns = ApiInfoColumns{
 	Id:          "id",
+	ApiUid:      "api_uid",
 	Name:        "name",
 	Path:        "path",
 	Method:      "method",

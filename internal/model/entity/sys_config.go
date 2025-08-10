@@ -14,7 +14,7 @@ type SysConfig struct {
 	Group       string      `json:"group"       orm:"group"       ` // 配置分组
 	Key         string      `json:"key"         orm:"key"         ` // 参数键名
 	Value       string      `json:"value"       orm:"value"       ` // 参数值
-	Description string      `json:"description" orm:"description" ` // 配置描述
+	Description string      `json:"description" orm:"description" ` //
 	Sort        int         `json:"sort"        orm:"sort"        ` // 排序
 	Status      int         `json:"status"      orm:"status"      ` // 状态: 0禁用 1启用
 	CreatedAt   *gtime.Time `json:"createdAt"   orm:"created_at"  ` // 创建时间

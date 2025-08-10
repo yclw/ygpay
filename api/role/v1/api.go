@@ -6,7 +6,7 @@ import (
 
 // API模型
 type ApiModel struct {
-	Id     int64  `json:"id" dc:"APIID"`
+	ApiUid string `json:"apiUid" dc:"API唯一标识"`
 	Path   string `json:"path" dc:"API路径"`
 	Method string `json:"method" dc:"API方法"`
 	Sort   int    `json:"-" dc:"排序"`
@@ -33,8 +33,8 @@ type GetRoleApiRes struct {
 // UpdateRoleApiReq 更新角色API
 type UpdateRoleApiReq struct {
 	g.Meta  `path:"/role/api/update" method:"post" tags:"角色管理" summary:"更新角色API"`
-	Id      int64   `json:"id" v:"required" dc:"角色ID"`
-	ApiList []int64 `json:"apiList" v:"required" dc:"API列表"`
+	Id      int64    `json:"id" v:"required" dc:"角色ID"`
+	ApiList []string `json:"apiList" v:"required" dc:"API列表"`
 }
 
 type UpdateRoleApiRes struct {

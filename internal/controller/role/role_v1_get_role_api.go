@@ -56,7 +56,7 @@ func (c *ControllerV1) GetRoleApi(ctx context.Context, req *v1.GetRoleApiReq) (r
 // apiModelToRoleApi 将apiModel转换为roleApiModel
 func (c *ControllerV1) apiModelToRoleApi(apiModel *api.ApiModel, usedApisMap map[int64]bool) *v1.ApiModel {
 	roleApi := v1.ApiModel{
-		Id:     apiModel.ApiInfo.Id,
+		ApiUid: apiModel.ApiInfo.ApiUid,
 		Path:   apiModel.ApiInfo.Path,
 		Method: apiModel.ApiInfo.Method,
 		Group:  apiModel.ApiInfo.GroupName,

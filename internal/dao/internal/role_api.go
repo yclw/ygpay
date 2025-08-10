@@ -21,14 +21,16 @@ type RoleApiDao struct {
 
 // RoleApiColumns defines and stores column names for the table t_role_api.
 type RoleApiColumns struct {
-	RoleId string // 角色ID
-	ApiId  string // API ID
+	RoleId    string // 角色ID
+	ApiId     string // API ID
+	CreatedAt string //
 }
 
 // roleApiColumns holds the columns for the table t_role_api.
 var roleApiColumns = RoleApiColumns{
-	RoleId: "role_id",
-	ApiId:  "api_id",
+	RoleId:    "role_id",
+	ApiId:     "api_id",
+	CreatedAt: "created_at",
 }
 
 // NewRoleApiDao creates and returns a new DAO object for table data access.

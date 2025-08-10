@@ -10,6 +10,8 @@ import (
 	"yclw/ygpay/internal/dao/internal"
 	"yclw/ygpay/internal/model/do"
 	"yclw/ygpay/internal/model/entity"
+
+	"github.com/gogf/gf/v2/util/gconv"
 )
 
 // apiInfoDao is the data access object for the table t_api_info.
@@ -29,6 +31,36 @@ var (
 func (d *apiInfoDao) FindByID(ctx context.Context, id int64) (res *entity.ApiInfo, err error) {
 	cols := d.Columns()
 	err = d.Ctx(ctx).Where(cols.Id, id).Scan(&res)
+	return
+}
+
+// FindByApiUid 根据ApiUid查询
+func (d *apiInfoDao) FindByApiUid(ctx context.Context, apiUid string) (res *entity.ApiInfo, err error) {
+	cols := d.Columns()
+	err = d.Ctx(ctx).Where(cols.ApiUid, apiUid).Scan(&res)
+	return
+}
+
+// FindIdsByApiUids 根据ApiUid列表查询ID列表
+
+func (d *apiInfoDao) FindIdsByApiUids(ctx context.Context, apiUids []string) (ids []int64, err error) {
+	cols := d.Columns()
+	res, err := d.Ctx(ctx).WhereIn(cols.ApiUid, apiUids).Fields(cols.Id).Array()
+	if err != nil {
+		return
+	}
+	ids = gconv.Int64s(res)
+	return
+}
+
+// FindIdByApiUid 根据ApiUid查询ID
+func (d *apiInfoDao) FindIdByApiUid(ctx context.Context, apiUid string) (id int64, err error) {
+	cols := d.Columns()
+	res, err := d.Ctx(ctx).Fields(cols.Id).Where(cols.ApiUid, apiUid).Value()
+	if err != nil {
+		return
+	}
+	id = res.Int64()
 	return
 }
 
@@ -83,6 +115,7 @@ func (d *apiInfoDao) FindEnabledByApiIds(ctx context.Context, apiIds []int64) (r
 func (d *apiInfoDao) Create(ctx context.Context, api *do.ApiInfo) (id int64, err error) {
 	cols := d.Columns()
 	res, err := d.Ctx(ctx).Fields(
+		cols.ApiUid,
 		cols.Name,
 		cols.Path,
 		cols.Method,
@@ -117,9 +150,33 @@ func (d *apiInfoDao) Update(ctx context.Context, api *do.ApiInfo) (err error) {
 	return
 }
 
+// UpdateByApiUid 根据ApiUid更新
+func (d *apiInfoDao) UpdateByApiUid(ctx context.Context, api *do.ApiInfo) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Where(cols.ApiUid, api.ApiUid).Fields(
+		cols.Name,
+		cols.Path,
+		cols.Method,
+		cols.GroupName,
+		cols.Description,
+		cols.NeedAuth,
+		cols.RateLimit,
+		cols.Sort,
+		cols.Status,
+	).Data(api).Update()
+	return
+}
+
 // Delete 删除
 func (d *apiInfoDao) Delete(ctx context.Context, id int64) (err error) {
 	cols := d.Columns()
 	_, err = d.Ctx(ctx).Where(cols.Id, id).Delete()
+	return
+}
+
+// DeleteByApiUid 根据ApiUid删除
+func (d *apiInfoDao) DeleteByApiUid(ctx context.Context, apiUid string) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Where(cols.ApiUid, apiUid).Delete()
 	return
 }

@@ -8,7 +8,7 @@ import (
 )
 
 func (c *ControllerV1) GetOne(ctx context.Context, req *v1.GetOneReq) (res *v1.GetOneRes, err error) {
-	model, err := c.ApiService.GetOne(ctx, req.Id)
+	model, err := c.ApiService.GetOne(ctx, req.ApiUid)
 	if err != nil {
 		return
 	}
@@ -20,7 +20,7 @@ func (c *ControllerV1) GetOne(ctx context.Context, req *v1.GetOneReq) (res *v1.G
 
 func (c *ControllerV1) apiModelToV1(model *api.ApiModel) *v1.ApiModel {
 	return &v1.ApiModel{
-		Id:          model.ApiInfo.Id,
+		ApiUid:      model.ApiInfo.ApiUid,
 		Name:        model.ApiInfo.Name,
 		Path:        model.ApiInfo.Path,
 		Method:      model.ApiInfo.Method,

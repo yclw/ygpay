@@ -14,7 +14,7 @@ type ApiModel struct {
 
 // ApiUpdateModel api更新模型
 type ApiUpdateModel struct {
-	Id int64
+	ApiUid string
 	*do.ApiInfo
 }
 

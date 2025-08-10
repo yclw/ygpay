@@ -21,14 +21,16 @@ type RoleMenuDao struct {
 
 // RoleMenuColumns defines and stores column names for the table t_role_menu.
 type RoleMenuColumns struct {
-	RoleId string // 角色ID
-	MenuId string // 菜单ID
+	RoleId    string // 角色ID
+	MenuId    string // 菜单ID
+	CreatedAt string //
 }
 
 // roleMenuColumns holds the columns for the table t_role_menu.
 var roleMenuColumns = RoleMenuColumns{
-	RoleId: "role_id",
-	MenuId: "menu_id",
+	RoleId:    "role_id",
+	MenuId:    "menu_id",
+	CreatedAt: "created_at",
 }
 
 // NewRoleMenuDao creates and returns a new DAO object for table data access.

@@ -16,7 +16,7 @@ type LogLogin struct {
 	MemberId      interface{} // 用户ID
 	Username      interface{} // 登录账号
 	IpAddress     interface{} // IP地址
-	UserAgent     interface{} // 用户代理
+	UserAgent     interface{} //
 	LoginLocation interface{} // 登录地点
 	Browser       interface{} // 浏览器
 	Os            interface{} // 操作系统

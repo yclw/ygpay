@@ -17,7 +17,7 @@ type MenuModel struct {
 	ShowParent  bool         `json:"showParent" dc:"是否显示父菜单"`
 	ShowLink    bool         `json:"showLink"   dc:"是否显示该菜单"`
 	KeepAlive   bool         `json:"keepAlive"  dc:"是否缓存"`
-	ParentId    int64        `json:"parentId"   dc:"父级菜单ID"`
+	ParentId    int64        `json:"-"   dc:"父级菜单ID"`
 	ParentTitle string       `json:"parentTitle" dc:"父级菜单标题"`
 	Redirect    string       `json:"redirect,omitempty"   dc:"重定向"`
 	Component   string       `json:"component,omitempty"  dc:"组件路径"`

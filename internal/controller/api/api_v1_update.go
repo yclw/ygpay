@@ -18,9 +18,9 @@ func (c *ControllerV1) Update(ctx context.Context, req *v1.UpdateReq) (res *v1.U
 
 func (c *ControllerV1) updateReqToUpdateModel(req *v1.UpdateReq) *api.ApiUpdateModel {
 	return &api.ApiUpdateModel{
-		Id: req.Id,
+		ApiUid: req.ApiUid,
 		ApiInfo: &do.ApiInfo{
-			Id:          req.Id,
+			ApiUid:      req.ApiUid,
 			Name:        req.Name,
 			Path:        req.Path,
 			Method:      req.Method,

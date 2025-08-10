@@ -25,13 +25,13 @@ type MemberInfoColumns struct {
 	Uid          string // 用户UID
 	Username     string // 帐号
 	PasswordHash string // 密码哈希
-	Avatar       string // 头像
+	Avatar       string //
 	Sex          string // 性别: 1男 2女 3未知
-	Email        string // 邮箱
+	Email        string //
 	Mobile       string // 手机号码
-	Address      string // 联系地址
+	Address      string //
 	LastActiveAt string // 最后活跃时间
-	Remark       string // 备注
+	Remark       string //
 	Sort         string // 排序
 	Status       string // 状态: 0禁用 1启用
 	CreatedAt    string // 创建时间

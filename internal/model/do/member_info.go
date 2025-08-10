@@ -16,13 +16,13 @@ type MemberInfo struct {
 	Uid          interface{} // 用户UID
 	Username     interface{} // 帐号
 	PasswordHash interface{} // 密码哈希
-	Avatar       interface{} // 头像
+	Avatar       interface{} //
 	Sex          interface{} // 性别: 1男 2女 3未知
-	Email        interface{} // 邮箱
+	Email        interface{} //
 	Mobile       interface{} // 手机号码
-	Address      interface{} // 联系地址
+	Address      interface{} //
 	LastActiveAt *gtime.Time // 最后活跃时间
-	Remark       interface{} // 备注
+	Remark       interface{} //
 	Sort         interface{} // 排序
 	Status       interface{} // 状态: 0禁用 1启用
 	CreatedAt    *gtime.Time // 创建时间

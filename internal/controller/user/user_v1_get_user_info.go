@@ -32,7 +32,7 @@ func (c *ControllerV1) GetUserInfo(ctx context.Context, req *v1.GetUserInfoReq) 
 		Email:     member.Email,
 		Mobile:    member.Mobile,
 		Address:   member.Address,
-		CreatedAt: member.CreatedAt,
+		CreatedAt: member.MemberInfo.CreatedAt,
 	}
 	return
 }

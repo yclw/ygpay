@@ -13,13 +13,14 @@ import (
 type ApiInfo struct {
 	g.Meta      `orm:"table:t_api_info, do:true"`
 	Id          interface{} // API ID
+	ApiUid      interface{} //
 	Name        interface{} // API名称
 	Path        interface{} // API路径
 	Method      interface{} // API方法
 	GroupName   interface{} // API分组
-	Description interface{} // API描述
+	Description interface{} //
 	NeedAuth    interface{} // 是否需要认证: 0否 1是
-	RateLimit   interface{} // 限流次数/分钟
+	RateLimit   interface{} //
 	Sort        interface{} // 排序
 	Status      interface{} // 状态: 0禁用 1启用
 	CreatedAt   *gtime.Time // 创建时间

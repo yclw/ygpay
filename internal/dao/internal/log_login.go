@@ -25,7 +25,7 @@ type LogLoginColumns struct {
 	MemberId      string // 用户ID
 	Username      string // 登录账号
 	IpAddress     string // IP地址
-	UserAgent     string // 用户代理
+	UserAgent     string //
 	LoginLocation string // 登录地点
 	Browser       string // 浏览器
 	Os            string // 操作系统

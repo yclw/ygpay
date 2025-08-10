@@ -14,13 +14,13 @@ type MemberInfo struct {
 	Uid          string      `json:"uid"          orm:"uid"            ` // 用户UID
 	Username     string      `json:"username"     orm:"username"       ` // 帐号
 	PasswordHash string      `json:"passwordHash" orm:"password_hash"  ` // 密码哈希
-	Avatar       string      `json:"avatar"       orm:"avatar"         ` // 头像
+	Avatar       string      `json:"avatar"       orm:"avatar"         ` //
 	Sex          int         `json:"sex"          orm:"sex"            ` // 性别: 1男 2女 3未知
-	Email        string      `json:"email"        orm:"email"          ` // 邮箱
+	Email        string      `json:"email"        orm:"email"          ` //
 	Mobile       string      `json:"mobile"       orm:"mobile"         ` // 手机号码
-	Address      string      `json:"address"      orm:"address"        ` // 联系地址
+	Address      string      `json:"address"      orm:"address"        ` //
 	LastActiveAt *gtime.Time `json:"lastActiveAt" orm:"last_active_at" ` // 最后活跃时间
-	Remark       string      `json:"remark"       orm:"remark"         ` // 备注
+	Remark       string      `json:"remark"       orm:"remark"         ` //
 	Sort         int         `json:"sort"         orm:"sort"           ` // 排序
 	Status       int         `json:"status"       orm:"status"         ` // 状态: 0禁用 1启用
 	CreatedAt    *gtime.Time `json:"createdAt"    orm:"created_at"     ` // 创建时间

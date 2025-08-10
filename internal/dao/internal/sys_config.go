@@ -25,7 +25,7 @@ type SysConfigColumns struct {
 	Group       string // 配置分组
 	Key         string // 参数键名
 	Value       string // 参数值
-	Description string // 配置描述
+	Description string //
 	Sort        string // 排序
 	Status      string // 状态: 0禁用 1启用
 	CreatedAt   string // 创建时间

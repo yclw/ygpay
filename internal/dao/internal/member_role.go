@@ -21,14 +21,16 @@ type MemberRoleDao struct {
 
 // MemberRoleColumns defines and stores column names for the table t_member_role.
 type MemberRoleColumns struct {
-	MemberId string // 用户ID
-	RoleId   string // 角色ID
+	MemberId  string // 用户ID
+	RoleId    string // 角色ID
+	CreatedAt string //
 }
 
 // memberRoleColumns holds the columns for the table t_member_role.
 var memberRoleColumns = MemberRoleColumns{
-	MemberId: "member_id",
-	RoleId:   "role_id",
+	MemberId:  "member_id",
+	RoleId:    "role_id",
+	CreatedAt: "created_at",
 }
 
 // NewMemberRoleDao creates and returns a new DAO object for table data access.
