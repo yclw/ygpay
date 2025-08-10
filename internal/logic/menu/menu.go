@@ -2,8 +2,11 @@ package menu
 
 import (
 	"context"
+	"yclw/ygpay/internal/consts"
 	"yclw/ygpay/internal/dao"
 	"yclw/ygpay/internal/model/entity"
+
+	"github.com/google/uuid"
 )
 
 var MenuService = NewMenu()
@@ -16,14 +19,14 @@ func NewMenu() *Menu {
 }
 
 // GetOne 获取单个菜单信息
-func (m *Menu) GetOne(ctx context.Context, id int64) (res *MenuModel, err error) {
+func (m *Menu) GetOne(ctx context.Context, menuUid string) (res *MenuModel, err error) {
 	// 创建菜单模型
 	res = &MenuModel{
 		MenuInfo: &entity.MenuInfo{},
 	}
 
 	// 获取菜单信息
-	res.MenuInfo, err = dao.MenuInfo.FindByID(ctx, id)
+	res.MenuInfo, err = dao.MenuInfo.FindByMenuUid(ctx, menuUid)
 	if err != nil {
 		return
 	}
@@ -71,21 +74,50 @@ func (m *Menu) GetAllList(ctx context.Context) (res []*MenuModel, err error) {
 
 // Create 创建菜单
 func (m *Menu) Create(ctx context.Context, req *MenuCreateModel) (id int64, err error) {
+	// 生成MenuUid
+	req.MenuInfo.MenuUid = uuid.New().String()
+
+	// 获取父菜单ID
+	if req.ParentUid == "" {
+		req.MenuInfo.Pid = 0
+	} else {
+		req.MenuInfo.Pid, err = dao.MenuInfo.FindIdByMenuUid(ctx, req.ParentUid)
+		if err != nil {
+			return
+		}
+	}
+
 	// 创建菜单
 	id, err = dao.MenuInfo.Create(ctx, req.MenuInfo)
+	if err != nil {
+		return
+	}
+
+	// 添加到超级管理员角色
+	_, err = dao.RoleMenu.AddRoleMenus(ctx, consts.SuperAdminRoleId, []int64{id})
 	return
 }
 
 // Update 更新菜单
 func (m *Menu) Update(ctx context.Context, req *MenuUpdateModel) (err error) {
+	// 获取父菜单ID
+	if req.ParentUid == "" {
+		req.MenuInfo.Pid = 0
+	} else {
+		req.MenuInfo.Pid, err = dao.MenuInfo.FindIdByMenuUid(ctx, req.ParentUid)
+		if err != nil {
+			return
+		}
+	}
+
 	// 更新菜单
-	err = dao.MenuInfo.Update(ctx, req.MenuInfo)
+	err = dao.MenuInfo.UpdateByMenuUid(ctx, req.MenuInfo)
 	return
 }
 
 // Delete 删除菜单
-func (m *Menu) Delete(ctx context.Context, id int64) (err error) {
+func (m *Menu) Delete(ctx context.Context, menuUid string) (err error) {
 	// 删除菜单
-	err = dao.MenuInfo.Delete(ctx, id)
+	err = dao.MenuInfo.DeleteByMenuUid(ctx, menuUid)
 	return
 }

@@ -10,9 +10,6 @@ import (
 
 func (c *ControllerV1) Update(ctx context.Context, req *v1.UpdateReq) (res *v1.UpdateRes, err error) {
 	err = c.ApiService.Update(ctx, c.updateReqToUpdateModel(req))
-	if err != nil {
-		return
-	}
 	return
 }
 

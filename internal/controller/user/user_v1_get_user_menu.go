@@ -44,7 +44,6 @@ func (c *ControllerV1) GetUserMenu(ctx context.Context, req *v1.GetUserMenuReq) 
 
 func (c *ControllerV1) menuModelToUserMenu(menuModel *menu.RoleMenuModel) *v1.UserMenu {
 	userMenu := v1.UserMenu{
-		Id:       menuModel.MenuInfo.Id,
 		ParentId: menuModel.MenuInfo.Pid,
 		Type:     menuModel.MenuInfo.Type,
 		Name:     menuModel.MenuInfo.Name,
@@ -77,8 +76,8 @@ func (c *ControllerV1) buildUserMenuTree(userMenus []*v1.UserMenu, menuMap map[i
 	for _, node := range userMenus {
 		parentId := node.ParentId
 		// 查找父节点
-		if parent, exists := menuMap[parentId]; exists {
-			// 将当前节点添加到父节点的Children中
+		if parent, exists := menuMap[parentId]; exists && parent.Type == menu.MenuTypeDir {
+			// 如果父节点是目录，则将当前节点添加到父节点的Children中
 			parent.Children = append(parent.Children, node)
 		} else if parentId == 0 {
 			// 无父节点，作为根节点

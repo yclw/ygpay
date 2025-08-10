@@ -57,7 +57,7 @@ func (c *ControllerV1) GetRoleMenu(ctx context.Context, req *v1.GetRoleMenuReq) 
 
 func (c *ControllerV1) menuModelToRoleMenu(menuModel *menu.RoleMenuModel, usedMenusMap map[int64]bool) *v1.MenuModel {
 	roleMenu := v1.MenuModel{
-		Id:       menuModel.MenuInfo.Id,
+		MenuUid:  menuModel.MenuInfo.MenuUid,
 		ParentId: menuModel.MenuInfo.Pid,
 		Title:    menuModel.MenuInfo.Title,
 		Sort:     menuModel.MenuInfo.Sort,

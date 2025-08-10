@@ -6,7 +6,6 @@ import "github.com/gogf/gf/v2/frame/g"
 
 // 菜单
 type UserMenu struct {
-	Id        int64        `json:"-" dc:"菜单ID"`
 	ParentId  int64        `json:"-" dc:"父菜单ID"`
 	Type      int          `json:"type" dc:"类型（0:目录 1:菜单 2:按钮）"`
 	Name      string       `json:"name" dc:"名称"`

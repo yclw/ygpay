@@ -29,7 +29,13 @@ func (m *Menu) GetRoleMenu(ctx context.Context, roleId int64) (res []*RoleMenuMo
 }
 
 // UpdateRoleMenu 更新角色菜单
-func (m *Menu) UpdateRoleMenu(ctx context.Context, roleId int64, menuIds []int64) (err error) {
+func (m *Menu) UpdateRoleMenu(ctx context.Context, roleId int64, menuUids []string) (err error) {
+	// 获取菜单ID
+	menuIds, err := dao.MenuInfo.FindIdsByMenuUids(ctx, menuUids)
+	if err != nil {
+		return
+	}
+
 	//TODO: 考虑事务
 
 	// 删除角色菜单

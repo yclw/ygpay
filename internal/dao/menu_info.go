@@ -10,6 +10,8 @@ import (
 	"yclw/ygpay/internal/dao/internal"
 	"yclw/ygpay/internal/model/do"
 	"yclw/ygpay/internal/model/entity"
+
+	"github.com/gogf/gf/v2/util/gconv"
 )
 
 // menuInfoDao is the data access object for the table t_menu_info.
@@ -36,6 +38,36 @@ func (d *menuInfoDao) FindEnabledByMenuIds(ctx context.Context, menuIds []int64)
 func (d *menuInfoDao) FindByID(ctx context.Context, id int64) (res *entity.MenuInfo, err error) {
 	cols := d.Columns()
 	err = d.Ctx(ctx).Where(cols.Id, id).Scan(&res)
+	return
+}
+
+// FindIdByMenuUid 根据MenuUid获取菜单ID
+func (d *menuInfoDao) FindIdByMenuUid(ctx context.Context, menuUid string) (res int64, err error) {
+	cols := d.Columns()
+	value, err := d.Ctx(ctx).Where(cols.MenuUid, menuUid).Fields(cols.Id).Value()
+	if err != nil {
+		return
+	}
+	res = value.Int64()
+	return
+}
+
+// FindIdsByMenuUids 根据MenuUid列表获取菜单ID列表
+
+func (d *menuInfoDao) FindIdsByMenuUids(ctx context.Context, menuUids []string) (res []int64, err error) {
+	cols := d.Columns()
+	array, err := d.Ctx(ctx).WhereIn(cols.MenuUid, menuUids).Fields(cols.Id).Array()
+	if err != nil {
+		return
+	}
+	res = gconv.Int64s(array)
+	return
+}
+
+// FindByMenuUid 根据MenuUid获取菜单
+func (d *menuInfoDao) FindByMenuUid(ctx context.Context, menuUid string) (res *entity.MenuInfo, err error) {
+	cols := d.Columns()
+	err = d.Ctx(ctx).Where(cols.MenuUid, menuUid).Scan(&res)
 	return
 }
 
@@ -69,6 +101,7 @@ func (d *menuInfoDao) FindWithPageAndOptions(ctx context.Context, page, pageSize
 func (d *menuInfoDao) Create(ctx context.Context, req *do.MenuInfo) (id int64, err error) {
 	cols := d.Columns()
 	mod, err := d.Ctx(ctx).Fields(
+		cols.MenuUid,
 		cols.Pid,
 		cols.Type,
 		cols.Name,
@@ -115,9 +148,40 @@ func (d *menuInfoDao) Update(ctx context.Context, req *do.MenuInfo) (err error) 
 	return
 }
 
+// UpdateByMenuUid 根据MenuUid更新菜单
+
+func (d *menuInfoDao) UpdateByMenuUid(ctx context.Context, req *do.MenuInfo) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Where(cols.MenuUid, req.MenuUid).Fields(
+		cols.Pid,
+		cols.Type,
+		cols.Name,
+		cols.Path,
+		cols.Title,
+		cols.Icon,
+		cols.Sort,
+		cols.ShowParent,
+		cols.ShowLink,
+		cols.KeepAlive,
+		cols.Redirect,
+		cols.Component,
+		cols.FrameSrc,
+		cols.Url,
+		cols.Status,
+	).Data(req).OmitNil().Update()
+	return
+}
+
 // Delete 删除菜单
 func (d *menuInfoDao) Delete(ctx context.Context, id int64) (err error) {
 	cols := d.Columns()
 	_, err = d.Ctx(ctx).Where(cols.Id, id).Delete()
+	return
+}
+
+// DeleteByMenuUid 根据MenuUid删除菜单
+func (d *menuInfoDao) DeleteByMenuUid(ctx context.Context, menuUid string) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Where(cols.MenuUid, menuUid).Delete()
 	return
 }

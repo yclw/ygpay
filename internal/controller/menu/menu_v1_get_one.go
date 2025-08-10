@@ -8,7 +8,7 @@ import (
 )
 
 func (c *ControllerV1) GetOne(ctx context.Context, req *v1.GetOneReq) (res *v1.GetOneRes, err error) {
-	menu, err := c.menuService.GetOne(ctx, req.Id)
+	menu, err := c.menuService.GetOne(ctx, req.MenuUid)
 	if err != nil {
 		return
 	}
@@ -22,7 +22,7 @@ func (c *ControllerV1) GetOne(ctx context.Context, req *v1.GetOneReq) (res *v1.G
 
 func (c *ControllerV1) menuModelToV1(menuInfo *menu.MenuModel) *v1.MenuModel {
 	res := &v1.MenuModel{
-		Id:          menuInfo.MenuInfo.Id,
+		MenuUid:     menuInfo.MenuInfo.MenuUid,
 		Type:        menuInfo.MenuInfo.Type,
 		Name:        menuInfo.MenuInfo.Name,
 		Path:        menuInfo.MenuInfo.Path,

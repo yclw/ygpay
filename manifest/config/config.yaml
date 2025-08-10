@@ -126,7 +126,7 @@ router:
 
 # 缓存驱动
 cache:
-  adapter: "memory"                    # 缓存驱动方式，支持：memory|redis，不填默认memory
+  adapter: "redis"                    # 缓存驱动方式，支持：memory|redis，不填默认memory
 # Redis. 配置参考：https://goframe.org/pages/viewpage.action?pageId=1114217
 redis:
   default:

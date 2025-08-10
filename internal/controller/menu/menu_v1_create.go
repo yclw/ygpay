@@ -4,25 +4,19 @@ import (
 	"context"
 
 	v1 "yclw/ygpay/api/menu/v1"
-	"yclw/ygpay/internal/consts"
 	"yclw/ygpay/internal/logic/menu"
 	"yclw/ygpay/internal/model/do"
 )
 
 func (c *ControllerV1) Create(ctx context.Context, req *v1.CreateReq) (res *v1.CreateRes, err error) {
-	id, err := c.menuService.Create(ctx, c.createReqToCreateModel(req))
-	if err != nil {
-		return
-	}
-
-	err = c.menuService.AddRoleMenu(ctx, consts.SuperAdminRoleId, id)
+	_, err = c.menuService.Create(ctx, c.createReqToCreateModel(req))
 	return
 }
 
 func (c *ControllerV1) createReqToCreateModel(req *v1.CreateReq) *menu.MenuCreateModel {
 	return &menu.MenuCreateModel{
+		ParentUid: req.ParentUid,
 		MenuInfo: &do.MenuInfo{
-			Pid:        req.ParentId,
 			Type:       req.Type,
 			Name:       req.Name,
 			Path:       req.Path,

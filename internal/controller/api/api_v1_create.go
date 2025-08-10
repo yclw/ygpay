@@ -10,9 +10,6 @@ import (
 
 func (c *ControllerV1) Create(ctx context.Context, req *v1.CreateReq) (res *v1.CreateRes, err error) {
 	_, err = c.ApiService.Create(ctx, c.createReqToCreateModel(req))
-	if err != nil {
-		return
-	}
 	return
 }
 

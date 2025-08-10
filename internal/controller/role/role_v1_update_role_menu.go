@@ -18,14 +18,14 @@ func (c *ControllerV1) UpdateRoleMenu(ctx context.Context, req *v1.UpdateRoleMen
 	}
 
 	// 构建可用菜单map
-	enabledMenusMap := make(map[int64]bool)
+	enabledMenusMap := make(map[string]bool)
 	for _, menu := range enabledMenus {
-		enabledMenusMap[menu.MenuInfo.Id] = true
+		enabledMenusMap[menu.MenuInfo.MenuUid] = true
 	}
 
 	// 过滤掉无权限的菜单
-	req.MenuList = slices.DeleteFunc(req.MenuList, func(menuId int64) bool {
-		return !enabledMenusMap[menuId]
+	req.MenuList = slices.DeleteFunc(req.MenuList, func(menuUid string) bool {
+		return !enabledMenusMap[menuUid]
 	})
 
 	err = c.MenuService.UpdateRoleMenu(ctx, req.Id, req.MenuList)

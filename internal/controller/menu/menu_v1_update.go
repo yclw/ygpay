@@ -15,9 +15,9 @@ func (c *ControllerV1) Update(ctx context.Context, req *v1.UpdateReq) (res *v1.U
 
 func (c *ControllerV1) updateReqToUpdateModel(req *v1.UpdateReq) *menu.MenuUpdateModel {
 	return &menu.MenuUpdateModel{
+		ParentUid: req.ParentUid,
 		MenuInfo: &do.MenuInfo{
-			Id:         req.Id,
-			Pid:        req.ParentId,
+			MenuUid:    req.MenuUid,
 			Type:       req.Type,
 			Name:       req.Name,
 			Path:       req.Path,

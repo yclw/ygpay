@@ -6,7 +6,8 @@ import (
 
 // 菜单模型
 type MenuModel struct {
-	Id       int64        `json:"id"         dc:"菜单ID"`
+	// Id       int64        `json:"id"         dc:"菜单ID"`
+	MenuUid  string       `json:"menuUid"    dc:"菜单唯一标识"`
 	ParentId int64        `json:"-"   dc:"父级菜单ID"`
 	Title    string       `json:"title"      dc:"菜单标题"`
 	Sort     int          `json:"-"       dc:"排序"`
@@ -27,8 +28,8 @@ type GetRoleMenuRes struct {
 // UpdateRoleMenuReq 更新角色菜单
 type UpdateRoleMenuReq struct {
 	g.Meta   `path:"/role/menu/update" method:"post" tags:"角色管理" summary:"更新角色菜单"`
-	Id       int64   `json:"id" v:"required" dc:"角色ID"`
-	MenuList []int64 `json:"menuList" v:"required" dc:"菜单列表"`
+	Id       int64    `json:"id" v:"required" dc:"角色ID"`
+	MenuList []string `json:"menuList" v:"required" dc:"菜单列表"`
 }
 
 type UpdateRoleMenuRes struct {

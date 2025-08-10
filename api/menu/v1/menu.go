@@ -7,7 +7,7 @@ import (
 
 // 菜单模型
 type MenuModel struct {
-	Id          int64        `json:"id"         dc:"菜单ID"`
+	MenuUid     string       `json:"menuUid"    dc:"菜单唯一标识"`
 	Type        int          `json:"type"       dc:"菜单类型: 0目录 1菜单 2外链"`
 	Name        string       `json:"name"       dc:"菜单名称"`
 	Path        string       `json:"path"       dc:"菜单路径"`
@@ -41,8 +41,8 @@ type GetListRes struct {
 
 // GetOneReq 获取菜单详情
 type GetOneReq struct {
-	g.Meta `path:"/menu/one" method:"get" tags:"菜单管理" summary:"获取菜单详情"`
-	Id     int64 `json:"id" v:"required" dc:"菜单ID"`
+	g.Meta  `path:"/menu/one" method:"get" tags:"菜单管理" summary:"获取菜单详情"`
+	MenuUid string `json:"menuUid" v:"required" dc:"菜单唯一标识"`
 }
 
 type GetOneRes struct {
@@ -61,7 +61,7 @@ type CreateReq struct {
 	ShowParent bool   `json:"showParent" v:"required" dc:"是否显示父菜单"`
 	ShowLink   bool   `json:"showLink"   v:"required" dc:"是否显示该菜单"`
 	KeepAlive  bool   `json:"keepAlive"  v:"required" dc:"是否缓存"`
-	ParentId   int64  `json:"parentId"   dc:"父级ID"`
+	ParentUid  string `json:"parentUid"  dc:"父级ID"`
 	Redirect   string `json:"redirect"   dc:"重定向"`
 	Component  string `json:"component"  dc:"组件路径"`
 	FrameSrc   string `json:"frameSrc"   dc:"内嵌地址"`
@@ -75,7 +75,7 @@ type CreateRes struct {
 // UpdateReq 更新菜单
 type UpdateReq struct {
 	g.Meta     `path:"/menu/update" method:"put" tags:"菜单管理" summary:"更新菜单"`
-	Id         int64  `json:"id"         v:"required" dc:"菜单ID"`
+	MenuUid    string `json:"menuUid"    v:"required" dc:"菜单唯一标识"`
 	Type       int    `json:"type"       v:"required" dc:"菜单类型: 0目录 1菜单 2外链"`
 	Name       string `json:"name"       v:"required" dc:"菜单名称"`
 	Path       string `json:"path"       v:"required" dc:"菜单路径"`
@@ -85,7 +85,7 @@ type UpdateReq struct {
 	ShowParent bool   `json:"showParent" v:"required" dc:"是否显示父菜单: 0是 1否"`
 	ShowLink   bool   `json:"showLink"   v:"required" dc:"是否显示该菜单: 0是 1否"`
 	KeepAlive  bool   `json:"keepAlive"  v:"required" dc:"是否缓存: 0是 1否"`
-	ParentId   int64  `json:"parentId"   dc:"父级ID"`
+	ParentUid  string `json:"parentUid"  dc:"父级ID"`
 	Redirect   string `json:"redirect"   dc:"重定向"`
 	Component  string `json:"component"  dc:"组件路径"`
 	FrameSrc   string `json:"frameSrc"   dc:"内嵌地址"`
@@ -98,8 +98,8 @@ type UpdateRes struct {
 
 // DeleteReq 删除菜单
 type DeleteReq struct {
-	g.Meta `path:"/menu/delete" method:"delete" tags:"菜单管理" summary:"删除菜单"`
-	Id     int64 `json:"id" v:"required" dc:"菜单ID"`
+	g.Meta  `path:"/menu/delete" method:"delete" tags:"菜单管理" summary:"删除菜单"`
+	MenuUid string `json:"menuUid" v:"required" dc:"菜单唯一标识"`
 }
 
 type DeleteRes struct {

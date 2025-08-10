@@ -17,10 +17,12 @@ type MenuModel struct {
 }
 
 type MenuCreateModel struct {
+	ParentUid string
 	*do.MenuInfo
 }
 
 type MenuUpdateModel struct {
+	ParentUid string
 	*do.MenuInfo
 }
 
