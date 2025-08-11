@@ -16,7 +16,7 @@ func (c *ControllerV1) GetList(ctx context.Context, req *v1.GetListReq) (res *v1
 		return
 	}
 
-	// 转换为v1.RoleModel，并映射 id->RoleModel
+	// 转换为v1.RoleModel，并映射 roleId->RoleModel
 	models := make([]*v1.RoleModel, 0, len(roles))
 	roleMap := make(map[int64]*v1.RoleModel)
 	for _, role := range roles {
@@ -50,7 +50,7 @@ func buildRoleTree(roles []*v1.RoleModel, roleMap map[int64]*v1.RoleModel) (tree
 		if parent, exists := roleMap[parentId]; exists {
 			// 将当前节点添加到父节点的Children中
 			parent.Children = append(parent.Children, node)
-		} else {
+		} else if parentId == 0 {
 			// 无父节点，作为根节点
 			tree = append(tree, node)
 		}

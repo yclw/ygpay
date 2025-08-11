@@ -16,14 +16,14 @@ func (c *ControllerV1) Update(ctx context.Context, req *v1.UpdateReq) (res *v1.U
 // updateReqToUpdateModel 将v1.UpdateReq转换为role.RoleUpdateModel
 func (c *ControllerV1) updateReqToUpdateModel(req *v1.UpdateReq) *role.RoleUpdateModel {
 	return &role.RoleUpdateModel{
+		ParentUid: req.ParentUid,
 		RoleInfo: &do.RoleInfo{
-			Id:     req.Id,
-			Pid:    req.ParentId,
-			Name:   req.Name,
-			Key:    req.Key,
-			Remark: req.Remark,
-			Sort:   req.Sort,
-			Status: req.Status,
+			RoleUid: req.RoleUid,
+			Name:    req.Name,
+			Key:     req.Key,
+			Remark:  req.Remark,
+			Sort:    req.Sort,
+			Status:  req.Status,
 		},
 	}
 }

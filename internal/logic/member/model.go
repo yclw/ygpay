@@ -16,13 +16,15 @@ type MemberModel struct {
 
 // MemberUpdateModel 用户更新模型
 type MemberUpdateModel struct {
-	Uid string `json:"uid"                 dc:"用户ID"`
+	Password string `json:"password" dc:"密码"`
+	Uid      string `json:"uid"                 dc:"用户ID"`
 	*do.MemberInfo
 	*do.MemberRole
 }
 
 // MemberCreateModel 用户创建模型
 type MemberCreateModel struct {
+	Password string `json:"password" dc:"密码"`
 	*do.MemberInfo
 	*do.MemberRole
 }
@@ -40,7 +42,6 @@ type MemberListFilter struct {
 	Nickname  string      `json:"nickname"`  // 昵称
 	Email     string      `json:"email"`     // 邮箱
 	Mobile    string      `json:"mobile"`    // 手机号码
-	RoleId    *int64      `json:"roleId"`    // 角色ID筛选
 	Sex       *int        `json:"sex"`       // 性别筛选
 	Status    *int        `json:"status"`    // 状态筛选
 	StartDate *gtime.Time `json:"startDate"` // 开始日期

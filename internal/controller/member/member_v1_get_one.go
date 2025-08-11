@@ -17,7 +17,7 @@ func (c *ControllerV1) GetOne(ctx context.Context, req *v1.GetOneReq) (res *v1.G
 	memberModel := c.memberModelToV1(member)
 
 	// 获取角色名称
-	role, roleErr := c.RoleService.GetOne(ctx, member.RoleId)
+	role, roleErr := c.RoleService.GetOneById(ctx, member.RoleId)
 	if roleErr == nil && role != nil && role.RoleInfo != nil {
 		memberModel.RoleName = role.RoleInfo.Name
 	}
@@ -31,7 +31,6 @@ func (c *ControllerV1) GetOne(ctx context.Context, req *v1.GetOneReq) (res *v1.G
 func (c *ControllerV1) memberModelToV1(member *member.MemberModel) *v1.MemberModel {
 	return &v1.MemberModel{
 		Uid:          member.Uid,
-		RoleId:       member.RoleId,
 		Username:     member.Username,
 		Nickname:     member.Nickname,
 		Avatar:       member.Avatar,

@@ -7,10 +7,10 @@ import (
 
 // 角色模型
 type RoleModel struct {
-	Id         int64        `json:"id" dc:"角色ID"`
+	RoleUid    string       `json:"roleUid" dc:"角色唯一标识"`
 	Name       string       `json:"name" dc:"角色名称"`
 	Key        string       `json:"key" dc:"角色权限字符串"`
-	ParentId   int64        `json:"parentId" dc:"父级ID"`
+	ParentId   int64        `json:"-" dc:"父级ID"`
 	ParentName string       `json:"parentName" dc:"父级名称"`
 	Remark     string       `json:"remark" dc:"备注"`
 	Sort       int          `json:"sort" dc:"排序"`
@@ -32,8 +32,8 @@ type GetListRes struct {
 
 // GetOneReq 获取用户详情
 type GetOneReq struct {
-	g.Meta `path:"/role/one" method:"get" tags:"角色管理" summary:"获取角色详情"`
-	Id     int64 `json:"id" v:"required" dc:"角色ID"`
+	g.Meta  `path:"/role/one" method:"get" tags:"角色管理" summary:"获取角色详情"`
+	RoleUid string `json:"roleUid" v:"required" dc:"角色唯一标识"`
 }
 
 type GetOneRes struct {
@@ -42,13 +42,13 @@ type GetOneRes struct {
 
 // CreateReq 创建用户
 type CreateReq struct {
-	g.Meta   `path:"/role/create" method:"post" tags:"角色管理" summary:"创建角色"`
-	ParentId int64  `json:"parentId" v:"required" dc:"父级ID"`
-	Name     string `json:"name" v:"required" dc:"角色名称"`
-	Key      string `json:"key" v:"required" dc:"角色权限字符串"`
-	Remark   string `json:"remark" v:"required" dc:"备注"`
-	Sort     int    `json:"sort" v:"required" dc:"排序"`
-	Status   int    `json:"status" v:"required" dc:"状态"`
+	g.Meta    `path:"/role/create" method:"post" tags:"角色管理" summary:"创建角色"`
+	ParentUid string `json:"parentUid" dc:"父级唯一标识"`
+	Name      string `json:"name" v:"required" dc:"角色名称"`
+	Key       string `json:"key" v:"required" dc:"角色权限字符串"`
+	Remark    string `json:"remark" v:"required" dc:"备注"`
+	Sort      int    `json:"sort" v:"required" dc:"排序"`
+	Status    int    `json:"status" v:"required" dc:"状态"`
 }
 
 type CreateRes struct {
@@ -56,14 +56,14 @@ type CreateRes struct {
 
 // UpdateReq 更新用户
 type UpdateReq struct {
-	g.Meta   `path:"/role/update" method:"put" tags:"角色管理" summary:"更新角色"`
-	Id       int64  `json:"id" v:"required" dc:"角色ID"`
-	ParentId int64  `json:"parentId" v:"required" dc:"父级ID"`
-	Name     string `json:"name" v:"required" dc:"角色名称"`
-	Key      string `json:"key" v:"required" dc:"角色权限字符串"`
-	Remark   string `json:"remark" v:"required" dc:"备注"`
-	Sort     int    `json:"sort" v:"required" dc:"排序"`
-	Status   int    `json:"status" v:"required" dc:"状态"`
+	g.Meta    `path:"/role/update" method:"put" tags:"角色管理" summary:"更新角色"`
+	RoleUid   string `json:"roleUid" v:"required" dc:"角色唯一标识"`
+	ParentUid string `json:"parentUid" dc:"父级唯一标识"`
+	Name      string `json:"name" v:"required" dc:"角色名称"`
+	Key       string `json:"key" v:"required" dc:"角色权限字符串"`
+	Remark    string `json:"remark" v:"required" dc:"备注"`
+	Sort      int    `json:"sort" v:"required" dc:"排序"`
+	Status    int    `json:"status" v:"required" dc:"状态"`
 }
 
 type UpdateRes struct {
@@ -71,8 +71,8 @@ type UpdateRes struct {
 
 // DeleteReq 删除用户
 type DeleteReq struct {
-	g.Meta `path:"/role/delete" method:"delete" tags:"角色管理" summary:"删除角色"`
-	Id     int64 `json:"id" v:"required" dc:"角色ID"`
+	g.Meta  `path:"/role/delete" method:"delete" tags:"角色管理" summary:"删除角色"`
+	RoleUid string `json:"roleUid" v:"required" dc:"角色唯一标识"`
 }
 
 type DeleteRes struct {

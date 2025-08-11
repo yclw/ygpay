@@ -11,16 +11,28 @@ import (
 )
 
 func (c *ControllerV1) GetRoleMenu(ctx context.Context, req *v1.GetRoleMenuReq) (res *v1.GetRoleMenuRes, err error) {
-	operator := contexts.GetRoleId(ctx)
+	operatorRoleUid := contexts.GetRoleUid(ctx)
+
+	// 根据操作者RoleUid获取RoleId
+	operatorRoleId, err := c.RoleService.GetRoleIdByUid(ctx, operatorRoleUid)
+	if err != nil {
+		return
+	}
 
 	// 获取可用菜单，当前为操作角色菜单
-	enabledMenus, err := c.MenuService.GetRoleMenu(ctx, operator)
+	enabledMenus, err := c.MenuService.GetRoleMenu(ctx, operatorRoleId)
+	if err != nil {
+		return
+	}
+
+	// 根据目标roleUid获取roleId
+	targetRoleId, err := c.RoleService.GetRoleIdByUid(ctx, req.RoleUid)
 	if err != nil {
 		return
 	}
 
 	// 获取已用菜单
-	usedMenus, err := c.MenuService.GetRoleMenu(ctx, req.Id)
+	usedMenus, err := c.MenuService.GetRoleMenu(ctx, targetRoleId)
 	if err != nil {
 		return
 	}

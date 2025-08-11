@@ -19,8 +19,9 @@ type Context struct {
 
 // Identity 上下文用户身份模型
 type Identity struct {
-	Uid    string `json:"uid"             dc:"用户UID"`
-	RoleId int64  `json:"roleId"          dc:"角色ID"`
+	Uid     string `json:"uid"             dc:"用户UID"`
+	RoleUid string `json:"roleUid"         dc:"角色UID"`
+	RoleKey string `json:"roleKey"         dc:"角色唯一标识符"`
 }
 
 // Response HTTP响应

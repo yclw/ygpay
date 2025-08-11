@@ -2,13 +2,17 @@ package member
 
 import (
 	"context"
+	"yclw/ygpay/internal/consts"
 	"yclw/ygpay/internal/dao"
 	"yclw/ygpay/internal/global"
 	"yclw/ygpay/internal/model/entity"
 	"yclw/ygpay/pkg/token"
+	"yclw/ygpay/util/encrypt"
 
+	"github.com/gogf/gf/v2/encoding/gbase64"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/os/gtime"
+	"github.com/google/uuid"
 )
 
 var MemberService = NewMember()
@@ -109,6 +113,28 @@ func (s *Member) GetAllList(ctx context.Context) (res []*MemberModel, err error)
 
 // Create 创建用户
 func (s *Member) Create(ctx context.Context, req *MemberCreateModel) (err error) {
+
+	// 生成uid
+	uid := uuid.New().String()
+	req.MemberInfo.Uid = uid
+
+	// 解码密码
+	password, err := gbase64.Decode([]byte(req.Password))
+	if err != nil {
+		return gerror.Wrap(err, "密码解析失败")
+	}
+	// 解密密码
+	password, err = encrypt.AesECBDecrypt(password, []byte(consts.RequestEncryptKey))
+	if err != nil {
+		return gerror.Wrap(err, "密码解析失败")
+	}
+	// 密码加密
+	passwordHash, err := encrypt.HashPassword(string(password), encrypt.DefaultCost)
+	if err != nil {
+		return gerror.Wrap(err, "密码加密失败")
+	}
+	req.MemberInfo.PasswordHash = passwordHash
+
 	// 创建用户
 	id, err := dao.MemberInfo.Create(ctx, req.MemberInfo)
 	if err != nil {
@@ -126,6 +152,26 @@ func (s *Member) Create(ctx context.Context, req *MemberCreateModel) (err error)
 
 // Update 更新用户
 func (s *Member) Update(ctx context.Context, req *MemberUpdateModel) (err error) {
+
+	// 密码处理
+	if req.Password != "" {
+		// 解码密码
+		password, err := gbase64.Decode([]byte(req.Password))
+		if err != nil {
+			return gerror.Wrap(err, "密码解析失败")
+		}
+		// 解密密码
+		password, err = encrypt.AesECBDecrypt(password, []byte(consts.RequestEncryptKey))
+		if err != nil {
+			return gerror.Wrap(err, "密码解析失败")
+		}
+		passwordHash, err := encrypt.HashPassword(string(password), encrypt.DefaultCost)
+		if err != nil {
+			return gerror.Wrap(err, "密码加密失败")
+		}
+		req.MemberInfo.PasswordHash = passwordHash
+	}
+
 	if err = dao.MemberInfo.Update(ctx, req.MemberInfo); err != nil {
 		err = gerror.Wrap(err, "更新用户失败")
 		return

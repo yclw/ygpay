@@ -7,7 +7,6 @@ import (
 
 type MemberModel struct {
 	Uid          string      `json:"uid" dc:"用户ID"`
-	RoleId       int64       `json:"roleId" dc:"角色ID"`
 	RoleName     string      `json:"roleName,omitempty" dc:"角色名称"`
 	Username     string      `json:"username" dc:"用户名"`
 	Nickname     string      `json:"nickname" dc:"昵称"`
@@ -33,7 +32,6 @@ type GetListReq struct {
 	Nickname  string      `json:"nickname" dc:"昵称"`
 	Email     string      `json:"email" dc:"邮箱"`
 	Mobile    string      `json:"mobile" dc:"手机号码"`
-	RoleId    *int64      `json:"roleId" dc:"角色ID筛选"`
 	Sex       *int        `json:"sex" dc:"性别筛选（0:未知 1:男 2:女）"`
 	Status    *int        `json:"status" dc:"状态筛选（0:禁用 1:启用）"`
 	StartDate *gtime.Time `json:"startDate" dc:"开始日期"`
@@ -63,7 +61,7 @@ type CreateReq struct {
 	Username string `json:"username" v:"required" dc:"用户名"`
 	Nickname string `json:"nickname" v:"required" dc:"昵称"`
 	Password string `json:"password" v:"required" dc:"密码"`
-	RoleId   int64  `json:"roleId" v:"required" dc:"角色ID"`
+	RoleUid  string `json:"roleUid" v:"required" dc:"角色UID"`
 	Avatar   string `json:"avatar" dc:"头像"`
 	Sex      int    `json:"sex" v:"required" dc:"性别: 0未知 1男 2女"`
 	Email    string `json:"email" dc:"邮箱"`
@@ -92,7 +90,7 @@ type UpdateReq struct {
 	Sort     int    `json:"sort" v:"required" dc:"排序"`
 	Status   int    `json:"status" v:"required" dc:"状态: 0禁用 1启用"`
 	Password string `json:"password" dc:"密码（可选，不传则不更新密码）"`
-	RoleId   int64  `json:"roleId" v:"required" dc:"角色ID"`
+	RoleUid  string `json:"roleUid" v:"required" dc:"角色UID"`
 }
 
 type UpdateRes struct {

@@ -17,8 +17,8 @@ type MenuModel struct {
 
 // GetRoleMenuReq 获取角色菜单
 type GetRoleMenuReq struct {
-	g.Meta `path:"/role/menu/get" method:"get" tags:"角色管理" summary:"获取角色菜单"`
-	Id     int64 `json:"id" v:"required" dc:"角色ID"`
+	g.Meta  `path:"/role/menu/get" method:"get" tags:"角色管理" summary:"获取角色菜单"`
+	RoleUid string `json:"roleUid" v:"required" dc:"角色唯一标识"`
 }
 
 type GetRoleMenuRes struct {
@@ -28,7 +28,7 @@ type GetRoleMenuRes struct {
 // UpdateRoleMenuReq 更新角色菜单
 type UpdateRoleMenuReq struct {
 	g.Meta   `path:"/role/menu/update" method:"post" tags:"角色管理" summary:"更新角色菜单"`
-	Id       int64    `json:"id" v:"required" dc:"角色ID"`
+	RoleUid  string   `json:"roleUid" v:"required" dc:"角色唯一标识"`
 	MenuList []string `json:"menuList" v:"required" dc:"菜单列表"`
 }
 

@@ -9,7 +9,7 @@ import (
 
 func (c *ControllerV1) GetOne(ctx context.Context, req *v1.GetOneReq) (res *v1.GetOneRes, err error) {
 	// 获取角色信息
-	model, err := c.RoleService.GetOne(ctx, req.Id)
+	model, err := c.RoleService.GetOne(ctx, req.RoleUid)
 	if err != nil {
 		return
 	}
@@ -24,7 +24,7 @@ func (c *ControllerV1) GetOne(ctx context.Context, req *v1.GetOneReq) (res *v1.G
 // roleModelToV1 将role.RoleModel转换为v1.RoleModel
 func (c *ControllerV1) roleModelToV1(model *role.RoleModel) *v1.RoleModel {
 	return &v1.RoleModel{
-		Id:         model.RoleInfo.Id,
+		RoleUid:    model.RoleInfo.RoleUid,
 		Name:       model.RoleInfo.Name,
 		Key:        model.RoleInfo.Key,
 		ParentId:   model.RoleInfo.Pid,

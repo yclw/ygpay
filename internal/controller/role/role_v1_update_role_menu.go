@@ -9,10 +9,16 @@ import (
 )
 
 func (c *ControllerV1) UpdateRoleMenu(ctx context.Context, req *v1.UpdateRoleMenuReq) (res *v1.UpdateRoleMenuRes, err error) {
-	operator := contexts.GetRoleId(ctx)
+	operatorRoleUid := contexts.GetRoleUid(ctx)
+
+	// 根据操作者RoleUid获取RoleId
+	operatorRoleId, err := c.RoleService.GetRoleIdByUid(ctx, operatorRoleUid)
+	if err != nil {
+		return
+	}
 
 	// 获取可用菜单，当前为操作角色菜单
-	enabledMenus, err := c.MenuService.GetRoleMenu(ctx, operator)
+	enabledMenus, err := c.MenuService.GetRoleMenu(ctx, operatorRoleId)
 	if err != nil {
 		return
 	}
@@ -28,6 +34,12 @@ func (c *ControllerV1) UpdateRoleMenu(ctx context.Context, req *v1.UpdateRoleMen
 		return !enabledMenusMap[menuUid]
 	})
 
-	err = c.MenuService.UpdateRoleMenu(ctx, req.Id, req.MenuList)
+	// 根据目标roleUid获取roleId
+	targetRoleId, err := c.RoleService.GetRoleIdByUid(ctx, req.RoleUid)
+	if err != nil {
+		return
+	}
+
+	err = c.MenuService.UpdateRoleMenu(ctx, targetRoleId, req.MenuList)
 	return
 }

@@ -14,7 +14,6 @@ func (c *ControllerV1) GetList(ctx context.Context, req *v1.GetListReq) (res *v1
 		Nickname:  req.Nickname,
 		Email:     req.Email,
 		Mobile:    req.Mobile,
-		RoleId:    req.RoleId,
 		Sex:       req.Sex,
 		Status:    req.Status,
 		StartDate: req.StartDate,

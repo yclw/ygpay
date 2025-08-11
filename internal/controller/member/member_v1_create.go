@@ -4,22 +4,28 @@ import (
 	"context"
 
 	v1 "yclw/ygpay/api/member/v1"
-	"yclw/ygpay/internal/consts"
 	"yclw/ygpay/internal/logic/member"
 	"yclw/ygpay/internal/model/do"
-	"yclw/ygpay/util/encrypt"
-
-	"github.com/gogf/gf/v2/encoding/gbase64"
-	"github.com/gogf/gf/v2/errors/gerror"
-	"github.com/google/uuid"
 )
 
 func (c *ControllerV1) Create(ctx context.Context, req *v1.CreateReq) (res *v1.CreateRes, err error) {
+
+	// 将创建请求转换为创建模型
 	model, err := c.createReqToCreateModel(req)
 	if err != nil {
 		return
 	}
 
+	// 根据roleUid获取roleId
+	roleId, err := c.RoleService.GetRoleIdByUid(ctx, req.RoleUid)
+	if err != nil {
+		return
+	}
+
+	// 设置角色ID
+	model.MemberRole.RoleId = roleId
+
+	// 创建用户
 	err = c.MemberService.Create(ctx, model)
 	if err != nil {
 		return
@@ -31,42 +37,18 @@ func (c *ControllerV1) Create(ctx context.Context, req *v1.CreateReq) (res *v1.C
 
 // createReqToCreateModel 将创建请求转换为创建模型
 func (c *ControllerV1) createReqToCreateModel(req *v1.CreateReq) (*member.MemberCreateModel, error) {
-	// 解码密码
-	password, err := gbase64.Decode([]byte(req.Password))
-	if err != nil {
-		return nil, gerror.Wrap(err, "密码解析失败")
-	}
-	// 解密密码
-	password, err = encrypt.AesECBDecrypt(password, []byte(consts.RequestEncryptKey))
-	if err != nil {
-		return nil, gerror.Wrap(err, "密码解析失败")
-	}
-	// 密码加密
-	passwordHash, err := encrypt.HashPassword(string(password), encrypt.DefaultCost)
-	if err != nil {
-		return nil, gerror.Wrap(err, "密码加密失败")
-	}
-
-	// 生成uid
-	uid := uuid.New().String()
-
 	return &member.MemberCreateModel{
 		MemberInfo: &do.MemberInfo{
-			Uid:          uid,
-			Username:     req.Username,
-			Nickname:     req.Nickname,
-			PasswordHash: passwordHash,
-			Avatar:       req.Avatar,
-			Sex:          req.Sex,
-			Email:        req.Email,
-			Mobile:       req.Mobile,
-			Address:      req.Address,
-			Remark:       req.Remark,
-			Sort:         req.Sort,
-			Status:       req.Status,
-		},
-		MemberRole: &do.MemberRole{
-			RoleId: req.RoleId,
+			Username: req.Username,
+			Nickname: req.Nickname,
+			Avatar:   req.Avatar,
+			Sex:      req.Sex,
+			Email:    req.Email,
+			Mobile:   req.Mobile,
+			Address:  req.Address,
+			Remark:   req.Remark,
+			Sort:     req.Sort,
+			Status:   req.Status,
 		},
 	}, nil
 }

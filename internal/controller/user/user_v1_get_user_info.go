@@ -17,7 +17,7 @@ func (c *ControllerV1) GetUserInfo(ctx context.Context, req *v1.GetUserInfoReq) 
 	}
 
 	// 获取角色信息
-	role, err := c.RoleService.GetOne(ctx, member.RoleId)
+	role, err := c.RoleService.GetOneById(ctx, member.RoleId)
 	if err != nil {
 		return
 	}

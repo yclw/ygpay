@@ -22,8 +22,8 @@ type ApiGroupModel struct {
 
 // GetRoleApiReq 获取角色API
 type GetRoleApiReq struct {
-	g.Meta `path:"/role/api/get" method:"get" tags:"角色管理" summary:"获取角色API"`
-	Id     int64 `json:"id" v:"required" dc:"角色ID"`
+	g.Meta  `path:"/role/api/get" method:"get" tags:"角色管理" summary:"获取角色API"`
+	RoleUid string `json:"roleUid" v:"required" dc:"角色唯一标识"`
 }
 
 type GetRoleApiRes struct {
@@ -33,7 +33,7 @@ type GetRoleApiRes struct {
 // UpdateRoleApiReq 更新角色API
 type UpdateRoleApiReq struct {
 	g.Meta  `path:"/role/api/update" method:"post" tags:"角色管理" summary:"更新角色API"`
-	Id      int64    `json:"id" v:"required" dc:"角色ID"`
+	RoleUid string   `json:"roleUid" v:"required" dc:"角色唯一标识"`
 	ApiList []string `json:"apiList" v:"required" dc:"API列表"`
 }
 

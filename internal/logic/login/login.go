@@ -102,7 +102,7 @@ func (l *Login) handleLogin(ctx context.Context, member *entity.MemberInfo) (res
 	// 创建用户身份
 	user := &token.AccessIdentity{
 		Uid:      member.Uid,
-		RoleId:   role.Id,
+		RoleUid:  role.RoleUid,
 		RoleKey:  role.Key,
 		Username: member.Username,
 		Avatar:   member.Avatar,
@@ -191,7 +191,7 @@ func (l *Login) RefreshToken(ctx context.Context, refreshToken string) (res *v1.
 	// 创建用户身份
 	user := &token.AccessIdentity{
 		Uid:      member.Uid,
-		RoleId:   role.Id,
+		RoleUid:  role.RoleUid,
 		RoleKey:  role.Key,
 		Username: member.Username,
 		Avatar:   member.Avatar,

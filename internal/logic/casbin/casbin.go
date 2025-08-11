@@ -2,7 +2,6 @@ package casbin
 
 import (
 	"context"
-	"strconv"
 	"yclw/ygpay/internal/dao"
 	"yclw/ygpay/internal/global"
 
@@ -54,7 +53,7 @@ func (c *Casbin) SyncRoleApi(ctx context.Context) (err error) {
 
 		// 添加策略
 		for _, api := range apis {
-			rules = append(rules, []string{strconv.FormatInt(roleId, 10), api.Path, api.Method})
+			rules = append(rules, []string{role.Key, api.Path, api.Method})
 		}
 	}
 

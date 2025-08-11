@@ -47,8 +47,9 @@ func (m *Middleware) Jwt(r *ghttp.Request) {
 
 	// 将用户信息传递到上下文中
 	userInfo := contexts.Identity{
-		Uid:    identity.Uid,
-		RoleId: identity.RoleId,
+		Uid:     identity.Uid,
+		RoleUid: identity.RoleUid,
+		RoleKey: identity.RoleKey,
 	}
 	contexts.SetUser(r.Context(), &userInfo)
 

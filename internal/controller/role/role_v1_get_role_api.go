@@ -11,16 +11,28 @@ import (
 )
 
 func (c *ControllerV1) GetRoleApi(ctx context.Context, req *v1.GetRoleApiReq) (res *v1.GetRoleApiRes, err error) {
-	operator := contexts.GetRoleId(ctx)
+	operatorRoleUid := contexts.GetRoleUid(ctx)
+
+	// 根据操作者RoleUid获取RoleId
+	operatorRoleId, err := c.RoleService.GetRoleIdByUid(ctx, operatorRoleUid)
+	if err != nil {
+		return
+	}
 
 	// 获取可用API，当前为操作角色API
-	enabledApis, err := c.ApiService.GetRoleApi(ctx, operator)
+	enabledApis, err := c.ApiService.GetRoleApi(ctx, operatorRoleId)
+	if err != nil {
+		return
+	}
+
+	// 根据目标roleUid获取roleId
+	targetRoleId, err := c.RoleService.GetRoleIdByUid(ctx, req.RoleUid)
 	if err != nil {
 		return
 	}
 
 	// 获取已用API
-	usedApis, err := c.ApiService.GetRoleApi(ctx, req.Id)
+	usedApis, err := c.ApiService.GetRoleApi(ctx, targetRoleId)
 	if err != nil {
 		return
 	}

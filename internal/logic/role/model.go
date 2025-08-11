@@ -9,14 +9,17 @@ import (
 type RoleModel struct {
 	*entity.RoleInfo        // 角色信息
 	ParentName       string // 父角色名称
+	ParentUid        string // 父角色UID
 }
 
 // RoleUpdateModel 角色更新模型
 type RoleUpdateModel struct {
+	ParentUid string
 	*do.RoleInfo
 }
 
 // RoleCreateModel 角色创建模型
 type RoleCreateModel struct {
+	ParentUid string
 	*do.RoleInfo
 }

@@ -3,7 +3,6 @@ package middleware
 import (
 	"context"
 	"fmt"
-	"strconv"
 
 	"yclw/ygpay/internal/global"
 	"yclw/ygpay/pkg/contexts"
@@ -26,11 +25,11 @@ func (m *Middleware) Casbin(r *ghttp.Request) {
 	}
 
 	// 获取用户角色
-	roleId := contexts.GetRoleId(ctx)
+	roleKey := contexts.GetRoleKey(ctx)
 
 	// casbin 鉴权
 	e := global.Casbin()
-	ok, err := e.Enforce(strconv.FormatInt(roleId, 10), path, method)
+	ok, err := e.Enforce(roleKey, path, method)
 	if err != nil {
 		r.SetError(gerror.NewCode(gcode.CodeInternalError, "权限验证系统错误"))
 		return

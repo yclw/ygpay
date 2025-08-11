@@ -11,8 +11,7 @@ import (
 // AccessIdentity 访问身份
 type AccessIdentity struct {
 	Uid      string      `json:"uid"              description:"用户ID"`
-	Pid      int64       `json:"pid"             description:"上级ID"`
-	RoleId   int64       `json:"roleId"          description:"角色ID"`
+	RoleUid  string      `json:"roleUid"         description:"角色UID"`
 	RoleKey  string      `json:"roleKey"         description:"角色唯一标识符"`
 	Username string      `json:"username"        description:"用户名"`
 	RealName string      `json:"realName"        description:"姓名"`

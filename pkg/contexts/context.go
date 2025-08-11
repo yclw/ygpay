@@ -43,7 +43,12 @@ func GetUserUid(ctx context.Context) string {
 	return GetUser(ctx).Uid
 }
 
-// GetRoleId 获取用户角色ID
-func GetRoleId(ctx context.Context) int64 {
-	return GetUser(ctx).RoleId
+// GetRoleUid 获取用户角色UID
+func GetRoleUid(ctx context.Context) string {
+	return GetUser(ctx).RoleUid
+}
+
+// GetRoleKey 获取用户角色唯一标识符
+func GetRoleKey(ctx context.Context) string {
+	return GetUser(ctx).RoleKey
 }

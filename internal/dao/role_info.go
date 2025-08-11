@@ -10,6 +10,8 @@ import (
 	"yclw/ygpay/internal/dao/internal"
 	"yclw/ygpay/internal/model/do"
 	"yclw/ygpay/internal/model/entity"
+
+	"github.com/gogf/gf/v2/util/gconv"
 )
 
 // roleInfoDao is the data access object for the table t_role_info.
@@ -29,6 +31,35 @@ var (
 func (d *roleInfoDao) FindByID(ctx context.Context, id int64) (role *entity.RoleInfo, err error) {
 	model := d.Ctx(ctx).WherePri(id)
 	err = model.Scan(&role)
+	return
+}
+
+// FindByRoleUid 根据RoleUid查询角色信息
+func (d *roleInfoDao) FindByRoleUid(ctx context.Context, roleUid string) (role *entity.RoleInfo, err error) {
+	cols := d.Columns()
+	err = d.Ctx(ctx).Where(cols.RoleUid, roleUid).Scan(&role)
+	return
+}
+
+// FindIdByRoleUid 根据RoleUid查询角色ID
+func (d *roleInfoDao) FindIdByRoleUid(ctx context.Context, roleUid string) (id int64, err error) {
+	cols := d.Columns()
+	res, err := d.Ctx(ctx).Fields(cols.Id).Where(cols.RoleUid, roleUid).Value()
+	if err != nil {
+		return
+	}
+	id = res.Int64()
+	return
+}
+
+// FindIdsByRoleUids 根据RoleUid列表查询角色ID列表
+func (d *roleInfoDao) FindIdsByRoleUids(ctx context.Context, roleUids []string) (ids []int64, err error) {
+	cols := d.Columns()
+	res, err := d.Ctx(ctx).WhereIn(cols.RoleUid, roleUids).Fields(cols.Id).Array()
+	if err != nil {
+		return
+	}
+	ids = gconv.Int64s(res)
 	return
 }
 
@@ -55,6 +86,7 @@ func (d *roleInfoDao) FindAllEnabled(ctx context.Context) (roles []*entity.RoleI
 func (d *roleInfoDao) Create(ctx context.Context, req *do.RoleInfo) (id int64, err error) {
 	cols := d.Columns()
 	mod, err := d.Ctx(ctx).Fields(
+		cols.RoleUid,
 		cols.Pid,
 		cols.Name,
 		cols.Key,
@@ -73,6 +105,20 @@ func (d *roleInfoDao) Create(ctx context.Context, req *do.RoleInfo) (id int64, e
 func (d *roleInfoDao) Update(ctx context.Context, req *do.RoleInfo) (err error) {
 	cols := d.Columns()
 	_, err = d.Ctx(ctx).Where(cols.Id, req.Id).Fields(
+		cols.Pid,
+		cols.Name,
+		cols.Key,
+		cols.Remark,
+		cols.Sort,
+		cols.Status,
+	).Data(req).OmitNil().Update()
+	return
+}
+
+// UpdateByRoleUid 根据RoleUid更新角色
+func (d *roleInfoDao) UpdateByRoleUid(ctx context.Context, req *do.RoleInfo) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Where(cols.RoleUid, req.RoleUid).Fields(
 		cols.Pid,
 		cols.Name,
 		cols.Key,
@@ -107,5 +153,12 @@ func (d *roleInfoDao) FindWithPageAndOptions(ctx context.Context, page, pageSize
 func (d *roleInfoDao) Delete(ctx context.Context, id int64) (err error) {
 	cols := d.Columns()
 	_, err = d.Ctx(ctx).Where(cols.Id, id).Delete()
+	return
+}
+
+// DeleteByRoleUid 根据RoleUid删除角色
+func (d *roleInfoDao) DeleteByRoleUid(ctx context.Context, roleUid string) (err error) {
+	cols := d.Columns()
+	_, err = d.Ctx(ctx).Where(cols.RoleUid, roleUid).Delete()
 	return
 }

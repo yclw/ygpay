@@ -22,6 +22,7 @@ func Router(ctx context.Context, group *ghttp.Server) {
 		// group.Middleware(ghttp.MiddlewareHandlerResponse)
 		group.Middleware(middleware.DefaultMiddleware.Lang) // 语言中间件
 		group.Bind(
+			casbin.NewV1(),
 			login.NewV1(),
 		)
 		group.Middleware(middleware.DefaultMiddleware.Jwt)    // jwt认证中间件
@@ -32,7 +33,6 @@ func Router(ctx context.Context, group *ghttp.Server) {
 			user.NewV1(),
 			member.NewV1(),
 			role.NewV1(),
-			casbin.NewV1(),
 		)
 		group.Bind()
 	})

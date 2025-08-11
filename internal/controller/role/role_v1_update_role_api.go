@@ -9,10 +9,16 @@ import (
 )
 
 func (c *ControllerV1) UpdateRoleApi(ctx context.Context, req *v1.UpdateRoleApiReq) (res *v1.UpdateRoleApiRes, err error) {
-	operator := contexts.GetRoleId(ctx)
+	operatorRoleUid := contexts.GetRoleUid(ctx)
+
+	// 根据操作者RoleUid获取RoleId
+	operatorRoleId, err := c.RoleService.GetRoleIdByUid(ctx, operatorRoleUid)
+	if err != nil {
+		return
+	}
 
 	// 获取可用API，当前为操作角色API
-	enabledApis, err := c.ApiService.GetRoleApi(ctx, operator)
+	enabledApis, err := c.ApiService.GetRoleApi(ctx, operatorRoleId)
 	if err != nil {
 		return
 	}
@@ -28,6 +34,12 @@ func (c *ControllerV1) UpdateRoleApi(ctx context.Context, req *v1.UpdateRoleApiR
 		return !enabledApisMap[apiUid]
 	})
 
-	err = c.ApiService.UpdateRoleApi(ctx, req.Id, req.ApiList)
+	// 根据目标roleUid获取roleId
+	targetRoleId, err := c.RoleService.GetRoleIdByUid(ctx, req.RoleUid)
+	if err != nil {
+		return
+	}
+
+	err = c.ApiService.UpdateRoleApi(ctx, targetRoleId, req.ApiList)
 	return
 }
