@@ -79,3 +79,34 @@ func (d *roleApiDao) AddRoleApi(ctx context.Context, roleId int64, apiIds []int6
 	count, err = mod.RowsAffected()
 	return
 }
+
+// UpdateRoleApi 更新角色API
+func (d *roleApiDao) UpdateRoleApi(ctx context.Context, roleId int64, apiIds []int64) (count int64, err error) {
+	cols := d.Columns()
+
+	// 构建插入数据
+	data := make([]do.RoleApi, 0, len(apiIds))
+	for _, apiId := range apiIds {
+		data = append(data, do.RoleApi{
+			RoleId: roleId,
+			ApiId:  apiId,
+		})
+	}
+
+	// TODO: 考虑事务
+
+	// 删除角色API
+	_, err = d.Ctx(ctx).Where(cols.RoleId, roleId).Delete()
+	if err != nil {
+		return
+	}
+
+	// 添加角色API
+	mod, err := d.Ctx(ctx).Data(data).Insert()
+	if err != nil {
+		return
+	}
+
+	count, err = mod.RowsAffected()
+	return
+}

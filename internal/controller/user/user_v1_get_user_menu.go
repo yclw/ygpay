@@ -13,14 +13,8 @@ import (
 func (c *ControllerV1) GetUserMenu(ctx context.Context, req *v1.GetUserMenuReq) (res *v1.GetUserMenuRes, err error) {
 	roleUid := contexts.GetRoleUid(ctx)
 
-	// 根据roleUid获取roleId
-	roleId, err := c.RoleService.GetRoleIdByUid(ctx, roleUid)
-	if err != nil {
-		return
-	}
-
-	// 获取角色菜单
-	menus, err := c.MenuService.GetRoleMenu(ctx, roleId)
+	// 获取角色菜单（自己查看自己的菜单）
+	menus, err := c.MenuService.GetRoleMenu(ctx, roleUid, roleUid)
 	if err != nil {
 		return
 	}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"yclw/ygpay/internal/dao"
 	"yclw/ygpay/internal/model/entity"
+	"yclw/ygpay/pkg/contexts"
 
 	"github.com/google/uuid"
 )
@@ -145,4 +146,10 @@ func (r *Role) Delete(ctx context.Context, roleUid string) (err error) {
 	// 删除角色
 	err = dao.RoleInfo.DeleteByRoleUid(ctx, roleUid)
 	return
+}
+
+// 获取操作者角色ID
+func (r *Role) GetOperatorRoleId(ctx context.Context) (int64, error) {
+	operatorRoleUid := contexts.GetRoleUid(ctx)
+	return dao.RoleInfo.FindIdByRoleUid(ctx, operatorRoleUid)
 }

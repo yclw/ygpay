@@ -9,6 +9,7 @@ import (
 
 type RoleMenuModel struct {
 	*entity.MenuInfo
+	Use bool `json:"use"`
 }
 
 type MenuModel struct {

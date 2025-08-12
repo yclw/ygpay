@@ -11,84 +11,63 @@ import (
 )
 
 func (c *ControllerV1) GetRoleMenu(ctx context.Context, req *v1.GetRoleMenuReq) (res *v1.GetRoleMenuRes, err error) {
+	// 获取操作者角色UID
 	operatorRoleUid := contexts.GetRoleUid(ctx)
 
-	// 根据操作者RoleUid获取RoleId
-	operatorRoleId, err := c.RoleService.GetRoleIdByUid(ctx, operatorRoleUid)
+	// 获得带Use标记的菜单列表
+	enabledMenus, err := c.MenuService.GetRoleMenu(ctx, operatorRoleUid, req.RoleUid)
 	if err != nil {
 		return
 	}
 
-	// 获取可用菜单，当前为操作角色菜单
-	enabledMenus, err := c.MenuService.GetRoleMenu(ctx, operatorRoleId)
-	if err != nil {
-		return
-	}
-
-	// 根据目标roleUid获取roleId
-	targetRoleId, err := c.RoleService.GetRoleIdByUid(ctx, req.RoleUid)
-	if err != nil {
-		return
-	}
-
-	// 获取已用菜单
-	usedMenus, err := c.MenuService.GetRoleMenu(ctx, targetRoleId)
-	if err != nil {
-		return
-	}
-
-	// 构建已用菜单map
-	usedMenusMap := make(map[int64]bool)
-	for _, menu := range usedMenus {
-		usedMenusMap[menu.MenuInfo.Id] = true
-	}
-
-	// 转换可用菜单为v1.MenuModel，并构建可用菜单map
-	enabledMenusMap := make(map[int64]*v1.MenuModel)
-	roleMenus := make([]*v1.MenuModel, 0)
-	for _, menu := range enabledMenus {
-		roleMenu := c.menuModelToRoleMenu(menu, usedMenusMap)
-		roleMenus = append(roleMenus, roleMenu)
-		enabledMenusMap[menu.MenuInfo.Id] = roleMenu
-	}
-
-	// 排序
-	slices.SortFunc(roleMenus, func(a, b *v1.MenuModel) int {
-		return cmp.Compare(a.Sort, b.Sort)
-	})
+	// 转换为响应格式并构建菜单映射
+	roleMenus, menuMap := c.convertToMenuModels(enabledMenus)
+	c.sortMenuModels(roleMenus)
 
 	// 构建菜单树
-	tree := c.buildRoleMenuTree(roleMenus, enabledMenusMap)
+	tree := c.buildRoleMenuTree(roleMenus, menuMap)
 
 	res = &v1.GetRoleMenuRes{
 		Tree: tree,
 	}
-
 	return
 }
 
-func (c *ControllerV1) menuModelToRoleMenu(menuModel *menu.RoleMenuModel, usedMenusMap map[int64]bool) *v1.MenuModel {
-	roleMenu := v1.MenuModel{
-		MenuUid:  menuModel.MenuInfo.MenuUid,
-		ParentId: menuModel.MenuInfo.Pid,
-		Title:    menuModel.MenuInfo.Title,
-		Sort:     menuModel.MenuInfo.Sort,
-		Use:      usedMenusMap[menuModel.MenuInfo.Id],
+// 转换菜单模型为响应格式并返回映射表
+func (c *ControllerV1) convertToMenuModels(menus []*menu.RoleMenuModel) ([]*v1.MenuModel, map[int64]*v1.MenuModel) {
+	roleMenus := make([]*v1.MenuModel, 0, len(menus))
+	menuMap := make(map[int64]*v1.MenuModel, len(menus))
+
+	for _, menu := range menus {
+		roleMenu := &v1.MenuModel{
+			MenuUid:  menu.MenuInfo.MenuUid,
+			ParentId: menu.MenuInfo.Pid,
+			Title:    menu.MenuInfo.Title,
+			Sort:     menu.MenuInfo.Sort,
+			Use:      menu.Use,
+		}
+		roleMenus = append(roleMenus, roleMenu)
+		menuMap[menu.MenuInfo.Id] = roleMenu
 	}
-	return &roleMenu
+	return roleMenus, menuMap
 }
 
-func (c *ControllerV1) buildRoleMenuTree(roleMenus []*v1.MenuModel, menuMap map[int64]*v1.MenuModel) (tree []*v1.MenuModel) {
+func (c *ControllerV1) sortMenuModels(models []*v1.MenuModel) {
+	slices.SortFunc(models, func(a, b *v1.MenuModel) int {
+		return cmp.Compare(a.Sort, b.Sort)
+	})
+}
+
+// 菜单树构建
+func (c *ControllerV1) buildRoleMenuTree(roleMenus []*v1.MenuModel, menuMap map[int64]*v1.MenuModel) []*v1.MenuModel {
+	tree := make([]*v1.MenuModel, 0)
 	for _, node := range roleMenus {
 		parentId := node.ParentId
-		// 查找父节点
 		if parent, exists := menuMap[parentId]; exists {
-			// 将当前节点添加到父节点的Children中
 			parent.Children = append(parent.Children, node)
 		} else if parentId == 0 {
-			// 无父节点，作为根节点
 			tree = append(tree, node)
 		}
 	}
-	return
+	return tree
 }

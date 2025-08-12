@@ -42,7 +42,6 @@ func (d *apiInfoDao) FindByApiUid(ctx context.Context, apiUid string) (res *enti
 }
 
 // FindIdsByApiUids 根据ApiUid列表查询ID列表
-
 func (d *apiInfoDao) FindIdsByApiUids(ctx context.Context, apiUids []string) (ids []int64, err error) {
 	cols := d.Columns()
 	res, err := d.Ctx(ctx).WhereIn(cols.ApiUid, apiUids).Fields(cols.Id).Array()
@@ -50,6 +49,17 @@ func (d *apiInfoDao) FindIdsByApiUids(ctx context.Context, apiUids []string) (id
 		return
 	}
 	ids = gconv.Int64s(res)
+	return
+}
+
+// FindUidsByApiIds 根据API ID列表获取ApiUid列表
+func (d *apiInfoDao) FindUidsByApiIds(ctx context.Context, apiIds []int64) (res []string, err error) {
+	cols := d.Columns()
+	array, err := d.Ctx(ctx).WhereIn(cols.Id, apiIds).Fields(cols.ApiUid).Array()
+	if err != nil {
+		return
+	}
+	res = gconv.Strings(array)
 	return
 }
 

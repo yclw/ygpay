@@ -11,81 +11,55 @@ import (
 )
 
 func (c *ControllerV1) GetRoleApi(ctx context.Context, req *v1.GetRoleApiReq) (res *v1.GetRoleApiRes, err error) {
+	// 获取操作者角色UID
 	operatorRoleUid := contexts.GetRoleUid(ctx)
 
-	// 根据操作者RoleUid获取RoleId
-	operatorRoleId, err := c.RoleService.GetRoleIdByUid(ctx, operatorRoleUid)
+	// 获得带Use标记的API列表
+	enabledApis, err := c.ApiService.GetRoleApi(ctx, operatorRoleUid, req.RoleUid)
 	if err != nil {
 		return
 	}
 
-	// 获取可用API，当前为操作角色API
-	enabledApis, err := c.ApiService.GetRoleApi(ctx, operatorRoleId)
-	if err != nil {
-		return
-	}
-
-	// 根据目标roleUid获取roleId
-	targetRoleId, err := c.RoleService.GetRoleIdByUid(ctx, req.RoleUid)
-	if err != nil {
-		return
-	}
-
-	// 获取已用API
-	usedApis, err := c.ApiService.GetRoleApi(ctx, targetRoleId)
-	if err != nil {
-		return
-	}
-
-	// 构建已用API map
-	usedApisMap := make(map[int64]bool)
-	for _, api := range usedApis {
-		usedApisMap[api.ApiInfo.Id] = true
-	}
-
-	// 转换可用API为v1.ApiModel
-	roleApis := make([]*v1.ApiModel, 0)
-	for _, api := range enabledApis {
-		roleApi := c.apiModelToRoleApi(api, usedApisMap)
-		roleApis = append(roleApis, roleApi)
-	}
-
-	// 排序
-	slices.SortFunc(roleApis, func(a, b *v1.ApiModel) int {
-		return cmp.Compare(a.Sort, b.Sort)
-	})
-
-	// 按照Group分组
-	groupList := c.groupApis(roleApis)
+	// 转换为响应格式
+	roleApis := c.convertToApiModels(enabledApis)
+	c.sortApiModels(roleApis)
 
 	res = &v1.GetRoleApiRes{
-		ApiList: groupList,
+		ApiList: c.groupApis(roleApis),
 	}
-
 	return
 }
 
-// apiModelToRoleApi 将apiModel转换为roleApiModel
-func (c *ControllerV1) apiModelToRoleApi(apiModel *api.ApiModel, usedApisMap map[int64]bool) *v1.ApiModel {
-	roleApi := v1.ApiModel{
-		ApiUid: apiModel.ApiInfo.ApiUid,
-		Path:   apiModel.ApiInfo.Path,
-		Method: apiModel.ApiInfo.Method,
-		Group:  apiModel.ApiInfo.GroupName,
-		Sort:   apiModel.ApiInfo.Sort,
-		Use:    usedApisMap[apiModel.ApiInfo.Id],
+// 转换API模型为响应格式
+func (c *ControllerV1) convertToApiModels(apis []*api.ApiModel) []*v1.ApiModel {
+	roleApis := make([]*v1.ApiModel, 0, len(apis))
+	for _, api := range apis {
+		roleApis = append(roleApis, &v1.ApiModel{
+			ApiUid: api.ApiInfo.ApiUid,
+			Path:   api.ApiInfo.Path,
+			Method: api.ApiInfo.Method,
+			Group:  api.ApiInfo.GroupName,
+			Sort:   api.ApiInfo.Sort,
+			Use:    api.Use,
+		})
 	}
-	return &roleApi
+	return roleApis
 }
 
-// groupApis 按照Group分组api
+func (c *ControllerV1) sortApiModels(models []*v1.ApiModel) {
+	slices.SortFunc(models, func(a, b *v1.ApiModel) int {
+		return cmp.Compare(a.Sort, b.Sort)
+	})
+}
+
+// API分组
 func (c *ControllerV1) groupApis(apis []*v1.ApiModel) []*v1.ApiGroupModel {
 	groupMap := make(map[string][]*v1.ApiModel)
 	for _, api := range apis {
 		groupMap[api.Group] = append(groupMap[api.Group], api)
 	}
 
-	groupList := make([]*v1.ApiGroupModel, 0)
+	groupList := make([]*v1.ApiGroupModel, 0, len(groupMap))
 	for groupName, apiList := range groupMap {
 		groupList = append(groupList, &v1.ApiGroupModel{
 			GroupName: groupName,

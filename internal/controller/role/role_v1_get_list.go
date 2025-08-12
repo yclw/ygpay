@@ -25,13 +25,9 @@ func (c *ControllerV1) GetList(ctx context.Context, req *v1.GetListReq) (res *v1
 		roleMap[role.Id] = roleModel
 	}
 
-	// 排序
-	slices.SortFunc(models, func(a, b *v1.RoleModel) int {
-		return cmp.Compare(a.Sort, b.Sort)
-	})
-
-	// 构建角色树
-	tree := buildRoleTree(models, roleMap)
+	// 排序和构建角色树
+	c.sortRoleModels(models)
+	tree := c.buildRoleTree(models, roleMap)
 
 	// 构建响应
 	res = &v1.GetListRes{
@@ -42,16 +38,20 @@ func (c *ControllerV1) GetList(ctx context.Context, req *v1.GetListReq) (res *v1
 	return
 }
 
-// buildRoleTree 构建角色树
-func buildRoleTree(roles []*v1.RoleModel, roleMap map[int64]*v1.RoleModel) (tree []*v1.RoleModel) {
+func (c *ControllerV1) sortRoleModels(models []*v1.RoleModel) {
+	slices.SortFunc(models, func(a, b *v1.RoleModel) int {
+		return cmp.Compare(a.Sort, b.Sort)
+	})
+}
+
+// 角色树构建
+func (c *ControllerV1) buildRoleTree(roles []*v1.RoleModel, roleMap map[int64]*v1.RoleModel) []*v1.RoleModel {
+	tree := make([]*v1.RoleModel, 0)
 	for _, node := range roles {
 		parentId := node.ParentId
-		// 查找父节点
 		if parent, exists := roleMap[parentId]; exists {
-			// 将当前节点添加到父节点的Children中
 			parent.Children = append(parent.Children, node)
 		} else if parentId == 0 {
-			// 无父节点，作为根节点
 			tree = append(tree, node)
 		}
 	}

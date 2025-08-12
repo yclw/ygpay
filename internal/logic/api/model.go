@@ -10,6 +10,7 @@ import (
 // ApiModel api模型
 type ApiModel struct {
 	*entity.ApiInfo
+	Use bool `json:"use"`
 }
 
 // ApiUpdateModel api更新模型

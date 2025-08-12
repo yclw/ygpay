@@ -69,3 +69,34 @@ func (d *roleMenuDao) AddRoleMenus(ctx context.Context, roleId int64, menuIds []
 	count, err = mod.RowsAffected()
 	return
 }
+
+// UpdateRoleMenu 更新角色菜单
+func (d *roleMenuDao) UpdateRoleMenu(ctx context.Context, roleId int64, menuIds []int64) (count int64, err error) {
+	cols := d.Columns()
+
+	// 构建插入数据
+	data := make([]do.RoleMenu, 0, len(menuIds))
+	for _, menuId := range menuIds {
+		data = append(data, do.RoleMenu{
+			RoleId: roleId,
+			MenuId: menuId,
+		})
+	}
+
+	// TODO: 考虑事务
+
+	// 删除角色菜单
+	_, err = d.Ctx(ctx).Where(cols.RoleId, roleId).Delete()
+	if err != nil {
+		return
+	}
+
+	// 添加角色菜单
+	mod, err := d.Ctx(ctx).Data(data).Insert()
+	if err != nil {
+		return
+	}
+
+	count, err = mod.RowsAffected()
+	return
+}

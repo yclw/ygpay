@@ -53,7 +53,6 @@ func (d *menuInfoDao) FindIdByMenuUid(ctx context.Context, menuUid string) (res 
 }
 
 // FindIdsByMenuUids 根据MenuUid列表获取菜单ID列表
-
 func (d *menuInfoDao) FindIdsByMenuUids(ctx context.Context, menuUids []string) (res []int64, err error) {
 	cols := d.Columns()
 	array, err := d.Ctx(ctx).WhereIn(cols.MenuUid, menuUids).Fields(cols.Id).Array()
@@ -61,6 +60,17 @@ func (d *menuInfoDao) FindIdsByMenuUids(ctx context.Context, menuUids []string) 
 		return
 	}
 	res = gconv.Int64s(array)
+	return
+}
+
+// FindUidsByMenuIds 根据菜单ID列表获取MenuUid列表
+func (d *menuInfoDao) FindUidsByMenuIds(ctx context.Context, menuIds []int64) (res []string, err error) {
+	cols := d.Columns()
+	array, err := d.Ctx(ctx).WhereIn(cols.Id, menuIds).Fields(cols.MenuUid).Array()
+	if err != nil {
+		return
+	}
+	res = gconv.Strings(array)
 	return
 }
 
